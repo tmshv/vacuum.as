@@ -6,20 +6,16 @@ package ru.gotoandstop.vacuum{
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
 	public class TurtleCanvas implements ICanvas{
-		public function TurtleCanvas()
-		{
+		public function TurtleCanvas(){
+			
 		}
 		
-		public function clear():void
-		{
+		public function clear():void{
+			
 		}
 		
-		public function moveTo(x:Number, y:Number):void
-		{
-		}
-		
-		public function lineTo(x:Number, y:Number):void
-		{
+		public function draw(...coords):void{
+			
 		}
 	}
 }
