@@ -1,6 +1,7 @@
 package ru.gotoandstop.vacuum{
 	import flash.display.Graphics;
 	import flash.display.Sprite;
+	import flash.geom.Point;
 	
 	
 	/**
@@ -10,6 +11,7 @@ package ru.gotoandstop.vacuum{
 	 */
 	public class Arrow extends Sprite{
 		private const TO_RADIAN:Number = Math.PI / 180;
+		private const TO_DEGREE:Number = 180 / Math.PI;
 		
 		private var _rootRadius:uint;
 		private var _arrowLength:uint;
@@ -23,10 +25,30 @@ package ru.gotoandstop.vacuum{
 			this.draw(length);
 		}
 		
+		public function setPosition(x:Number, y:Number):void{
+			super.x = x;
+			super.y = y;
+		}
+		
+		public function setCoord(coord:Point):void{
+			this.setPosition(coord.x, coord.y);
+		}
+		
 		public function setLength(value:uint):void{
 			if(value > 10){
 				this.draw(value);
 			}
+		}
+		
+		public function lookAt(x:Number, y:Number):void{
+			var dx:Number = x - super.x;
+			var dy:Number = y - super.y;
+			var rad:Number = Math.atan2(dy, dx);
+			super.rotation = rad * this.TO_DEGREE;
+		}
+		
+		public function lookAtPoint(point:Point):void{
+			this.lookAt(point.x, point.y);
 		}
 		
 		private function draw(length:uint):void{
