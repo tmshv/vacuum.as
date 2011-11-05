@@ -3,6 +3,8 @@ package ru.gotoandstop.vacuum{
 	import flash.events.Event;
 	import flash.geom.Point;
 	
+	import ru.gotoandstop.mvc.BaseView;
+	import ru.gotoandstop.mvc.IModel;
 	import ru.gotoandstop.vacuum.core.IDisposable;
 	
 	
@@ -11,20 +13,25 @@ package ru.gotoandstop.vacuum{
 	 * Creation date: May 1, 2011 (2:01:47 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class SplineView extends Sprite implements IDisposable{
+	public class SplineView extends BaseView{
 		private var _spline:Spline;
 		public function get spline():Spline{
 			return this._spline;
 		}
 		
+		public override function get model():IModel{
+			return this.spline;
+		}
+		
 		public function SplineView(spline:Spline){
-			super();
+			super(spline);
 			this._spline = spline;
 			this.spline.addEventListener(Event.CHANGE, this.handleSplineChanged);
 			this.drawSpline(this.spline.getInstructions(), this.spline.closed);
 		}
 		
-		public function dispose():void{
+		public override function dispose():void{
+			super.dispose();
 			this.spline.removeEventListener(Event.CHANGE, this.handleSplineChanged);
 			this._spline = null;
 		}
@@ -35,6 +42,7 @@ package ru.gotoandstop.vacuum{
 		}
 		
 		private function drawSpline(coords:Vector.<Point>, close:Boolean=false):void{
+			if(!coords.length) return;
 			const first:Point = coords.shift();
 			super.graphics.clear();
 			super.graphics.lineStyle(0);
