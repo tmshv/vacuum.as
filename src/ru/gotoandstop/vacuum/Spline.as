@@ -3,6 +3,7 @@ package ru.gotoandstop.vacuum{
 	import flash.events.EventDispatcher;
 	import flash.geom.Point;
 	
+	import ru.gotoandstop.mvc.BaseModel;
 	import ru.gotoandstop.vacuum.core.IDisposable;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	
@@ -13,7 +14,7 @@ package ru.gotoandstop.vacuum{
 	 * Creation date: May 1, 2011 (1:24:59 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class Spline extends EventDispatcher implements IDisposable{
+	public class Spline extends BaseModel{
 		private var vertices:Vector.<Vertex>;
 		
 		public var closed:Boolean;
@@ -23,7 +24,7 @@ package ru.gotoandstop.vacuum{
 			this.vertices = new Vector.<Vertex>();
 		}
 		
-		public function dispose():void{
+		public override function dispose():void{
 			for each(var v:Vertex in this.vertices){
 				v.removeEventListener(Event.CHANGE, this.handleVertexChanged);
 			}
@@ -67,23 +68,14 @@ package ru.gotoandstop.vacuum{
 			super.dispatchEvent(event);
 		}
 		
-		private var _locked:Boolean;
-		public function get locked():Boolean{
-			return this._locked;
-		}
-		
-		public function lock():void{
-			this._locked = true;
-		}
-		
-		public function unlock():void{
-			this._locked = false;
+		public override function unlock():void{
+			super.unlock();
 			if(this.changed){
 				this.update();
 			}
 		}
 		
-		public function update():void{
+		public override function update():void{
 			if(!this.locked){
 				super.dispatchEvent(new Event(Event.CHANGE));
 				this.changed = false;
