@@ -12,14 +12,14 @@ package ru.gotoandstop.vacuum.controllers{
 	 * Creation date: May 2, 2011 (3:04:51 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class VertexController extends EventDispatcher implements IDisposable{
+	public class MouseController extends EventDispatcher implements IDisposable{
 		private var dot:VertexView;
 		private var _mouseDown:Boolean;
 		private var _lastPosition:Point;
 		
 		private var _mouseOffset:Point;
 		
-		public function VertexController(dot:VertexView){
+		public function MouseController(dot:VertexView){
 			super();
 			this._lastPosition = new Point();
 			
