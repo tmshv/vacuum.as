@@ -15,13 +15,11 @@ package ru.gotoandstop.vacuum.controllers{
 	public class MouseController extends EventDispatcher implements IDisposable{
 		private var dot:VertexView;
 		private var _mouseDown:Boolean;
-		private var _lastPosition:Point;
 		
 		private var _mouseOffset:Point;
 		
 		public function MouseController(dot:VertexView){
 			super();
-			this._lastPosition = new Point();
 			
 			this.dot = dot;
 			this.dot.addEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
