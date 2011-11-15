@@ -37,13 +37,13 @@ package ru.gotoandstop.vacuum.controllers{
 		
 		public function startMove():void{
 			this._mouseDown = true;
-			this.dot.active.value = true;
+//			this.dot.active.value = true;
 			this._mouseOffset = new Point(-this.dot.mouseX, -this.dot.mouseY);
 		}
 		
 		public function stopMove():void{
 			this._mouseDown = false;
-			this.dot.active.value = false;
+//			this.dot.active.value = false;
 		}
 		
 		/**
