@@ -59,10 +59,10 @@ package ru.gotoandstop.vacuum.controllers{
 					event.stageY + this._mouseOffset.y
 				);
 				
-				this.dot.vertex.lock();
-				this.dot.vertex.x = coord.x;
-				this.dot.vertex.y = coord.y;
-				this.dot.vertex.unlock();
+				this.dot.vertex.setCoord(
+					coord.x,
+					coord.y
+				);
 			}
 		}
 		
