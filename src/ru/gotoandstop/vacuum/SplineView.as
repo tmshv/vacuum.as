@@ -1,4 +1,5 @@
 package ru.gotoandstop.vacuum{
+	import flash.display.GraphicsPath;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -27,7 +28,8 @@ package ru.gotoandstop.vacuum{
 			super(spline);
 			this._spline = spline;
 			this.spline.addEventListener(Event.CHANGE, this.handleSplineChanged);
-			this.drawSpline(this.spline.getInstructions(), this.spline.closed);
+//			this.drawSpline(this.spline.getInstructions(), this.spline.closed);
+			this.drawSpline2(spline.getCommands(), spline.closed);
 		}
 		
 		public override function dispose():void{
@@ -38,7 +40,8 @@ package ru.gotoandstop.vacuum{
 		
 		private function handleSplineChanged(event:Event):void{
 			const spline:Spline = event.target as Spline;
-			this.drawSpline(spline.getInstructions(), spline.closed);
+//			this.drawSpline(spline.getInstructions(), spline.closed);
+			this.drawSpline2(spline.getCommands(), spline.closed);
 		}
 		
 		private function drawSpline(coords:Vector.<Point>, close:Boolean=false):void{
@@ -53,6 +56,12 @@ package ru.gotoandstop.vacuum{
 			if(close){
 				super.graphics.lineTo(first.x, first.y);
 			}
+		}
+		
+		private function drawSpline2(data:GraphicsPath, close:Boolean=false):void{
+			super.graphics.clear();
+			super.graphics.lineStyle(0);
+			super.graphics.drawPath(data.commands, data.data, data.winding);
 		}
 	}
 }
