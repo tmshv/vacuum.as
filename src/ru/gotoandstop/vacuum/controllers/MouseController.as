@@ -12,16 +12,14 @@ package ru.gotoandstop.vacuum.controllers{
 	 * Creation date: May 2, 2011 (3:04:51 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class VertexController extends EventDispatcher implements IDisposable{
+	public class MouseController extends EventDispatcher implements IDisposable{
 		private var dot:VertexView;
 		private var _mouseDown:Boolean;
-		private var _lastPosition:Point;
 		
 		private var _mouseOffset:Point;
 		
-		public function VertexController(dot:VertexView){
+		public function MouseController(dot:VertexView){
 			super();
-			this._lastPosition = new Point();
 			
 			this.dot = dot;
 			this.dot.addEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
@@ -37,13 +35,13 @@ package ru.gotoandstop.vacuum.controllers{
 		
 		public function startMove():void{
 			this._mouseDown = true;
-			this.dot.active.value = true;
+//			this.dot.active.value = true;
 			this._mouseOffset = new Point(-this.dot.mouseX, -this.dot.mouseY);
 		}
 		
 		public function stopMove():void{
 			this._mouseDown = false;
-			this.dot.active.value = false;
+//			this.dot.active.value = false;
 		}
 		
 		/**
@@ -59,10 +57,10 @@ package ru.gotoandstop.vacuum.controllers{
 					event.stageY + this._mouseOffset.y
 				);
 				
-				this.dot.vertex.lock();
-				this.dot.vertex.x = coord.x;
-				this.dot.vertex.y = coord.y;
-				this.dot.vertex.unlock();
+				this.dot.vertex.setCoord(
+					coord.x,
+					coord.y
+				);
 			}
 		}
 		

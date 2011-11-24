@@ -24,15 +24,15 @@ package ru.gotoandstop.vacuum.view{
 			);
 		}
 		
-		private var _active:BooleanValue;
-		/**
-		 * Булево значение, отвечающее за состояние точки. true - вьюшка будет слушать модель.
-		 * @return 
-		 * 
-		 */
-		public function get active():BooleanValue{
-			return this._active;
-		}
+//		private var _active:BooleanValue;
+//		/**
+//		 * Булево значение, отвечающее за состояние точки. true - вьюшка будет слушать модель.
+//		 * @return 
+//		 * 
+//		 */
+//		public function get active():BooleanValue{
+//			return this._active;
+//		}
 		
 		private var _vertex:Vertex;
 		/**
@@ -58,7 +58,7 @@ package ru.gotoandstop.vacuum.view{
 		
 		public function VertexView(vertex:Vertex, layout:Layout, icon:VertexIcon=null){
 			super();
-			this._active = new BooleanValue();
+//			this._active = new BooleanValue();
 			
 			this.setIcon(icon ? icon : new EmptyIcon());
 			

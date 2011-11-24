@@ -42,6 +42,13 @@ package ru.gotoandstop.vacuum.core{
 			this.y = y;
 		}
 		
+		public function setCoord(x:Number, y:Number):void{
+			this.lock();
+			this.x = x;
+			this.y = y;
+			this.unlock();
+		}
+		
 		public function lock():void{
 			this._locked = true;
 		}

@@ -249,7 +249,7 @@ package ru.gotoandstop.vacuum.controllers{
 		public function startMove():void{
 			//this.currentVertexDependencySet.dispose();
 			
-			var mover:VertexController = this.topleft.getController('move');
+			var mover:MouseController = this.topleft.getController('move');
 			mover.startMove();
 			
 			mover = this.top.getController('move');
@@ -324,7 +324,7 @@ package ru.gotoandstop.vacuum.controllers{
 			var vertex:Vertex = new Vertex(x, y);
 			var view:VertexView = new VertexView(vertex, this.layout, new RectIcon(0xff000000, 0xffffffff));
 			this.vertexContainer.addChild(view);
-			var ac:VertexController = new VertexController(view);
+			var ac:MouseController = new MouseController(view);
 			view.addController(ac, 'move');
 			
 			this.disposables.push(view);
