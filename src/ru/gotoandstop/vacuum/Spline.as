@@ -62,86 +62,64 @@ package ru.gotoandstop.vacuum{
 		
 		public function getCommands():GraphicsPath{
 			var data:GraphicsPath = new GraphicsPath();
-			var vnum:uint = this.vertices.length;
-			if(vnum < 2){
-				//nothing to draw
+			
+			//nothing to draw
+			if(this.vertices.length < 2){
 				return data;
-			}else if(vnum < 3){
-				//draw line
-				return this.getDrawLineData();
-			}else if(vnum < 4){
-				//draw curve
-				return this.getDrawCurveLineData();
 			}
 			
 			var vertices:Vector.<Vertex> = this.vertices.concat();
 			var controls:Vector.<Boolean> = this.controls.concat();
 			
-			var first:Vertex = vertices[0];
-			
 			if(this.closed){
-				vertices.push(first);
+				vertices.push(this.vertices[0]);
 				controls.push(this.controls[0]);
 			}
 			
+			var first:Vertex = vertices.shift();
+			controls.shift();
 			data.moveTo(first.x, first.y);
 			
-			var v1:Vertex;
-			var v2:Vertex;
-			var v3:Vertex;
-			var c1:Boolean;
-			var c2:Boolean;
-			var c3:Boolean;
-			
-			const length:uint = vertices.length;
-			for(var i:uint=1; i<length; i+=3){
-				v1 = vertices[i];
-				c1 = controls[i];
+			var length:uint = vertices.length;
+			for(var i:uint=0; i<length; i++){
+				var draw_cubic_bezier:Boolean = false;
+				var draw_quadrantic_bezier:Boolean = false;
 				
-				v2 = vertices[i+1];
-				c2 = controls[i+1];
+				var v1:Vertex = vertices[i];
+				var c1:Boolean = controls[i];
+				var c2:Boolean;
 				
-				v3 = vertices[i+2];
-				c3 = controls[i+2];
+				//можно нарисовать куад-безье
+				if(length-i > 2){
+					c2 = controls[i+1];
+					
+					//в правилах указано нарисовать куад-безье
+					if(c1 && c2){
+						draw_cubic_bezier = true;
+					}
+				}
 				
-				if(c1 && c2){
-					data.cubicCurveTo(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
-//					i += 2;
-				}else if(c1){
-					data.curveTo(v1.x, v1.y, v2.x, v2.x);
-//					i++;
-				}else if(!c2){
-					data.lineTo(v1.x, v1.y);
+				draw_quadrantic_bezier = length-i > 1 && c1;
+				
+				// нарисуется кривая
+				if(draw_cubic_bezier || draw_quadrantic_bezier){
+					var v2:Vertex = vertices[i+1];
+					if(draw_cubic_bezier){
+						var c3:Boolean = controls[i+2];
+						var v3:Vertex = vertices[i+2];
+						if(!c3) data.cubicCurveTo(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
+						i += 1;
+					}else if(draw_quadrantic_bezier){
+						c2 = controls[i+1];
+						if(!c2) data.curveTo(v1.x, v1.y, v2.x, v2.y);
+					}
+				}
+				
+				// нарисуется линия
+				else{
+					if(!c1) data.lineTo(v1.x, v1.y);	
 				}
 			}
-			
-			trace(i)
-			
-//			const last:uint = vertices.length - 1;
-//			v3 = vertices[last];
-//			c3 = controls[last];
-//			
-//			v2 = vertices[last-1];
-//			c2 = controls[last-1];
-//			
-//			v1 = vertices[last-2];
-//			c1 = controls[last-2];
-//			
-//			if(c1 && c2){
-//				data.cubicCurveTo(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
-//				i += 2;
-//			}else if(c1){
-//				data.curveTo(v1.x, v1.y, v2.x, v2.x);
-//				i++;
-//			}else if(!c2){
-//				data.lineTo(v1.x, v1.y);
-//			}
-			
-//			if(this.closed){
-//				commands.push(this.controls[cmd ? 6 : 2]);
-//				coords.push(first.x);
-//				coords.push(first.y);
-//			}
 			
 			return data;
 		}
