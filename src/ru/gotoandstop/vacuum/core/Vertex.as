@@ -10,7 +10,7 @@ package ru.gotoandstop.vacuum.core{
 	 * Creation date: May 1, 2011 (1:28:18 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class Vertex extends EventDispatcher{
+	public class Vertex extends EventDispatcher implements IVertex{
 		private var _x:Number;
 		public function get x():Number{
 			return this._x;
@@ -47,6 +47,10 @@ package ru.gotoandstop.vacuum.core{
 			this.x = x;
 			this.y = y;
 			this.unlock();
+		}
+		
+		public function getCoord():Point{
+			return new Point(this.x, this.y);
 		}
 		
 		public function lock():void{
