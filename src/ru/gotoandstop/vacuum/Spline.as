@@ -19,7 +19,16 @@ package ru.gotoandstop.vacuum{
 		private var vertices:Vector.<Vertex>;
 		private var controls:Vector.<Boolean>;
 		
-		public var closed:Boolean;
+		private var _closed:Boolean;
+		public function get closed():Boolean{
+			return this._closed;
+		}
+		public function set closed(value:Boolean):void{
+			this._closed = value;
+			this.changed = true;
+			this.update();
+		}
+		
 		private var changed:Boolean;
 		
 		public function Spline(){
