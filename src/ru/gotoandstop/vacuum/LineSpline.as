@@ -1,4 +1,5 @@
 package ru.gotoandstop.vacuum{
+	import ru.gotoandstop.vacuum.core.Vertex;
 	
 	/**
 	 *
@@ -8,8 +9,8 @@ package ru.gotoandstop.vacuum{
 	public class LineSpline extends Spline{
 		public function LineSpline(x1:Number, y1:Number, x2:Number, y2:Number){
 			super();
-			super.addVertexXY(x1, y1);
-			super.addVertexXY(x2, y2);
+			super.addVertex(new Vertex(x1, y1));
+			super.addVertex(new Vertex(x2, y2));
 		}
 	}
 }

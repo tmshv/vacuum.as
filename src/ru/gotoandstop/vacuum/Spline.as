@@ -5,7 +5,7 @@ package ru.gotoandstop.vacuum{
 	import flash.geom.Point;
 	
 	import ru.gotoandstop.mvc.BaseModel;
-	import ru.gotoandstop.vacuum.core.Vertex;
+	import ru.gotoandstop.vacuum.core.IVertex;
 	
 	[Event(name="change", type="flash.events.Event")]
 	
@@ -15,7 +15,7 @@ package ru.gotoandstop.vacuum{
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
 	public class Spline extends BaseModel{
-		private var vertices:Vector.<Vertex>;
+		private var vertices:Vector.<IVertex>;
 		private var controls:Vector.<Boolean>;
 		
 		private var _closed:Boolean;
@@ -31,17 +31,17 @@ package ru.gotoandstop.vacuum{
 		private var changed:Boolean;
 		
 		public function Spline(){
-			this.vertices = new Vector.<Vertex>();
+			this.vertices = new Vector.<IVertex>();
 			this.controls = new Vector.<Boolean>();
 		}
 		
 		public override function dispose():void{
-			for each(var v:Vertex in this.vertices){
+			for each(var v:IVertex in this.vertices){
 				v.removeEventListener(Event.CHANGE, this.handleVertexChanged);
 			}
 		}
 		
-		public function addVertex(vertex:Vertex, asControl:Boolean=false):void{
+		public function addVertex(vertex:IVertex, asControl:Boolean=false):void{
 			this.vertices.push(vertex);
 			this.controls.push(asControl);
 			
@@ -51,9 +51,9 @@ package ru.gotoandstop.vacuum{
 			this.update();
 		}
 		
-		public function addVertexXY(x:Number, y:Number):void{
-			this.addVertex(new Vertex(x, y));
-		}
+//		public function addVertexXY(x:Number, y:Number):void{
+//			this.addVertex(new Vertex(x, y));
+//		}
 		
 		/**
 		 * Устаревший метод, будет заменен методом getCommands 
@@ -62,7 +62,7 @@ package ru.gotoandstop.vacuum{
 		 */
 		public function getInstructions():Vector.<Point>{
 			var result:Vector.<Point> = new Vector.<Point>();
-			for each(var v:Vertex in this.vertices){
+			for each(var v:IVertex in this.vertices){
 				result.push(new Point(v.x, v.y));
 			}
 			return result;
@@ -76,7 +76,7 @@ package ru.gotoandstop.vacuum{
 				return data;
 			}
 			
-			var vertices:Vector.<Vertex> = this.vertices.concat();
+			var vertices:Vector.<IVertex> = this.vertices.concat();
 			var controls:Vector.<Boolean> = this.controls.concat();
 			
 			if(this.closed){
@@ -84,7 +84,7 @@ package ru.gotoandstop.vacuum{
 				controls.push(this.controls[0]);
 			}
 			
-			var first:Vertex = vertices.shift();
+			var first:IVertex = vertices.shift();
 			controls.shift();
 			data.moveTo(first.x, first.y);
 			
@@ -93,7 +93,7 @@ package ru.gotoandstop.vacuum{
 				var draw_cubic_bezier:Boolean = false;
 				var draw_quadrantic_bezier:Boolean = false;
 				
-				var v1:Vertex = vertices[i];
+				var v1:IVertex = vertices[i];
 				var c1:Boolean = controls[i];
 				var c2:Boolean;
 				
@@ -111,10 +111,10 @@ package ru.gotoandstop.vacuum{
 				
 				// нарисуется кривая
 				if(draw_cubic_bezier || draw_quadrantic_bezier){
-					var v2:Vertex = vertices[i+1];
+					var v2:IVertex = vertices[i+1];
 					if(draw_cubic_bezier){
 						var c3:Boolean = controls[i+2];
-						var v3:Vertex = vertices[i+2];
+						var v3:IVertex = vertices[i+2];
 						if(!c3) data.cubicCurveTo(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
 						i += 1;
 					}else if(draw_quadrantic_bezier){
@@ -133,8 +133,8 @@ package ru.gotoandstop.vacuum{
 		}
 		
 		private function getDrawLineData():GraphicsPath{
-			var first:Vertex = this.vertices[0];
-			var second:Vertex = this.vertices[1];
+			var first:IVertex = this.vertices[0];
+			var second:IVertex = this.vertices[1];
 			
 			var data:GraphicsPath = new GraphicsPath();
 			data.moveTo(first.x, first.y);
@@ -144,9 +144,9 @@ package ru.gotoandstop.vacuum{
 		}
 		
 		private function getDrawCurveLineData():GraphicsPath{
-			var first:Vertex = this.vertices[0];
-			var second:Vertex = this.vertices[1];
-			var third:Vertex = this.vertices[2];
+			var first:IVertex = this.vertices[0];
+			var second:IVertex = this.vertices[1];
+			var third:IVertex = this.vertices[2];
 			
 			var data:GraphicsPath = new GraphicsPath();
 			data.moveTo(first.x, first.y);
@@ -155,7 +155,7 @@ package ru.gotoandstop.vacuum{
 			return data;
 		}
 		
-		private function drawCubicCurve(path:GraphicsPath, c1:Vertex, c2:Vertex, a:Vertex):void{
+		private function drawCubicCurve(path:GraphicsPath, c1:IVertex, c2:IVertex, a:IVertex):void{
 			path.cubicCurveTo(c1.x, c1.y, c2.x, c2.y, a.x, a.y);
 		}
 		
@@ -163,8 +163,8 @@ package ru.gotoandstop.vacuum{
 			var list:Vector.<Line> = new Vector.<Line>();
 			const length:uint = this.vertices.length - 1;
 			for(var i:uint; i<length; i++){
-				var v1:Vertex = this.vertices[i];
-				var v2:Vertex = this.vertices[i+1];
+				var v1:IVertex = this.vertices[i];
+				var v2:IVertex = this.vertices[i+1];
 				list.push(new Line(v1, v2));
 			}
 			if(this.closed){

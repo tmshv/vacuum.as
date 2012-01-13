@@ -1,5 +1,5 @@
 package ru.gotoandstop.vacuum{
-	import ru.gotoandstop.vacuum.core.Vertex;
+	import ru.gotoandstop.vacuum.core.IVertex;
 	
 	/**
 	 *
@@ -7,10 +7,10 @@ package ru.gotoandstop.vacuum{
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
 	public class Line{
-		public var first:Vertex;
-		public var second:Vertex;
+		public var first:IVertex;
+		public var second:IVertex;
 		
-		public function Line(first:Vertex, second:Vertex){
+		public function Line(first:IVertex, second:IVertex){
 			this.first = first;
 			this.second = second;
 		}
