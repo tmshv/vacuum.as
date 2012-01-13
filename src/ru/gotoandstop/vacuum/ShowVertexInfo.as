@@ -1,5 +1,4 @@
 package ru.gotoandstop.vacuum{
-	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -8,27 +7,26 @@ package ru.gotoandstop.vacuum{
 	
 	import ru.gotoandstop.vacuum.view.VertexView;
 	
-	
 	/**
 	 *
-	 * Creation date: May 2, 2011 (12:17:50 PM)
+	 * creation date: Nov 25, 2011
 	 * @author Roman Timashev (roman@tmshv.ru)
-	 */
-	public class ShowCoordWidget extends EventDispatcher{
+	 **/
+	public class ShowVertexInfo extends EventDispatcher{
 		private var text:Text;
 		private var dot:VertexView;
-		
+		private var info:String;
 		private var over:Boolean;
 		
-		public function ShowCoordWidget(container:DisplayObjectContainer, dot:VertexView){
+		public function ShowVertexInfo(container:DisplayObjectContainer, dot:VertexView, info:String){
 			super();
 			this.dot = dot;
 			this.dot.vertex.addEventListener(Event.CHANGE, this.handleVertexChanged);
 			this.dot.addEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
 			this.dot.addEventListener(MouseEvent.MOUSE_OUT, this.handleMouseOut);
 			this.dot.addEventListener(Event.REMOVED_FROM_STAGE, this.handleRemovedFromStage);
-//			this.dot.active.addEventListener(Event.CHANGE, this.handleDotActivityChanged);
-			
+			//			this.dot.active.addEventListener(Event.CHANGE, this.handleDotActivityChanged);
+			this.info = info;
 			this.text = new Text();
 			this.text.visible = false;
 			container.addChild(this.text);
@@ -41,7 +39,7 @@ package ru.gotoandstop.vacuum{
 			this.dot.removeEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
 			this.dot.removeEventListener(MouseEvent.MOUSE_OUT, this.handleMouseOut);
 			this.dot.removeEventListener(Event.REMOVED_FROM_STAGE, this.handleRemovedFromStage);
-//			this.dot.active.removeEventListener(Event.CHANGE, this.handleDotActivityChanged);
+			//			this.dot.active.removeEventListener(Event.CHANGE, this.handleDotActivityChanged);
 		}
 		
 		private function handleMouseOver(event:MouseEvent):void{
@@ -51,7 +49,8 @@ package ru.gotoandstop.vacuum{
 		
 		private function handleMouseOut(event:MouseEvent):void{
 			this.over = false;
-//			this.text.visible = this.dot.active.value;
+			this.text.visible = false;
+			//			this.text.visible = this.dot.active.value;
 		}
 		
 		private function handleVertexChanged(event:Event):void{
@@ -59,19 +58,13 @@ package ru.gotoandstop.vacuum{
 		}
 		
 		private function handleDotActivityChanged(event:Event):void{
-//			this.text.visible = this.dot.active.value || this.over;
+			//			this.text.visible = this.dot.active.value || this.over;
 		}
 		
 		private function update():void{
 			this.text.x = this.dot.x;
 			this.text.y = this.dot.y;
-			
-			var message:String = 'x:<x>' +
-				'\n' +
-				'y:<y>';
-			message = message.replace(/<x>/, this.dot.vertex.x);
-			message = message.replace(/<y>/, this.dot.vertex.y);
-			this.text.text = message;
+			this.text.text = info;
 		}
 	}
 }

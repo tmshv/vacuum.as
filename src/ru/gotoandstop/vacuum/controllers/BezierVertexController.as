@@ -61,8 +61,10 @@ package ru.gotoandstop.vacuum.controllers{
 			
 			angle += Math.PI;
 			
-			vertex.x = this.spin.x - Math.cos(angle) * dist;
-			vertex.y = this.spin.y - Math.sin(angle) * dist;
+			vertex.setCoord(
+				this.spin.x - Math.cos(angle) * dist,
+				this.spin.y - Math.sin(angle) * dist
+			);
 		}
 	}
 }
