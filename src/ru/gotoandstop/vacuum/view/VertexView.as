@@ -93,7 +93,7 @@ package ru.gotoandstop.vacuum.view{
 			this.vertex.setCoord(x, y);
 		}
 		
-		public function getCoord():Point{
+		public function getCoord(params:Object=null):Point{
 			return new Point(this.x, this.y);
 		}
 		

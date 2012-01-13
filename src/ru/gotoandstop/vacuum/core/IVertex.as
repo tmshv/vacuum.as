@@ -12,6 +12,6 @@ package ru.gotoandstop.vacuum.core{
 		function get y():Number;
 		function set y(value:Number):void;
 		function setCoord(x:Number, y:Number):void;
-		function getCoord():Point;
+		function getCoord(params:Object=null):Point;
 	}
 }
