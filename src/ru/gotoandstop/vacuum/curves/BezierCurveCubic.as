@@ -1,6 +1,8 @@
 package ru.gotoandstop.vacuum.curves{
 	import flash.display.Graphics;
 	import flash.events.Event;
+	
+	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.vacuum.ICanvas;
 	import ru.gotoandstop.vacuum.core.IVertex;
 	
@@ -11,7 +13,7 @@ package ru.gotoandstop.vacuum.curves{
 	 * Creation date: May 2, 2011 (12:06:04 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class BezierCurveCubic{
+	public class BezierCurveCubic implements IDisposable{
 		private var v1:IVertex;
 		private var v2:IVertex;
 		private var v3:IVertex;
@@ -32,6 +34,13 @@ package ru.gotoandstop.vacuum.curves{
 			
 			this.canvas = canvas;
 			this.draw();
+		}
+		
+		public function dispose():void{
+			this.v1.removeEventListener(Event.CHANGE, this.handleVertexChange);
+			this.v2.removeEventListener(Event.CHANGE, this.handleVertexChange);
+			this.v3.removeEventListener(Event.CHANGE, this.handleVertexChange);
+			this.v4.removeEventListener(Event.CHANGE, this.handleVertexChange);
 		}
 		
 		private function handleVertexChange(event:Event):void{
