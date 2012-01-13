@@ -6,6 +6,7 @@ package ru.gotoandstop.vacuum.view{
 	
 	import ru.gotoandstop.vacuum.Layout;
 	import ru.gotoandstop.vacuum.core.IDisposable;
+	import ru.gotoandstop.vacuum.core.IVertex;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	import ru.gotoandstop.values.BooleanValue;
 	
@@ -16,7 +17,7 @@ package ru.gotoandstop.vacuum.view{
 	 * Creation date: Jun 2, 2011 (1:33:42 PM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class VertexView extends Sprite implements IDisposable{
+	public class VertexView extends Sprite implements IDisposable, IVertex{
 		public static function screenToLayout(view:VertexView, x:Number, y:Number):Point{
 			return new Point(
 				(x - view.layout.center.x) / view.layout.scale.value,
@@ -86,6 +87,14 @@ package ru.gotoandstop.vacuum.view{
 			//super.removeEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
 			//super.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
 			super.removeEventListener(Event.REMOVED_FROM_STAGE, this.handleRemovedFromStage);
+		}
+		
+		public function setCoord(x:Number, y:Number):void{
+			this.vertex.setCoord(x, y);
+		}
+		
+		public function getCoord():Point{
+			return new Point(this.x, this.y);
 		}
 		
 		public function setIcon(icon:VertexIcon):void{
