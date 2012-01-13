@@ -5,6 +5,7 @@ package ru.gotoandstop.vacuum.controllers{
 	import flash.geom.Point;
 	
 	import ru.gotoandstop.math.Calculate;
+	import ru.gotoandstop.vacuum.core.IVertex;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	import ru.gotoandstop.vacuum.view.VertexView;
 	
@@ -49,7 +50,7 @@ package ru.gotoandstop.vacuum.controllers{
 		 * @param relative
 		 * 
 		 */
-		private function locate(vertex:Vertex, relative:Vertex):void{
+		private function locate(vertex:IVertex, relative:IVertex):void{
 			var angle:Number = Calculate.angle(
 				new Point(relative.x, relative.y),
 				new Point(this.spin.x, this.spin.y)

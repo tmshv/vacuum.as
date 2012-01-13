@@ -5,6 +5,7 @@ package ru.gotoandstop.vacuum.controllers{
 	import flash.geom.Point;
 	
 	import ru.gotoandstop.IDisposable;
+	import ru.gotoandstop.vacuum.core.IVertex;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	
 	
@@ -15,7 +16,7 @@ package ru.gotoandstop.vacuum.controllers{
 	 */
 	public class ParentVertexController extends EventDispatcher implements IDisposable{
 		private var children:Vector.<Vertex>;
-		private var parent:Vertex;
+		private var parent:IVertex;
 		
 		private var lastPosition:Point;
 		
@@ -29,7 +30,7 @@ package ru.gotoandstop.vacuum.controllers{
 			this.parent.removeEventListener(Event.CHANGE, this.handleParentChanged);
 		}
 		
-		public function add(vertex:Vertex, makeParent:Boolean=false):void{
+		public function add(vertex:IVertex, makeParent:Boolean=false):void{
 			this.children.push(vertex);
 			if(makeParent){
 				if(this.parent) this.clearParent(this.parent);
@@ -50,11 +51,11 @@ package ru.gotoandstop.vacuum.controllers{
 			this.lastPosition.y = this.parent.y;
 		}
 		
-		private function clearParent(vertex:Vertex):void{
+		private function clearParent(vertex:IVertex):void{
 			vertex.removeEventListener(Event.CHANGE, this.handleParentChanged);
 		}
 		
-		public function makeParent(vertex:Vertex):void{
+		public function makeParent(vertex:IVertex):void{
 			this.parent = vertex;
 			this.parent.addEventListener(Event.CHANGE, this.handleParentChanged);
 			this.lastPosition = new Point(this.parent.x, this.parent.y);

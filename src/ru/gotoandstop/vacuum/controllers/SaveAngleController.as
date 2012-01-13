@@ -4,6 +4,7 @@ package ru.gotoandstop.vacuum.controllers{
 	
 	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.math.Calculate;
+	import ru.gotoandstop.vacuum.core.IVertex;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	import ru.gotoandstop.vacuum.view.VertexView;
 
@@ -16,11 +17,11 @@ package ru.gotoandstop.vacuum.controllers{
 		private var prevValue:Number;
 		
 		private var dot:VertexView;
-		private var relative:Vertex;
+		private var relative:IVertex;
 		
 		private var dependecies:Vector.<Vertex>;
 		
-		public function SaveAngleController(vertex:VertexView, relative:Vertex){
+		public function SaveAngleController(vertex:VertexView, relative:IVertex){
 			this.dependecies = new Vector.<Vertex>();
 			
 			this.dot = vertex;
@@ -39,7 +40,7 @@ package ru.gotoandstop.vacuum.controllers{
 			this.relative = null;
 		}
 		
-		public function addDependencyVertex(vertex:Vertex):void{
+		public function addDependencyVertex(vertex:IVertex):void{
 			this.dependecies.push(vertex);
 		}
 		

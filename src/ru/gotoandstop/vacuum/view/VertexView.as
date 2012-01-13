@@ -7,7 +7,6 @@ package ru.gotoandstop.vacuum.view{
 	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.vacuum.Layout;
 	import ru.gotoandstop.vacuum.core.IVertex;
-	import ru.gotoandstop.vacuum.core.Vertex;
 	import ru.gotoandstop.values.BooleanValue;
 	
 	[Event(name="change", type="flash.events.Event")]
@@ -35,13 +34,13 @@ package ru.gotoandstop.vacuum.view{
 			return this._active;
 		}
 		
-		private var _vertex:Vertex;
+		private var _vertex:IVertex;
 		/**
 		 * модель данных для отрисовки 
 		 * @return 
 		 * 
 		 */
-		public function get vertex():Vertex{
+		public function get vertex():IVertex{
 			return this._vertex;
 		}
 		
@@ -57,7 +56,7 @@ package ru.gotoandstop.vacuum.view{
 		
 		private var layout:Layout;
 		
-		public function VertexView(vertex:Vertex, layout:Layout, icon:VertexIcon=null){
+		public function VertexView(vertex:IVertex, layout:Layout, icon:VertexIcon=null){
 			super();
 			this._active = new BooleanValue();
 			
@@ -74,6 +73,10 @@ package ru.gotoandstop.vacuum.view{
 //			super.addEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
 //			super.addEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
 //			super.addEventListener(Event.REMOVED_FROM_STAGE, this.handleRemovedFromStage);
+		}
+		
+		public function update():void{
+			super.dispatchEvent(new Event(Event.CHANGE));
 		}
 		
 		public function dispose():void{
@@ -100,6 +103,10 @@ package ru.gotoandstop.vacuum.view{
 					return super.localToGlobal(l_to_g);
 				}
 			}
+			return new Point(this.x, this.y);
+		}
+		
+		public function toPoint():Point{
 			return new Point(this.x, this.y);
 		}
 		
@@ -138,7 +145,7 @@ package ru.gotoandstop.vacuum.view{
 		 * @param vertex
 		 * 
 		 */
-		private function configure(vertex:Vertex):void{
+		private function configure(vertex:IVertex):void{
 			//if(!this.active.value){
 				super.x = this.layout.center.x + vertex.x*this.layout.scale.value;
 				super.y = this.layout.center.y + vertex.y*this.layout.scale.value;
@@ -156,8 +163,9 @@ package ru.gotoandstop.vacuum.view{
 //		}
 		
 		private function handleVertexChange(event:Event):void{
-			const vertex:Vertex = event.target as Vertex;
+			const vertex:IVertex = event.target as IVertex;
 			this.configure(vertex);
+			super.dispatchEvent(event);
 		}
 		
 		private function handleLayoutChange(event:Event):void{
