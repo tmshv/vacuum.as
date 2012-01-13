@@ -1,5 +1,5 @@
 package ru.gotoandstop.vacuum.controllers{
-	import ru.gotoandstop.vacuum.core.IDisposable;
+	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.vacuum.view.VertexView;
 
 	/**

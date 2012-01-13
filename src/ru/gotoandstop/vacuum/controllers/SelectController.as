@@ -2,8 +2,8 @@ package ru.gotoandstop.vacuum.controllers{
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
+	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.vacuum.ISelectable;
-	import ru.gotoandstop.vacuum.core.IDisposable;
 	
 	/**
 	 *

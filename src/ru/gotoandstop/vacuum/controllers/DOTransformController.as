@@ -9,11 +9,11 @@ package ru.gotoandstop.vacuum.controllers{
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.math.Calculate;
 	import ru.gotoandstop.vacuum.Layout;
 	import ru.gotoandstop.vacuum.Spline;
 	import ru.gotoandstop.vacuum.SplineView;
-	import ru.gotoandstop.vacuum.core.IDisposable;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	import ru.gotoandstop.vacuum.view.RectIcon;
 	import ru.gotoandstop.vacuum.view.VertexView;

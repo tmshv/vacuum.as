@@ -5,7 +5,6 @@ package ru.gotoandstop.vacuum{
 	import flash.geom.Point;
 	
 	import ru.gotoandstop.mvc.BaseModel;
-	import ru.gotoandstop.vacuum.core.IDisposable;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	
 	[Event(name="change", type="flash.events.Event")]

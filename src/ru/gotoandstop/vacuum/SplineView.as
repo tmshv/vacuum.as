@@ -6,9 +6,7 @@ package ru.gotoandstop.vacuum{
 	
 	import ru.gotoandstop.mvc.BaseView;
 	import ru.gotoandstop.mvc.IModel;
-	import ru.gotoandstop.vacuum.core.IDisposable;
-	
-	
+		
 	/**
 	 *
 	 * Creation date: May 1, 2011 (2:01:47 AM)

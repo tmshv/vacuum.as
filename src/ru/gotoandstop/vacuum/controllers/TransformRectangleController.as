@@ -6,8 +6,8 @@ package ru.gotoandstop.vacuum.controllers{
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
+	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.math.Calculate;
-	import ru.gotoandstop.vacuum.core.IDisposable;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	import ru.gotoandstop.vacuum.view.VertexView;
 	

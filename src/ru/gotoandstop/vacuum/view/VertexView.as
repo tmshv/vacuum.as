@@ -4,8 +4,8 @@ package ru.gotoandstop.vacuum.view{
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.vacuum.Layout;
-	import ru.gotoandstop.vacuum.core.IDisposable;
 	import ru.gotoandstop.vacuum.core.IVertex;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	import ru.gotoandstop.values.BooleanValue;

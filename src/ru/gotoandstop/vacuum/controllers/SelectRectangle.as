@@ -4,7 +4,6 @@ package ru.gotoandstop.vacuum.controllers{
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
-	import ru.gotoandstop.vacuum.core.IDisposable;
 	import ru.gotoandstop.vacuum.splines.RectSpline;
 	
 	

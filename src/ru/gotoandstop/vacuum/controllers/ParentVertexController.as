@@ -4,7 +4,7 @@ package ru.gotoandstop.vacuum.controllers{
 	import flash.events.IEventDispatcher;
 	import flash.geom.Point;
 	
-	import ru.gotoandstop.vacuum.core.IDisposable;
+	import ru.gotoandstop.IDisposable;
 	import ru.gotoandstop.vacuum.core.Vertex;
 	
 	
