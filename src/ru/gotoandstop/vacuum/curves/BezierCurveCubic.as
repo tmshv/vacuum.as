@@ -2,7 +2,7 @@ package ru.gotoandstop.vacuum.curves{
 	import flash.display.Graphics;
 	import flash.events.Event;
 	import ru.gotoandstop.vacuum.ICanvas;
-	import ru.gotoandstop.vacuum.core.Vertex;
+	import ru.gotoandstop.vacuum.core.IVertex;
 	
 	/**
 	 * B(t) = (1-t)^3*P0 + 3t(1-t)^2*P1 + 3t^2*(1-t)*P2 + t^3*P3;
@@ -12,14 +12,14 @@ package ru.gotoandstop.vacuum.curves{
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
 	public class BezierCurveCubic{
-		private var v1:Vertex;
-		private var v2:Vertex;
-		private var v3:Vertex;
-		private var v4:Vertex;
+		private var v1:IVertex;
+		private var v2:IVertex;
+		private var v3:IVertex;
+		private var v4:IVertex;
 		
 		private var canvas:ICanvas;
 		
-		public function BezierCurveCubic(v1:Vertex, v2:Vertex, v3:Vertex, v4:Vertex, canvas:ICanvas){
+		public function BezierCurveCubic(v1:IVertex, v2:IVertex, v3:IVertex, v4:IVertex, canvas:ICanvas){
 			this.v1 = v1;
 			this.v2 = v2;
 			this.v3 = v3;
