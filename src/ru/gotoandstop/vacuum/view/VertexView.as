@@ -94,6 +94,12 @@ package ru.gotoandstop.vacuum.view{
 		}
 		
 		public function getCoord(params:Object=null):Point{
+			if(params){
+				var l_to_g:Point = params.localToGlobal;
+				if(l_to_g){
+					return super.localToGlobal(l_to_g);
+				}
+			}
 			return new Point(this.x, this.y);
 		}
 		
