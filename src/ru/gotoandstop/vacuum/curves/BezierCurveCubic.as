@@ -45,6 +45,7 @@ package ru.gotoandstop.vacuum.curves{
 			this.v2 = null;
 			this.v3 = null;
 			this.v4 = null;
+			this.canvas = null;
 		}
 		
 		private function handleVertexChange(event:Event):void{
