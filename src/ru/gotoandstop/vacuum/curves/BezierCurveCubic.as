@@ -41,6 +41,10 @@ package ru.gotoandstop.vacuum.curves{
 			this.v2.removeEventListener(Event.CHANGE, this.handleVertexChange);
 			this.v3.removeEventListener(Event.CHANGE, this.handleVertexChange);
 			this.v4.removeEventListener(Event.CHANGE, this.handleVertexChange);
+			this.v1 = null;
+			this.v2 = null;
+			this.v3 = null;
+			this.v4 = null;
 		}
 		
 		private function handleVertexChange(event:Event):void{
