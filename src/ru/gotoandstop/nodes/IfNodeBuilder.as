@@ -1,6 +1,8 @@
 package ru.gotoandstop.nodes{
 import flash.display.DisplayObjectContainer;
 
+import ru.gotoandstop.nodes.VacuumLayout;
+
 /**
 	 *
 	 * creation date: Jan 27, 2012

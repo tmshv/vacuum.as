@@ -173,7 +173,6 @@ public class NodeSystem extends Sprite {
 	public function loadBytes(bytes:ByteArray):void {
 		bytes.position = 0;
 		var obj:Object = bytes.readObject();
-		storage['sysbytes'] = obj;
 		Cc.log(obj);
 		var nodes:Array = obj.nodes;
 		var coords:Array = obj.coords;
@@ -213,7 +212,7 @@ public class NodeSystem extends Sprite {
 			links.push({from:[conection.from.node.name, conection.from.property], to:[conection.to.node.name, conection.to.property]});
 		}
 
-		var obj:Object = {nodes:nodes, links:links, coords:coords, version:'1'}; // TODO: need to store cusom node view only info (i.e, node model - number, node view - range of numbers
+		var obj:Object = {nodes:nodes, links:links, coords:coords, version:'peter'}; // TODO: need to store cusom node view only info (i.e, node model - number, node view - range of numbers
 		var bytes:ByteArray = new ByteArray();
 		bytes.writeObject(obj);
 
