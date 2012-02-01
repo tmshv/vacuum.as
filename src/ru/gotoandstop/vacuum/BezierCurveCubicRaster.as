@@ -10,7 +10,7 @@ package ru.gotoandstop.vacuum{
 	 */
 	public class BezierCurveCubicRaster implements ICanvas{
 		private var canvas:Raster;
-		
+
 		public function BezierCurveCubicRaster(canvas:Raster){
 			this.canvas = canvas;
 		}

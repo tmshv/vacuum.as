@@ -1,6 +1,5 @@
 package ru.gotoandstop.vacuum.curves{
 	import flash.events.Event;
-	import flash.geom.Bezier;
 	import flash.geom.Point;
 	
 	import ru.gotoandstop.vacuum.core.Vertex;

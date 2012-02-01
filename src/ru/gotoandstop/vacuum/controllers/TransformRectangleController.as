@@ -37,8 +37,8 @@ package ru.gotoandstop.vacuum.controllers{
 		
 		private var viewsByVertex:Dictionary;
 		
-//		public var width:uint;
-//		public var height:uint;
+		public var width:uint;
+		public var height:uint;
 		public var scaleX:Number;
 		public var scaleY:Number;
 		public var rotation:Number;
