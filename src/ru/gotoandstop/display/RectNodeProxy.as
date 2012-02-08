@@ -2,7 +2,7 @@ package ru.gotoandstop.display
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import ru.gotoandstop.nodes.INode;
+	import ru.gotoandstop.nodes.datatypes.INode;
 	import ru.gotoandstop.values.IValue;
 	import ru.gotoandstop.values.NumberValue;
 	
@@ -36,15 +36,16 @@ package ru.gotoandstop.display
 		private function getValue(key:String):Number
 		{
 			
-			var value:NumberValue = this.node.getValue(key) as NumberValue;
-			if (value)
-			{
-				return value.value;
-			}
-			else
-			{
-				return 0;
-			}
+//			var value:NumberValue = this.node.getValue(key) as NumberValue;
+//			if (value)
+//			{
+//				return value.value;
+//			}
+//			else
+//			{
+//				return 0;
+//			}
+			return 0;
 		}
 	
 	}

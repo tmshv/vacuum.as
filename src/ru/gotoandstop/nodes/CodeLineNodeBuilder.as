@@ -2,6 +2,8 @@ package ru.gotoandstop.nodes
 {
 import flash.display.DisplayObjectContainer;
 
+import ru.gotoandstop.nodes.datatypes.INode;
+
 /**
 	 * ...
 	 * @author Roman Timashev

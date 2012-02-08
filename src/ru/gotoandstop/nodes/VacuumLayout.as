@@ -106,7 +106,6 @@ public class VacuumLayout extends EventDispatcher {
 	}
 
 	public function deletePoint(point:PortPoint):void {
-		trace('delete', point, point.property, point.node.name)
 		const layer:Sprite = this.layers['activepoints'];
 		layer.removeChild(point);
 		super.dispatchEvent(new VacuumEvent(VacuumEvent.REMOVED_VERTEX, false, false, point));

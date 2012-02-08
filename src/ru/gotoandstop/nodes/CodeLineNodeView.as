@@ -5,6 +5,8 @@ import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormat;
 
+import ru.gotoandstop.nodes.datatypes.INode;
+
 /**
 	 * ...
 	 * @author Roman Timashev
@@ -16,7 +18,7 @@ import flash.text.TextFormat;
 		public function CodeLineNodeView(model:INode, code:String, vacuum:VacuumLayout, vo:NodeVO)
 		{
 			super(vacuum, vo);
-			super.model = model;
+			super._model = model;
 			
 			var props:Vector.<String> = model.getParams();
 			var x:Number = 0;

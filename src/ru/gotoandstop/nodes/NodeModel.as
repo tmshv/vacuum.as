@@ -1,5 +1,6 @@
 package ru.gotoandstop.nodes{
 import ru.gotoandstop.mvc.BaseModel;
+import ru.gotoandstop.nodes.datatypes.INode;
 
 /**
 	 * @author tmshv
@@ -19,11 +20,11 @@ import ru.gotoandstop.mvc.BaseModel;
 			return 'base';
 		}
 
-		public function getValue(key:String):*{
+		public function getKeyValue(key:String):*{
 			return this[key];
 		}
 
-		public function setValue(key:String, value:*):void{
+		public function setKeyValue(key:String, value:*):void{
 			this[key] = value;
 		}
 

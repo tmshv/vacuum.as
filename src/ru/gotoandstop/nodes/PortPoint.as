@@ -1,5 +1,6 @@
 package ru.gotoandstop.nodes {
 import ru.gotoandstop.IDirectionalVertex;
+import ru.gotoandstop.nodes.datatypes.INode;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.view.RectIcon;
@@ -10,7 +11,7 @@ import ru.gotoandstop.vacuum.view.VertexView;
  * @author tmshv
  */
 public class PortPoint extends VertexView implements IDirectionalVertex {
-	public var node:Node;
+	public var node:INode;
 	public var property:String;
 	public var type:String;
 
@@ -23,7 +24,7 @@ public class PortPoint extends VertexView implements IDirectionalVertex {
 		this._direction = value;
 	}
 
-	public function PortPoint(vertex:IVertex, layout:Layout, node:Node, property:String, type:String, direction:String) {
+	public function PortPoint(vertex:IVertex, layout:Layout, node:INode, property:String, type:String, direction:String) {
 		this.property = property;
 		this.type = type;
 		this.direction = direction;
@@ -37,6 +38,14 @@ public class PortPoint extends VertexView implements IDirectionalVertex {
 
 		super(vertex, layout, icon);
 		this.node = node;
+	}
+
+	public function getValue():* {
+		if (node) {
+			return node.getKeyValue(property);
+		} else {
+			return null;
+		}
 	}
 
 	public function get target():IVertex {

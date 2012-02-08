@@ -8,13 +8,11 @@ import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.geom.Point;
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import ru.gotoandstop.command.ICommand;
-
-import ru.gotoandstop.display.DraggableSprite;
+import ru.gotoandstop.nodes.datatypes.INode;
 import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
@@ -23,29 +21,30 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class NodeView extends VertexView implements IVertex {
+public class NodeView extends VertexView implements IVertex, INode {
 	private var dataContainer:DisplayObjectContainer;
 	protected var vacuum:VacuumLayout;
-	protected var vo:NodeVO;
-	protected var model:INode;
+	protected var _model:INode;
+	public function get model():INode {
+		return _model;
+	}
 
 	private var closeButton:PushButton;
 	private var closeButtonTimeout:int;
-	private var closeButtonCommand:ICommand;
 
+	private var closeButtonCommand:ICommand;
 	private var pos:IVertex;
 	private var mover:MouseController;
 
-	public function NodeView(vacuum:VacuumLayout, vo:NodeVO) {
+	private var actives:Object;
+
+	public function NodeView(vacuum:VacuumLayout) {
 		pos = new Vertex();
 		super(pos, vacuum.layout, null);
-
+		mover = new MouseController(this);
+		actives = new Object();
 		this.vacuum = vacuum;
-		this.vo = vo;
-
 		this.dataContainer = new Sprite();
-		this.dataContainer.scaleX = this.vo.clipScale.x;
-		this.dataContainer.scaleY = this.vo.clipScale.y;
 		super.addChild(this.dataContainer);
 
 		closeButton = new PushButton(null, 0, -18, 'X');
@@ -60,13 +59,64 @@ public class NodeView extends VertexView implements IVertex {
 		super.addEventListener(MouseEvent.MOUSE_OUT, this.handleMouseOut);
 	}
 
+	override public function dispose():void {
+		mover.dispose();
+		Tweener.removeTweens(closeButton);
+		clearTimeout(closeButtonTimeout);
+		closeButton.removeEventListener(MouseEvent.CLICK, handleClickClose);
+		dataContainer.removeEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
+		super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+		super.removeEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
+		super.removeEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
+		super.removeEventListener(MouseEvent.MOUSE_OUT, this.handleMouseOut);
+
+		super.dispose();
+	}
+
+	protected function createPoints(markers:Vector.<Object>):void {
+		var scale_x:Number = 1;
+		var scale_y:Number = 1;
+
+		for each(var p:Object in markers) {
+			var prop:String = p.param;
+			var type:String = p.type;
+			var x:Number = p.x * scale_x;
+			var y:Number = p.y * scale_y;
+
+			x /= vacuum.layout.scale.value;
+			y /= vacuum.layout.scale.value;
+
+			addPort(x, y, prop, type, p.dir);
+		}
+	}
+
+	protected function addPort(x:Number, y:Number, property:String, type:String, direction:String):void {
+		var xy:IVertex = new Vertex(x, y);
+		var rel:IVertex = new RelativeVertex(this, xy);
+
+		var point:PortPoint = new PortPoint(rel, vacuum.layout, _model, property, type, direction);
+		vacuum.showPort(point);
+
+		actives[property] = point;
+	}
+
+	public function getPoint(property:String):PortPoint {
+		return actives[property];
+	}
+
+	override public function get name():String {
+		return _model.name;
+	}
+
+	override public function set name(value:String):void {
+		_model.name = value;
+	}
+
 	protected function setDragTarget(target:DisplayObject):void {
 		mover.setTarget(target);
 	}
 
 	private function handleAddedToStage(event:Event):void {
-		mover = new MouseController(this);
-
 		super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
 		super.addEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
 	}
@@ -90,17 +140,6 @@ public class NodeView extends VertexView implements IVertex {
 
 	override public function set y(value:Number):void {
 		pos.y = value;
-	}
-
-	override public function dispose():void {
-		mover.dispose();
-		Tweener.removeTweens(closeButton);
-		clearTimeout(closeButtonTimeout);
-		closeButton.removeEventListener(MouseEvent.CLICK, handleClickClose);
-		dataContainer.removeEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
-		super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-		super.removeEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
-		super.dispose();
 	}
 
 	private function showClose():void {
@@ -135,16 +174,7 @@ public class NodeView extends VertexView implements IVertex {
 	}
 
 	public override function addChild(child:DisplayObject):DisplayObject {
-		return this.dataContainer.addChild(child);
-	}
-
-	public function getPoint(name:String):PortPoint {
-		//			for each (var point:ActivePoint in this.points){
-		//				if (point.name == name){
-		//					return point;
-		//				}
-		//			}
-		return null;
+		return dataContainer.addChild(child);
 	}
 
 	//	protected override function handleMouseMove(event:MouseEvent):void {
@@ -173,6 +203,26 @@ public class NodeView extends VertexView implements IVertex {
 
 	private function handleClickClose(event:Event):void {
 		if (closeButtonCommand) closeButtonCommand.execute();
+	}
+
+	public function get type():String {
+		return model.type;
+	}
+
+	public function set type(value:String):void {
+		model.type = value;
+	}
+
+	public function getKeyValue(key:String):* {
+		return model.getKeyValue(key);
+	}
+
+	public function setKeyValue(key:String, value:*):void {
+		model.setKeyValue(key, value);
+	}
+
+	public function getParams():Vector.<String> {
+		return model.getParams();
 	}
 }
 }

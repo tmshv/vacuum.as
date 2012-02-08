@@ -1,7 +1,7 @@
 package ru.gotoandstop.nodes.commands{
 import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.Node;
-import ru.gotoandstop.nodes.NodeSystem;
+import ru.gotoandstop.nodes.core.NodeSystem;
 
 /**
 	 * @author tmshv
