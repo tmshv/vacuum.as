@@ -38,8 +38,11 @@ package ru.gotoandstop.vacuum.core{
 		}
 		
 		public function Vertex(x:Number=0, y:Number=0){
-			this.x = x;
-			this.y = y;
+			setCoord(x, y);
+		}
+
+		public function clone():IVertex{
+			return new Vertex(x, y);
 		}
 		
 		public function setCoord(x:Number, y:Number):void{
