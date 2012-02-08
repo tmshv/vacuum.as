@@ -2,7 +2,6 @@ package ru.gotoandstop.vacuum.controllers {
 import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.events.EventDispatcher;
-import flash.events.IEventDispatcher;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 
@@ -15,48 +14,57 @@ import ru.gotoandstop.vacuum.view.VertexView;
  * @author Roman Timashev (roman@tmshv.ru)
  */
 public class MouseController extends EventDispatcher implements IDisposable {
-	private var dot:VertexView;
-	private var target:DisplayObject;
+	private var _dot:VertexView;
+	private var _target:DisplayObject;
 	private var _mouseDown:Boolean;
 
 	private var _mouseOffset:Point;
 
 	public function MouseController(dot:VertexView, target:DisplayObject = null) {
 		super();
+		_dot = dot;
 		if (target) {
-			this.target = target;
+			_target = target;
 		} else {
-			this.target = dot;
+			_target = dot;
 		}
+		setTarget(_target);
+	}
 
-		this.dot = dot;
-		this.target.addEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
-		this.target.stage.addEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
-		this.target.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.handleMouseMove);
+	private function handleAddedToStage(event:Event):void {
+		_target.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+		setTarget(_target);
 	}
 
 	public function setTarget(target:DisplayObject):void {
-		this.target.removeEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
-		this.target.stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
-		this.target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.handleMouseMove);
-		this.target = target;
-		this.target.addEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
-		this.target.stage.addEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
-		this.target.stage.addEventListener(MouseEvent.MOUSE_MOVE, this.handleMouseMove);
+		if(_target && _target.stage){
+			_target.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+			_target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+			_target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+		}
+
+		_target = target;
+		if (_target.stage) {
+			_target.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+			_target.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+			_target.stage.addEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+		} else {
+			_target.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+		}
 	}
 
 	public function dispose():void {
-		target.removeEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
-		target.stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
-		target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.handleMouseMove);
-		target = null;
-		dot = null;
+		_target.removeEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
+		_target.stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
+		_target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.handleMouseMove);
+		_target = null;
+		_dot = null;
 	}
 
 	public function startMove():void {
 		this._mouseDown = true;
 		//			this.dot.active.value = true;
-		this._mouseOffset = new Point(-this.dot.mouseX, -this.dot.mouseY);
+		this._mouseOffset = new Point(-this._dot.mouseX, -this._dot.mouseY);
 	}
 
 	public function stopMove():void {
@@ -72,12 +80,12 @@ public class MouseController extends EventDispatcher implements IDisposable {
 	private function handleMouseMove(event:MouseEvent):void {
 		if (this._mouseDown) {
 			var coord:Point = VertexView.screenToLayout(
-			this.dot,
+			this._dot,
 			event.stageX + this._mouseOffset.x,
 			event.stageY + this._mouseOffset.y
 			);
 
-			this.dot.vertex.setCoord(
+			this._dot.vertex.setCoord(
 			coord.x,
 			coord.y
 			);
