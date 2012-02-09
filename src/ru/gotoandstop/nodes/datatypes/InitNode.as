@@ -9,10 +9,10 @@ package ru.gotoandstop.nodes.datatypes {
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
-import ru.gotoandstop.nodes.NodeView;
+import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
 
-public class InitNode extends NodeView{
+public class InitNode extends Node{
 	public function InitNode(model:InitObject, vacuum:VacuumLayout) {
 		super(vacuum);
 		super._model = model;

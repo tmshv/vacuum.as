@@ -2,7 +2,7 @@ package ru.gotoandstop.display
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import ru.gotoandstop.nodes.datatypes.INode;
+	import ru.gotoandstop.nodes.core.INode;
 	import ru.gotoandstop.values.IValue;
 	import ru.gotoandstop.values.NumberValue;
 	

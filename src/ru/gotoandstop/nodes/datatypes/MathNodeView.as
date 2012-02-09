@@ -3,12 +3,14 @@ import ru.gotoandstop.nodes.*;
 
 import com.bit101.components.Text;
 
+import ru.gotoandstop.nodes.core.Node;
+
 /**
 	 *
 	 * creation date: Jan 26, 2012
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 **/
-	public class MathNodeView extends NodeView {
+	public class MathNodeView extends Node {
 		public function MathNodeView(model:MathNode, vacuum:VacuumLayout, vo:NodeVO) {
 			super(vacuum, vo);
 			

@@ -2,6 +2,8 @@ package ru.gotoandstop.nodes.datatypes {
 import flash.events.Event;
 import flash.events.EventDispatcher;
 
+import ru.gotoandstop.nodes.core.INode;
+
 import ru.gotoandstop.nodes.core.NodeEvent;
 import ru.gotoandstop.values.IValue;
 

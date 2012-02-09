@@ -1,28 +1,16 @@
 /**
- * Created by JetBrains Astella.
  * User: tmshv
  * Date: 03.02.12
  * Time: 3:50
  *
  */
 package ru.gotoandstop.nodes.core {
-import ru.gotoandstop.nodes.*;
-
 import flash.events.EventDispatcher;
 
-import ru.gotoandstop.nodes.datatypes.INode;
+[Event(name="change", type="ru.gotoandstop.nodes.core.NodeEvent")]
 
-public class Node2 extends EventDispatcher implements INode{
+public class SimpleNodeObject extends EventDispatcher implements INode{
 	private var _name:String;
-	private var _model:Object;
-
-	public function Node2(model:Object, name:String) {
-		if(!model) throw new Error('model must be not null');
-		if(!name) throw new Error('name must be not null');
-		_model = model;
-		_name = name;
-	}
-
 	public function get name():String {
 		return _name;
 	}
@@ -32,8 +20,19 @@ public class Node2 extends EventDispatcher implements INode{
 		notifyAbout('name', _name);
 	}
 
+	private var _type:String;
 	public function get type():String {
-		return "";
+		return _type;
+	}
+	public function set type(value:String):void{
+		_type = value;
+		notifyAbout('type', _type);
+	}
+
+	protected var _model:Object;
+
+	public function SimpleNodeObject() {
+		_model = new Object();
 	}
 
 	public function getKeyValue(key:String):* {
@@ -55,6 +54,14 @@ public class Node2 extends EventDispatcher implements INode{
 
 	private function notifyAbout(key:String, value:*):void{
 		super.dispatchEvent(new NodeEvent(key, value));
+	}
+
+	public function update():void {
+		super.dispatchEvent(new NodeEvent('', null));
+	}
+
+	public function dispose():void {
+		_model = null;
 	}
 }
 }

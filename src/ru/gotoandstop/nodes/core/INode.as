@@ -1,4 +1,4 @@
-package ru.gotoandstop.nodes.datatypes {
+package ru.gotoandstop.nodes.core {
 import flash.events.IEventDispatcher;
 
 import ru.gotoandstop.IDisposable;

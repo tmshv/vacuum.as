@@ -11,9 +11,9 @@ import ru.gotoandstop.nodes.*;
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
-import ru.gotoandstop.nodes.NodeView;
+import ru.gotoandstop.nodes.core.Node;
 
-public class TimeoutNode extends NodeView{
+public class TimeoutNode extends Node{
 	private var timeout:TimeoutObject;
 
 	public function TimeoutNode(model:TimeoutObject, vacuum:VacuumLayout) {

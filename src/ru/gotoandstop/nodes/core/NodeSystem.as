@@ -6,7 +6,7 @@ import flash.events.MouseEvent;
 
 import ru.gotoandstop.nodes.*;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
-import ru.gotoandstop.nodes.datatypes.INode;
+import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.values.IValue;
 
@@ -28,12 +28,12 @@ public class NodeSystem extends Sprite implements INodeSystem {
 	private var firstPortFake:PortPoint;
 
 	private var nodeLibrary:Object;
-	private var nodes:Vector.<NodeView>;
+	private var nodes:Vector.<Node>;
 	private var vacuum:VacuumLayout;
 
 	public function NodeSystem(stage:Stage) {
 		nodeLibrary = new Object();
-		nodes = new Vector.<NodeView>();
+		nodes = new Vector.<Node>();
 		connections = new Vector.<SingleConnection>();
 		vacuum = new VacuumLayout(this, new Layout());
 		vacuum.cursor = new MouseVertex(stage);
@@ -79,7 +79,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		}
 		var N:Class = manifest.node;
 		if (N) {
-			var node:NodeView = new N(obj, vacuum);
+			var node:Node = new N(obj, vacuum);
 		} else {
 			trace('lol happend again');
 		}
@@ -113,8 +113,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
 	}
 
 	public function connect(firstNodeName:String, firstProp:String, secondNodeName:String, secondProp:String):void {
-		var from_node:NodeView = getNodeByName(firstNodeName) as NodeView;
-		var to_node:NodeView = getNodeByName(secondNodeName) as NodeView;
+		var from_node:Node = getNodeByName(firstNodeName) as Node;
+		var to_node:Node = getNodeByName(secondNodeName) as Node;
 
 		var d1:PortPoint = from_node.getPoint(firstProp);
 		var d2:PortPoint = to_node.getPoint(secondProp);
@@ -154,7 +154,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 	}
 
 	private function deleteNode(node:INode):void {
-		var vis:NodeView = node as NodeView;
+		var vis:Node = node as Node;
 		for (var i:uint; i < connections.length; i++) {
 			var connection:SingleConnection = connections[i];
 			if (connection.from.node == vis.model || connection.to.node == vis.model) {
@@ -181,7 +181,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		var node_names:Vector.<String> = getNodeNames();
 		var nodes:Array = new Array();
 		for each (var name:String in node_names) {
-			var node:NodeView = getNodeByName(name) as NodeView;
+			var node:Node = getNodeByName(name) as Node;
 			var raw_node:Object = {
 				type:node.type
 			};

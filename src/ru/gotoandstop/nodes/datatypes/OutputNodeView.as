@@ -5,12 +5,15 @@ import com.bit101.components.Text;
 
 import flash.events.Event;
 
+import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.nodes.core.Node;
+
 /**
 	 *
 	 * creation date: Jan 21, 2012
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 **/
-	public class OutputNodeView extends NodeView {
+	public class OutputNodeView extends Node {
 		private var text:Text;
 		
 		public function OutputNodeView(model:OutputNode, vacuum:VacuumLayout, vo:NodeVO) {

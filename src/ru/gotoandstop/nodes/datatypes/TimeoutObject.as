@@ -6,6 +6,7 @@ import flash.utils.setTimeout;
 
 import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.*;
+import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.nodes.core.NodeSystem;
 import ru.gotoandstop.values.IValue;
 import ru.gotoandstop.values.NumberValue;

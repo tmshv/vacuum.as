@@ -10,6 +10,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 
 import ru.gotoandstop.command.ICommand;
+import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.values.IValue;
 
 public class CommandObject extends EventDispatcher implements INode {

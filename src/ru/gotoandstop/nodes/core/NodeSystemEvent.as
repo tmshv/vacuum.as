@@ -1,7 +1,7 @@
 package ru.gotoandstop.nodes.core{
 import flash.events.Event;
 
-import ru.gotoandstop.nodes.datatypes.INode;
+import ru.gotoandstop.nodes.core.INode;
 
 /**
 	 *

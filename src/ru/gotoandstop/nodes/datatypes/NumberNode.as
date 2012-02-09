@@ -5,12 +5,13 @@ import com.bit101.components.Panel;
 import flash.events.Event;
 
 import ru.gotoandstop.nodes.*;
+import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.core.NodeEvent;
 
 /**
  * @author tmshv
  */
-public class NumberNode extends NodeView {
+public class NumberNode extends Node {
 	private var currentValue:Number;
 	private var num:NumericStepper;
 

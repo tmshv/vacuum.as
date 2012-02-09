@@ -7,7 +7,7 @@
  */
 package ru.gotoandstop.nodes.commands {
 import ru.gotoandstop.command.ICommand;
-import ru.gotoandstop.nodes.datatypes.INode;
+import ru.gotoandstop.nodes.core.INode;
 
 public class DeleteNodeCommand implements ICommand{
 	private var _node:INode;

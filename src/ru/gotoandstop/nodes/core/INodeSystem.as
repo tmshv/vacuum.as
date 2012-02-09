@@ -9,7 +9,7 @@ import flash.events.IEventDispatcher;
 import flash.utils.ByteArray;
 import flash.utils.getDefinitionByName;
 
-import ru.gotoandstop.nodes.datatypes.INode;
+import ru.gotoandstop.nodes.core.INode;
 
 public interface INodeSystem extends IEventDispatcher {
 	function registerNode(node:Object):void;

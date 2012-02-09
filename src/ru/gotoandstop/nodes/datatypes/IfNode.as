@@ -4,7 +4,7 @@ import ru.gotoandstop.nodes.*;
 import flash.events.Event;
 
 import ru.gotoandstop.command.ICommand;
-import ru.gotoandstop.nodes.ExecuteValue;
+import ru.gotoandstop.nodes.datatypes.ExecuteValue;
 import ru.gotoandstop.nodes.NodeModel;
 import ru.gotoandstop.nodes.core.NodeSystem;
 import ru.gotoandstop.nodes.NodeType;

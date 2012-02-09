@@ -1,4 +1,4 @@
-package ru.gotoandstop.nodes {
+package ru.gotoandstop.nodes.core {
 import caurina.transitions.Tweener;
 
 import com.bit101.components.PushButton;
@@ -12,7 +12,9 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import ru.gotoandstop.command.ICommand;
-import ru.gotoandstop.nodes.datatypes.INode;
+import ru.gotoandstop.nodes.PortPoint;
+import ru.gotoandstop.nodes.RelativeVertex;
+import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
@@ -21,7 +23,7 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class NodeView extends VertexView implements IVertex, INode {
+public class Node extends VertexView implements IVertex, INode {
 	private var dataContainer:DisplayObjectContainer;
 	protected var vacuum:VacuumLayout;
 	protected var _model:INode;
@@ -38,7 +40,7 @@ public class NodeView extends VertexView implements IVertex, INode {
 
 	private var actives:Object;
 
-	public function NodeView(vacuum:VacuumLayout) {
+	public function Node(vacuum:VacuumLayout) {
 		pos = new Vertex();
 		super(pos, vacuum.layout, null);
 		mover = new MouseController(this);
@@ -55,8 +57,8 @@ public class NodeView extends VertexView implements IVertex, INode {
 		super.addChild(closeButton);
 
 		super.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-		super.addEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
-		super.addEventListener(MouseEvent.MOUSE_OUT, this.handleMouseOut);
+		super.addEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
+		super.addEventListener(MouseEvent.MOUSE_OUT, handleMouseOut);
 	}
 
 	override public function dispose():void {
@@ -64,11 +66,11 @@ public class NodeView extends VertexView implements IVertex, INode {
 		Tweener.removeTweens(closeButton);
 		clearTimeout(closeButtonTimeout);
 		closeButton.removeEventListener(MouseEvent.CLICK, handleClickClose);
-		dataContainer.removeEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
+		dataContainer.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
 		super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
 		super.removeEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
-		super.removeEventListener(MouseEvent.MOUSE_OVER, this.handleMouseOver);
-		super.removeEventListener(MouseEvent.MOUSE_OUT, this.handleMouseOut);
+		super.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
+		super.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseOut);
 
 		super.dispose();
 	}

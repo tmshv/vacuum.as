@@ -1,6 +1,6 @@
 package ru.gotoandstop.nodes {
 import ru.gotoandstop.IDirectionalVertex;
-import ru.gotoandstop.nodes.datatypes.INode;
+import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.view.RectIcon;

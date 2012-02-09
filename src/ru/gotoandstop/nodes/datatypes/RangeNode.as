@@ -11,10 +11,10 @@ import com.bit101.components.Panel;
 import com.bit101.components.Slider;
 
 import ru.gotoandstop.nodes.NodeVO;
-import ru.gotoandstop.nodes.NodeView;
+import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
 
-public class RangeNode extends NodeView{
+public class RangeNode extends Node{
 	private var num:Slider;
 	public function RangeNode(model:ValueObject, vacuum:VacuumLayout, vo:NodeVO) {
 		super(vacuum, vo);

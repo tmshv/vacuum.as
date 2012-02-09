@@ -5,12 +5,14 @@ import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.text.TextField;
 
+import ru.gotoandstop.nodes.core.Node;
+
 /**
 	 *
 	 * creation date: Jan 27, 2012
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 **/
-	public class PrintNodeView extends NodeView{
+	public class PrintNodeView extends Node{
 //		private var clip:PrintNodeClip;
 		private var msg:String;
 		private var printer:PrintNode;

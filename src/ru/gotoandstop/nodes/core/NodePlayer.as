@@ -15,8 +15,7 @@ import ru.gotoandstop.nodes.SingleConnection;
 
 import ru.gotoandstop.nodes.core.INodeSystem;
 import ru.gotoandstop.nodes.core.NodeSystem;
-import ru.gotoandstop.nodes.datatypes.INode;
-import ru.gotoandstop.nodes.datatypes.INode;
+import ru.gotoandstop.nodes.core.INode;
 
 public class NodePlayer extends EventDispatcher implements INodeSystem{
 	private var nodeLibrary:Object;
@@ -95,7 +94,7 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 		return null;
 	}
 
-	public function matchNodeName(pattern:RegExp):Vector.<ru.gotoandstop.nodes.datatypes.INode> {
+	public function matchNodeName(pattern:RegExp):Vector.<INode> {
 		return null;
 	}
 

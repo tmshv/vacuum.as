@@ -4,12 +4,14 @@ import ru.gotoandstop.nodes.*;
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
+import ru.gotoandstop.nodes.core.Node;
+
 /**
  *
  * creation date: Jan 27, 2012
  * @author Roman Timashev (roman@tmshv.ru)
  **/
-public class IfNodeView extends NodeView {
+public class IfNodeView extends Node {
 	//		private var clip:IfNodeClip;
 
 	public function IfNodeView(model:IfNode, vacuum:VacuumLayout, vo:NodeVO) {

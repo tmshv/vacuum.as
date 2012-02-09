@@ -16,27 +16,28 @@ import ru.gotoandstop.vacuum.core.Vertex;
 		public function CloneVertex(source:IVertex, mask:uint){
 			super();
 
-			this.modifyX = Boolean(mask >> 1 & 1);
-			this.modifyY = Boolean(mask & 1);
+			modifyX = Boolean(mask >> 1 & 1);
+			modifyY = Boolean(mask & 1);
 			
-			this.target = source;
-			this.target.addEventListener(Event.CHANGE, this.handleParamChange);
-			this.recalc();
+			target = source;
+			target.addEventListener(Event.CHANGE, handleParamChange);
+			recalc();
 		}
 
 		public function dispose():void{
-			this.target.removeEventListener(Event.CHANGE, this.handleParamChange);
+			target.removeEventListener(Event.CHANGE, handleParamChange);
+			target = null;
 		}
 
 		private function recalc():void{
-			var x:Number = this.modifyX ? this.target.x : super.x;
-			var y:Number = this.modifyY ? this.target.y : super.y;
+			var x:Number = modifyX ? target.x : super.x;
+			var y:Number = modifyY ? target.y : super.y;
 
 			super.setCoord(x, y);
 		}
 
 		private function handleParamChange(event:Event):void{
-			this.recalc();
+			recalc();
 		}
 	}
 }

@@ -11,11 +11,11 @@ import com.bit101.components.Text;
 
 import flash.events.Event;
 
-import ru.gotoandstop.nodes.NodeView;
+import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.core.NodeEvent;
 
-public class CommentNode extends NodeView {
+public class CommentNode extends Node {
 	private var text:Text;
 	private var string:StringObject;
 

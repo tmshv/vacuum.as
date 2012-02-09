@@ -9,11 +9,11 @@ package ru.gotoandstop.nodes.datatypes {
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
-import ru.gotoandstop.nodes.NodeView;
+import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.datatypes.CommandObject;
 
-public class CommandNode extends NodeView{
+public class CommandNode extends Node{
 	public function CommandNode(model:CommandObject, vacuum:VacuumLayout) {
 		super(vacuum);
 		super._model = model;
