@@ -12,7 +12,7 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import ru.gotoandstop.command.ICommand;
-import ru.gotoandstop.nodes.PortPoint;
+import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.RelativeVertex;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.vacuum.controllers.MouseController;

@@ -1,4 +1,4 @@
-package ru.gotoandstop.nodes{
+package ru.gotoandstop.nodes.links{
 	/**
 	 *
 	 * creation date: Jan 21, 2012

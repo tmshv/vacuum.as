@@ -5,6 +5,7 @@ import flash.events.MouseEvent;
 import ru.gotoandstop.IDirectionalVertex;
 
 import ru.gotoandstop.IDisposable;
+import ru.gotoandstop.nodes.links.IPort;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
@@ -12,7 +13,7 @@ import ru.gotoandstop.vacuum.core.Vertex;
 /**
  * @author tmshv
  */
-public class MouseVertex extends Vertex implements IDirectionalVertex, ITargetVertex{
+public class MouseVertex extends Vertex implements IPort{
 	private var target2:DisplayObject;
 	private var _direction:String;
 	public function get direction():String {
@@ -47,6 +48,18 @@ public class MouseVertex extends Vertex implements IDirectionalVertex, ITargetVe
 	}
 
 	public function setTarget(vertex:IVertex):void {
+	}
+
+	public function get type():String {
+		return "";
+	}
+
+	public function get dataType():String {
+		return "";
+	}
+
+	public function get isLocked():Boolean {
+		return false;
 	}
 }
 }

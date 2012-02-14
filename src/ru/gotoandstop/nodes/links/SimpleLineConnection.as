@@ -5,19 +5,17 @@
  * Time: 11:27 AM
  * To change this template use File | Settings | File Templates.
  */
-package ru.gotoandstop.nodes.lines {
+package ru.gotoandstop.nodes.links {
 import flash.display.DisplayObjectContainer;
 
 import ru.gotoandstop.vacuum.Spline;
 import ru.gotoandstop.vacuum.SplineView;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
-import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.TargetVertex;
 
 public class SimpleLineConnection implements ILineConnection {
 	private static var count:uint = 1;
-
-	private static function getIndex():uint {
+	internal static function getIndex():uint {
 		return count++;
 	}
 
@@ -57,7 +55,7 @@ public class SimpleLineConnection implements ILineConnection {
 		_spline.addVertex(_second);
 	}
 
-	public function setOutsideVertices(first:IVertex, second:IVertex):void {
+	public function setOutsideVertices(first:IPort, second:IPort):void {
 		_first.setTarget(first);
 		_second.setTarget(second);
 	}

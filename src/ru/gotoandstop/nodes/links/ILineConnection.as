@@ -5,13 +5,11 @@
  * Time: 11:25 AM
  * To change this template use File | Settings | File Templates.
  */
-package ru.gotoandstop.nodes.lines {
+package ru.gotoandstop.nodes.links {
 import ru.gotoandstop.IDisposable;
-import ru.gotoandstop.vacuum.core.ITargetVertex;
-import ru.gotoandstop.vacuum.core.IVertex;
 
 public interface ILineConnection extends IDisposable {
 	function get index():uint;
-	function setOutsideVertices(first:IVertex, second:IVertex):void;
+	function setOutsideVertices(first:IPort, second:IPort):void;
 }
 }

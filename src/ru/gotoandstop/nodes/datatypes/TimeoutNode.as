@@ -38,7 +38,7 @@ public class TimeoutNode extends Node{
 	public override function getMarkers():Vector.<Object> {
 		var result:Vector.<Object> = new Vector.<Object>;
 		result.push({param:'init', x:0, y:25, dir:'left', type:'in'});
-		result.push({param:'delay', x:50, y:50, dir:'top', type:'in'});
+		result.push({param:'delay', x:50, y:50, dir:'down', type:'in'});
 		result.push({param:'done', x:100, y:25, dir:'right', type:'out'});
 		return result;
 	}

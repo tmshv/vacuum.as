@@ -1,5 +1,7 @@
 package ru.gotoandstop.nodes {
-	/**
+import ru.gotoandstop.nodes.links.PortPoint;
+
+/**
 	 * @author tmshv
 	 */
 	public class SingleConnection {

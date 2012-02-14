@@ -7,6 +7,8 @@ import flash.events.MouseEvent;
 import ru.gotoandstop.nodes.*;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
 import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.nodes.links.PortPoint;
+import ru.gotoandstop.nodes.links.PortPointType;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.values.IValue;
 
@@ -142,8 +144,6 @@ public class NodeSystem extends Sprite implements INodeSystem {
 	}
 
 	private function unlink(connection:SingleConnection, breakVacuumConnection:Boolean = false):void {
-		trace('unlinking', connection.from.node.name, connection.from.property, connection.to.node.name, connection.to.property)
-
 		var to:PortPoint = connection.to;
 		to.node.setKeyValue(to.property, null);
 
@@ -287,6 +287,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
 				firstPortFake = connection.from;
 			}
 		}
+
+		handleInVertexMouseOver(event);
 
 	}
 

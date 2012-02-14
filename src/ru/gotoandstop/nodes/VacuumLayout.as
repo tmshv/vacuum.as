@@ -4,8 +4,13 @@ import flash.display.Sprite;
 import flash.events.EventDispatcher;
 
 import ru.gotoandstop.IDirectionalVertex;
-import ru.gotoandstop.nodes.lines.ILineConnection;
-import ru.gotoandstop.nodes.lines.SimpleLineConnection;
+import ru.gotoandstop.nodes.links.BezierQuadConnection;
+import ru.gotoandstop.nodes.links.ILineConnection;
+import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.nodes.links.PortPoint;
+import ru.gotoandstop.nodes.links.SimpleLineConnection;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
@@ -30,7 +35,7 @@ public class VacuumLayout extends EventDispatcher {
 
 	private var connections:Vector.<ILineConnection>;
 
-	public var cursor:IDirectionalVertex;
+	public var cursor:IPort;
 
 	public function VacuumLayout(container:DisplayObjectContainer, layout:Layout) {
 		super();
@@ -55,10 +60,10 @@ public class VacuumLayout extends EventDispatcher {
 		return this.layers[name];
 	}
 
-	public function connect(first:IDirectionalVertex, second:IDirectionalVertex, index:uint = 0):uint {
+	public function connect(first:IPort, second:IPort, index:uint = 0):uint {
 		var connection:ILineConnection;
 		if (index) {
-			for each(var c:ILineConnection in this.connections) {
+			for each(var c:ILineConnection in connections) {
 				if (c.index == index) {
 					connection = c;
 					break;
@@ -67,9 +72,10 @@ public class VacuumLayout extends EventDispatcher {
 		}
 
 		if (!connection) {
-			const layer:Sprite = this.layers['lines'];
-			connection = new SimpleLineConnection(layer);
-			this.connections.push(connection);
+			const layer:Sprite = layers['lines'];
+//			connection = new SimpleLineConnection(layer);
+			connection = new BezierQuadConnection(layer);
+			connections.push(connection);
 		}
 		connection.setOutsideVertices(first, second);
 		return connection.index;
