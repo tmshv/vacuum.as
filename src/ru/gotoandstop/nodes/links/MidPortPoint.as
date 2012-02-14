@@ -43,16 +43,21 @@ public class MidPortPoint extends Vertex{
 	private function calc(event:Event = null):void {
 		var x:Number;
 		var y:Number;
+		var dx:int = _target2.x - _target.x;
+		var dy:int = _target2.y - _target.y;
+
+		var dist:uint = Math.sqrt(dx * dx + dy * dy);
+		dx = dy = dist;
 
 		if (_target.direction == 'left') {
-			x = (_target2.x - _target.x) * ratio;
+			x = dx * ratio;
 			x = Math.abs(x);
 			x = Math.min(x, max);
 			x = Math.max(x, min);
 			x = _target.x - x;
 			y = _target.y;
 		} else if (_target.direction == 'right') {
-			x = (_target2.x - _target.x) * ratio;
+			x = dx * ratio;
 			x = Math.abs(x);
 			x = Math.min(x, max);
 			x = Math.max(x, min);
@@ -60,14 +65,14 @@ public class MidPortPoint extends Vertex{
 			y = _target.y;
 		} else if (_target.direction == 'up') {
 			x = _target.x;
-			y = (_target2.y - _target.y) * ratio;
+			y = dy * ratio;
 			y = Math.abs(y);
 			y = Math.min(y, max);
 			y = Math.max(y, min);
 			y = _target.y - y;
 		} else if (_target.direction == 'down') {
 			x = _target.x;
-			y = (_target2.y - _target.y) * ratio;
+			y = dy * ratio;
 			y = Math.abs(y);
 			y = Math.min(y, max);
 			y = Math.max(y, min);
