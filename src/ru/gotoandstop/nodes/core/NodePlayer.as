@@ -16,6 +16,7 @@ import ru.gotoandstop.nodes.SingleConnection;
 import ru.gotoandstop.nodes.core.INodeSystem;
 import ru.gotoandstop.nodes.core.NodeSystem;
 import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.values.IValue;
 
 public class NodePlayer extends EventDispatcher implements INodeSystem{
 	private var nodeLibrary:Object;
@@ -91,7 +92,39 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 	}
 
 	public function getStructure():Object {
-		return null;
+		var node_names:Vector.<String> = getNodeNames();
+		var nodes:Array = new Array();
+		for each (var name:String in node_names) {
+			var node:INode = getNodeByName(name) as Node;
+			var raw_node:Object = {
+				type:node.type
+			};
+
+			//model filling
+			var model:Object = {};
+			var params:Vector.<String> = node.getParams();
+			for each(var prop:String in params) {
+				var val:* = node.getKeyValue(prop);
+				if (val) {
+					if (val is IValue) {
+						var ival:* = (val as IValue).getValue();
+						if (ival) model[prop] = ival;
+					} else {
+						model[prop] = val;
+					}
+				}
+			}
+			model.name = node.name;
+
+			raw_node.model = model;
+			nodes.push(raw_node);
+		}
+		var links:Array = new Array();
+//		for each (var conection:SingleConnection in connections) {
+//			links.push({from:[conection.from.node.name, conection.from.property], to:[conection.to.node.name, conection.to.property]});
+//		}
+
+		return {nodes:nodes, links:links, version:'1'};
 	}
 
 	public function matchNodeName(pattern:RegExp):Vector.<INode> {
