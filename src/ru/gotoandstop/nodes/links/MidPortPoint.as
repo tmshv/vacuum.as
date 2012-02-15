@@ -20,7 +20,7 @@ public class MidPortPoint extends Vertex{
 	private var min:Number;
 	private var max:Number;
 
-	public function MidPortPoint(target:IPort, target2:IPort, interpolationValue:Number = 0.5, minimalInterpolationValue:Number = 10, maximalInterpolationValue:Number = 100) {
+	public function MidPortPoint(target:IPort, target2:IPort, interpolationValue:Number = 0.5, minimalInterpolationValue:Number = 1, maximalInterpolationValue:Number = 100) {
 		super();
 		_target = target;
 		_target2 = target2;

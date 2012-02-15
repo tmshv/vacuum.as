@@ -83,8 +83,8 @@ public class BezierQuadConnection implements ILineConnection {
 		}
 
 		if (new_first || new_second) {
-			firstMid.setTarget(new MidPortPoint(first, second));
-			secondMid.setTarget(new MidPortPoint(second, first));
+			firstMid.setTarget(new MidPortPoint(first, second, 0.25));
+			secondMid.setTarget(new MidPortPoint(second, first, 0.25));
 		}
 	}
 }
