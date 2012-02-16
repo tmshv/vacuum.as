@@ -32,8 +32,10 @@ public class NodeSystem extends Sprite implements INodeSystem {
 	private var nodeLibrary:Object;
 	private var nodes:Vector.<Node>;
 	private var vacuum:VacuumLayout;
+	private var _stage:Stage;
 
 	public function NodeSystem(stage:Stage) {
+		_stage = stage;
 		nodeLibrary = new Object();
 		nodes = new Vector.<Node>();
 		connections = new Vector.<SingleConnection>();
@@ -41,7 +43,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		vacuum.cursor = new MouseVertex(stage);
 		vacuum.addEventListener(VacuumEvent.ADDED_VERTEX, this.handleAddedVertexToVacuum);
 
-		stage.addEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
+		_stage.addEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
 	}
 
 	public function registerNode(node:Object):void {
@@ -330,7 +332,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		connections = null;
 		nodeLibrary = null;
 
-		stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
+		_stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
 		vacuum.removeEventListener(VacuumEvent.ADDED_VERTEX, this.handleAddedVertexToVacuum);
 		vacuum.dispose();
 		vacuum = null;
