@@ -54,9 +54,15 @@ public class MouseController extends EventDispatcher implements IDisposable {
 	}
 
 	public function dispose():void {
-		_target.removeEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
-		_target.stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
-		_target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.handleMouseMove);
+		if(_target){
+			_target.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+		}
+		
+		if(_target.stage){
+			_target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+			_target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+		}
+
 		_target = null;
 		_dot = null;
 	}
