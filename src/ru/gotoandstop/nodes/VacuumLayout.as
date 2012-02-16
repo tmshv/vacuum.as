@@ -1,9 +1,11 @@
 package ru.gotoandstop.nodes {
+import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.EventDispatcher;
 
 import ru.gotoandstop.IDirectionalVertex;
+import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.nodes.links.BezierQuadConnection;
 import ru.gotoandstop.nodes.links.ILineConnection;
 import ru.gotoandstop.nodes.links.IPort;
@@ -19,7 +21,7 @@ import ru.gotoandstop.vacuum.core.Vertex;
 /**
  * @author tmshv
  */
-public class VacuumLayout extends EventDispatcher {
+public class VacuumLayout extends EventDispatcher implements IDisposable {
 	private var vertices:Vector.<Vertex>;
 	private var _container:DisplayObjectContainer;
 
@@ -115,6 +117,20 @@ public class VacuumLayout extends EventDispatcher {
 		const layer:Sprite = this.layers['activepoints'];
 		layer.removeChild(point);
 		super.dispatchEvent(new VacuumEvent(VacuumEvent.REMOVED_VERTEX, false, false, point));
+	}
+
+	public function dispose():void {
+		for each(var c:ILineConnection in connections) {
+			c.dispose();
+		}
+		connections = null;
+
+		for each(var layer:DisplayObject in layers) {
+			container.removeChild(layer);
+		}
+		layers = null;
+
+		if(cursor) cursor.dispose();
 	}
 }
 }
