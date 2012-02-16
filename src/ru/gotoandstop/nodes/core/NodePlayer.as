@@ -141,5 +141,13 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 
 	public function breakConnection(nodeName:String, nodeProp:String):void {
 	}
+
+	public function dispose():void {
+		for each(var n:INode in nodes) {
+			n.dispose();
+		}
+		nodes = null;
+		nodeLibrary = null;
+	}
 }
 }

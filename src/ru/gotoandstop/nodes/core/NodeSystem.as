@@ -289,7 +289,6 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		}
 
 		handleInVertexMouseOver(event);
-
 	}
 
 	/**
@@ -321,6 +320,20 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		vacuum.breakConnection(fakeConnection);
 		fakeConnection = 0;
 		firstPortFake = null;
+	}
+
+	public function dispose():void {
+		for each(var n:INode in nodes) {
+			n.dispose();
+		}
+		nodes = null;
+		connections = null;
+		nodeLibrary = null;
+
+		stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
+		vacuum.removeEventListener(VacuumEvent.ADDED_VERTEX, this.handleAddedVertexToVacuum);
+		vacuum.dispose();
+		vacuum = null;
 	}
 }
 }

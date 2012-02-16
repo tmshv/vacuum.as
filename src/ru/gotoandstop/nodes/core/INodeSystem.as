@@ -9,9 +9,11 @@ import flash.events.IEventDispatcher;
 import flash.utils.ByteArray;
 import flash.utils.getDefinitionByName;
 
+import ru.gotoandstop.IDisposable;
+
 import ru.gotoandstop.nodes.core.INode;
 
-public interface INodeSystem extends IEventDispatcher {
+public interface INodeSystem extends IEventDispatcher, IDisposable{
 	function registerNode(node:Object):void;
 	function createNode(type:String, model:Object=null):INode;
 	function getStructure():Object;
