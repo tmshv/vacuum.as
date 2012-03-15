@@ -115,8 +115,10 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 
 	public function deletePoint(point:PortPoint):void {
 		const layer:Sprite = this.layers['activepoints'];
-		layer.removeChild(point);
-		super.dispatchEvent(new VacuumEvent(VacuumEvent.REMOVED_VERTEX, false, false, point));
+        if(layer.contains(point)) {
+            layer.removeChild(point);
+            super.dispatchEvent(new VacuumEvent(VacuumEvent.REMOVED_VERTEX, false, false, point));
+        }
 	}
 
 	public function dispose():void {
