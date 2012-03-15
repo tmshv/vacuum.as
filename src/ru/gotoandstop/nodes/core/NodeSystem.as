@@ -6,10 +6,11 @@ import flash.events.MouseEvent;
 
 import ru.gotoandstop.nodes.*;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
-import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.links.PortPointType;
 import ru.gotoandstop.vacuum.Layout;
+import ru.gotoandstop.vacuum.core.IVertex;
+import ru.gotoandstop.vacuum.modificators.SnapModifier;
 import ru.gotoandstop.values.IValue;
 
 [Event(name="addedNode", type="ru.gotoandstop.nodes.core.NodeSystemEvent")]
@@ -33,6 +34,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
 	private var nodes:Vector.<Node>;
 	private var vacuum:VacuumLayout;
 	private var _stage:Stage;
+
+    private var snapVerticles:Vector.<IVertex> = new Vector.<IVertex>();
 
 	public function NodeSystem(stage:Stage) {
 		_stage = stage;
@@ -89,6 +92,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		}
 		node.name = model.name ? model.name : getUniqueName({type:type});
 		node.type = type;
+        node.pos.addModifier(new SnapModifier(snapVerticles, 10));
 		if (model.position) {
 			node.setCoord(model.position.x, model.position.y);
 		}
@@ -338,5 +342,9 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		vacuum.dispose();
 		vacuum = null;
 	}
+
+    public function addSnapVertex(vertex:IVertex):void{
+        snapVerticles.push(vertex);
+    }
 }
 }

@@ -12,11 +12,12 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import ru.gotoandstop.command.ICommand;
-import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.RelativeVertex;
 import ru.gotoandstop.nodes.VacuumLayout;
+import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.IVertex;
+import ru.gotoandstop.vacuum.core.ModifiableVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.vacuum.view.VertexView;
 
@@ -35,13 +36,13 @@ public class Node extends VertexView implements IVertex, INode {
 	private var closeButtonTimeout:int;
 
 	private var closeButtonCommand:ICommand;
-	private var pos:IVertex;
+	internal var pos:ModifiableVertex;
 	private var mover:MouseController;
 
 	private var actives:Object;
 
 	public function Node(vacuum:VacuumLayout, model:INode) {
-		pos = new Vertex();
+		pos = new ModifiableVertex();
 		super(pos, vacuum.layout, null);
         _model = model;
         _model.addEventListener(Event.CHANGE, super.dispatchEvent);
