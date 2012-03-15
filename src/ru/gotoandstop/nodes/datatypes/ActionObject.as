@@ -66,5 +66,12 @@ public class ActionObject extends SimpleNodeObject{
         cmd.name = NodeSystem.getUniqueName();
         return cmd;
     }
+
+    override public function getParams():Vector.<String> {
+        var list:Vector.<String> = super.getParams();
+        list.push('init');
+        list.push('done');
+        return list;
+    }
 }
 }
