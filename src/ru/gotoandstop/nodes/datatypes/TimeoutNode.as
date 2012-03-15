@@ -17,8 +17,7 @@ public class TimeoutNode extends Node{
 	private var timeout:TimeoutObject;
 
 	public function TimeoutNode(model:TimeoutObject, vacuum:VacuumLayout) {
-		super(vacuum);
-		super._model = model;
+		super(vacuum, model);
 		timeout = model;
 
 		var p:Panel = new Panel();

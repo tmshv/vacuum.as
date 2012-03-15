@@ -40,9 +40,11 @@ public class Node extends VertexView implements IVertex, INode {
 
 	private var actives:Object;
 
-	public function Node(vacuum:VacuumLayout) {
+	public function Node(vacuum:VacuumLayout, model:INode) {
 		pos = new Vertex();
 		super(pos, vacuum.layout, null);
+        _model = model;
+        _model.addEventListener(Event.CHANGE, super.dispatchEvent);
 		mover = new MouseController(this);
 		actives = new Object();
 		this.vacuum = vacuum;
@@ -71,7 +73,9 @@ public class Node extends VertexView implements IVertex, INode {
 		super.removeEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
 		super.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
 		super.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseOut);
-
+        _model.removeEventListener(Event.CHANGE, super.dispatchEvent);
+        _model.dispose();
+        _model = null;
 		super.dispose();
 	}
 

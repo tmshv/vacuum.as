@@ -14,8 +14,7 @@ import ru.gotoandstop.nodes.VacuumLayout;
 
 public class InitNode extends Node{
 	public function InitNode(model:InitObject, vacuum:VacuumLayout) {
-		super(vacuum);
-		super._model = model;
+		super(vacuum, model);
 
 		var h:Panel = new Panel();
 		h.color = 0xF5B0AB;

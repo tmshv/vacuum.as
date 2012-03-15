@@ -14,8 +14,7 @@ import ru.gotoandstop.nodes.core.Node;
 
 public class ActionNode extends Node{
     public function ActionNode(model:ActionObject, vacuum:VacuumLayout) {
-        super(vacuum);
-        super._model = model;
+        super(vacuum, model);
 
         var h:Panel = new Panel();
         h.width = 150;

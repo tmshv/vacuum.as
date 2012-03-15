@@ -16,8 +16,7 @@ public class NumberNode extends Node {
 	private var num:NumericStepper;
 
 	public function NumberNode(model:NumberObject, vacuum:VacuumLayout) {
-		super(vacuum);
-		super._model = model;
+		super(vacuum, model);
 
 		var h:Panel = new Panel();
 		h.height = 35;

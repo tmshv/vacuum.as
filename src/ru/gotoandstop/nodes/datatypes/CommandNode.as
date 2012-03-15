@@ -15,8 +15,7 @@ import ru.gotoandstop.nodes.datatypes.CommandObject;
 
 public class CommandNode extends Node{
 	public function CommandNode(model:CommandObject, vacuum:VacuumLayout) {
-		super(vacuum);
-		super._model = model;
+		super(vacuum, model);
 
 		var h:Panel = new Panel();
 		h.width = 150;

@@ -20,9 +20,8 @@ public class CommentNode extends Node {
 	private var string:StringObject;
 
 	public function CommentNode(model:StringObject, vacuum:VacuumLayout) {
-		super(vacuum);
-		super._model = model;
-		super._model.addEventListener(Event.CHANGE, handleStringChange);
+		super(vacuum, model);
+		super.model.addEventListener(Event.CHANGE, handleStringChange);
 		string = model;
 
 		var h:Panel = new Panel();

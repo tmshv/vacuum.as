@@ -19,8 +19,7 @@ public class StringNode extends Node {
 	private var text:Text;
 
 	public function StringNode(model:StringObject, vacuum:VacuumLayout) {
-		super(vacuum);
-		super._model = model;
+		super(vacuum, model);
 
 		model.addEventListener(Event.CHANGE, handleChange);
 
