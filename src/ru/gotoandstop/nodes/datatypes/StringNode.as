@@ -31,6 +31,7 @@ public class StringNode extends Node {
 		super.setDragTarget(h);
 
 		text = new Text();
+        text.addEventListener(Event.CHANGE, handleTextChange);
 		text.x = 10;
 		text.y = 10;
 		text.width = 150;
@@ -49,10 +50,19 @@ public class StringNode extends Node {
 		return result;
 	}
 
+    private function handleTextChange(event:Event):void {
+        super.model.setKeyValue('value', text.text);
+    }
+    
 	private function handleChange(event:NodeEvent):void {
-		if (event.key == 'value') {
+		if (event.key == 'value' && event.value != text.text) {
 			text.text = event.value;
 		}
 	}
+
+    override public function dispose():void {
+        text.removeEventListener(Event.CHANGE, handleTextChange);
+        super.dispose();
+    }
 }
 }
