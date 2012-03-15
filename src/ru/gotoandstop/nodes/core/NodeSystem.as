@@ -177,6 +177,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
 		vis.dispose();
 		var container:DisplayObjectContainer = vacuum.getLayer('nodes');
 		container.removeChild(vis);
+
+        super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.REMOVED_NODE, false, false, node));
 	}
 
 	public function getStructure():Object {
