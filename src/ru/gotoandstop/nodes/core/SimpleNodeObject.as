@@ -52,7 +52,7 @@ public class SimpleNodeObject extends EventDispatcher implements INode{
 		return list;
 	}
 
-	private function notifyAbout(key:String, value:*):void{
+	protected function notifyAbout(key:String, value:*):void{
 		super.dispatchEvent(new NodeEvent(key, value));
 	}
 
