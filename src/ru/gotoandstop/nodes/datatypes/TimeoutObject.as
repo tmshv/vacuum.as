@@ -53,7 +53,11 @@ public class TimeoutObject extends ActionObject{
         super.dispose();
 	}
 
-    override protected function handleChange(event:Event):void {
+    private function handleChange(event:Event):void {
+        update();
+    }
+
+    override protected function executeAction():void {
         update();
     }
 

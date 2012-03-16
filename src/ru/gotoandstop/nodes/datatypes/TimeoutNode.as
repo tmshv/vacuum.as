@@ -11,35 +11,37 @@ import ru.gotoandstop.nodes.*;
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
-import ru.gotoandstop.nodes.core.Node;
+import ru.gotoandstop.nodes.commands.ShakeCommand;
 
-public class TimeoutNode extends Node{
+import ru.gotoandstop.nodes.core.Node;
+import ru.gotoandstop.nodes.datatypes.ActionNode;
+
+public class TimeoutNode extends ActionNode{
 	private var timeout:TimeoutObject;
 
 	public function TimeoutNode(model:TimeoutObject, vacuum:VacuumLayout) {
-		super(vacuum, model);
-		timeout = model;
+        timeout = model;
+        super(model, vacuum);
+        model.overrideAction(new ShakeCommand(this, 2, 0.3));
+    }
 
-		var p:Panel = new Panel();
-		p.height = 50;
-		super.addChild(p);
-		
-		var label:Label;
-		label = new Label(null, 30, 0, 'timeout');
-		p.addChild(label);
+    public override function getMarkers():Vector.<Object> {
+        var result:Vector.<Object> = super.getMarkers();
+        result.push({param:'delay', x:50, y:50, dir:'down', type:'in'});
+        return result;
+    }
 
-		label = new Label(null, 40, 30, 'delay');
-		p.addChild(label);
+    override protected function draw():void {
+        var p:Panel = new Panel();
+        p.height = 50;
+        super.addChild(p);
 
-		super.createPoints(getMarkers());
-	}
+        var label:Label;
+        label = new Label(null, 30, 0, 'timeout');
+        p.addChild(label);
 
-	public override function getMarkers():Vector.<Object> {
-		var result:Vector.<Object> = new Vector.<Object>;
-		result.push({param:'init', x:0, y:25, dir:'left', type:'in'});
-		result.push({param:'delay', x:50, y:50, dir:'down', type:'in'});
-		result.push({param:'done', x:100, y:25, dir:'right', type:'out'});
-		return result;
-	}
+        label = new Label(null, 40, 30, 'delay');
+        p.addChild(label);
+    }
 }
 }

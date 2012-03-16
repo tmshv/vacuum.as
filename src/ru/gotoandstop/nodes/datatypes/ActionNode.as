@@ -15,23 +15,25 @@ import ru.gotoandstop.nodes.core.Node;
 public class ActionNode extends Node{
     public function ActionNode(model:ActionObject, vacuum:VacuumLayout) {
         super(vacuum, model);
+        draw();
+        super.createPoints(getMarkers());
+    }
 
+    protected function draw():void{
         var h:Panel = new Panel();
-        h.width = 150;
+        h.width = 100;
         h.height = 30;
         super.addChild(h);
 
 //        var label:Label;
 //        label = new Label(null, 10, 5, model.description);
 //        super.addChild(label);
-
-        super.createPoints(getMarkers());
     }
 
     public override function getMarkers():Vector.<Object> {
         var result:Vector.<Object> = new Vector.<Object>;
         result.push({param:'init', x:0, y:15, dir:'left', type:'in'});
-        result.push({param:'done', x:150, y:15, dir:'right', type:'out'});
+        result.push({param:'done', x:100, y:15, dir:'right', type:'out'});
         return result;
     }
 }

@@ -13,8 +13,9 @@ import ru.gotoandstop.nodes.core.NodeSystem;
 import ru.gotoandstop.nodes.core.SimpleNodeObject;
 import ru.gotoandstop.values.IValue;
 
-public class ActionObject extends SimpleNodeObject{
+public class ActionObject extends SimpleNodeObject {
     private var _initObjectName:String;
+
     public function get init():String {
         return _initObjectName;
     }
@@ -22,8 +23,14 @@ public class ActionObject extends SimpleNodeObject{
     private var _init:IValue;
     protected var _done:ICommand;
 
+    private var _overridedCommand:ICommand;
+
     public function ActionObject() {
         _done = createExecuter();
+    }
+
+    public function overrideAction(cmd:ICommand):void {
+        _overridedCommand = cmd;
     }
 
     override public function setKeyValue(key:String, value:*):void {
@@ -44,18 +51,26 @@ public class ActionObject extends SimpleNodeObject{
     }
 
     override public function getKeyValue(key:String):* {
-        if(key == 'done'){
+        if (key == 'done') {
             return _done;
         }
         return super.getKeyValue(key);
     }
 
-    protected function handleChange(event:Event):void {
+    private function handleChange(event:Event):void {
+        if (_overridedCommand) {
+            _overridedCommand.execute();
+        } else {
+            executeAction();
+        }
+    }
+
+    protected function executeAction():void{
         _done.execute();
     }
 
     override public function dispose():void {
-        if(_init) _init.removeEventListener(Event.CHANGE, handleChange);
+        if (_init) _init.removeEventListener(Event.CHANGE, handleChange);
         _init = null;
         _done = null;
         super.dispose();
