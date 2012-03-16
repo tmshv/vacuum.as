@@ -2,6 +2,8 @@ package ru.gotoandstop.nodes.datatypes {
 import com.bit101.components.NumericStepper;
 import com.bit101.components.Panel;
 
+import flash.display.Shape;
+
 import flash.events.Event;
 
 import ru.gotoandstop.nodes.*;
@@ -18,19 +20,9 @@ public class NumberNode extends Node {
 	public function NumberNode(model:NumberObject, vacuum:VacuumLayout) {
 		super(vacuum, model);
 
-		var h:Panel = new Panel();
-		h.height = 35;
-		super.addChild(h);
-		super.setDragTarget(h);
-
-		num = new NumericStepper(null, 10, 10, handleNumeric);
-		super.addChild(num);
-
 		model.addEventListener(Event.CHANGE, handleChange);
 		num.value = model.getValue();
 		currentValue = num.value;
-
-		super.createPoints(getMarkers());
 	}
 
 	public override function dispose():void {
@@ -48,7 +40,7 @@ public class NumberNode extends Node {
 	}
 
 	public override function getMarkers():Vector.<Object> {
-		var result:Vector.<Object> = new Vector.<Object>;
+		var result:Vector.<Object> = super.getMarkers();
 		result.push({param:'value', x:100, y:35 / 2, dir:'right', type:'out'});
 		return result;
 	}
@@ -61,5 +53,22 @@ public class NumberNode extends Node {
 			}
 		}
 	}
+
+    override protected function draw():void {
+        var s:Shape = new Shape();
+        s.graphics.beginFill(0, 1);
+        s.graphics.drawRect(0, 0, 100, 35);
+        s.graphics.endFill();
+        super.addChild(s);
+        super._selectedShape = s;
+
+        var h:Panel = new Panel();
+        h.height = 35;
+        super.addChild(h);
+        super.setDragTarget(h);
+
+        num = new NumericStepper(null, 10, 10, handleNumeric);
+        super.addChild(num);
+    }
 }
 }

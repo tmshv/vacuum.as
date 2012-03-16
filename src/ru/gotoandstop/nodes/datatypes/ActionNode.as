@@ -9,25 +9,28 @@ package ru.gotoandstop.nodes.datatypes {
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
+import flash.display.Shape;
+
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.core.Node;
 
 public class ActionNode extends Node{
     public function ActionNode(model:ActionObject, vacuum:VacuumLayout) {
         super(vacuum, model);
-        draw();
-        super.createPoints(getMarkers());
     }
 
-    protected function draw():void{
+    override protected function draw():void{
+        var s:Shape = new Shape();
+        s.graphics.beginFill(0, 1);
+        s.graphics.drawRect(0, 0, 100, 30);
+        s.graphics.endFill();
+        super.addChild(s);
+        super._selectedShape = s;
+
         var h:Panel = new Panel();
         h.width = 100;
         h.height = 30;
         super.addChild(h);
-
-//        var label:Label;
-//        label = new Label(null, 10, 5, model.description);
-//        super.addChild(label);
     }
 
     public override function getMarkers():Vector.<Object> {

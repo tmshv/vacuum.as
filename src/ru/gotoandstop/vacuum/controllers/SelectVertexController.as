@@ -1,16 +1,15 @@
 package ru.gotoandstop.vacuum.controllers{
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
-	import flash.events.MouseEvent;
-	
-	import ru.gotoandstop.vacuum.ISelectable;
-	import ru.gotoandstop.vacuum.view.RectIcon;
-	import ru.gotoandstop.vacuum.view.VertexIcon;
-	import ru.gotoandstop.vacuum.view.VertexView;
-	import ru.gotoandstop.values.BooleanValue;
-	
-	[Event(name="complete", type="flash.events.Event")]
+import flash.events.Event;
+import flash.events.EventDispatcher;
+import flash.events.MouseEvent;
+
+import ru.gotoandstop.ui.ISelectable;
+import ru.gotoandstop.vacuum.view.RectIcon;
+import ru.gotoandstop.vacuum.view.VertexIcon;
+import ru.gotoandstop.vacuum.view.VertexView;
+import ru.gotoandstop.values.BooleanValue;
+
+[Event(name="complete", type="flash.events.Event")]
 	
 	/**
 	 *
@@ -24,7 +23,12 @@ package ru.gotoandstop.vacuum.controllers{
 		}
 		
 		private var vertex:VertexView;
-		private var defauldIcon:VertexIcon;
+
+    public function get isSelected():Boolean {
+        return this.selected.value;
+    }
+
+    private var defauldIcon:VertexIcon;
 		
 		public function SelectVertexController(vertex:VertexView){
 			super();
@@ -34,10 +38,6 @@ package ru.gotoandstop.vacuum.controllers{
 			
 			this._selected = new BooleanValue();
 			this._selected.addEventListener(Event.CHANGE, this.handleValueChange);
-		}
-		
-		public function isSelected():Boolean{
-			return this.selected.value;
 		}
 		
 		public function select():void{

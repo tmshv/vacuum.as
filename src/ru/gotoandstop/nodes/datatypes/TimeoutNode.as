@@ -6,12 +6,16 @@
  * To change this template use File | Settings | File Templates.
  */
 package ru.gotoandstop.nodes.datatypes {
+import flash.display.Shape;
+
+import ru.gotoandstop.command.MacroCommand;
 import ru.gotoandstop.nodes.*;
 
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
 import ru.gotoandstop.nodes.commands.ShakeCommand;
+import ru.gotoandstop.nodes.commands.TimeoutCommand;
 
 import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.datatypes.ActionNode;
@@ -22,7 +26,11 @@ public class TimeoutNode extends ActionNode{
 	public function TimeoutNode(model:TimeoutObject, vacuum:VacuumLayout) {
         timeout = model;
         super(model, vacuum);
-        model.overrideAction(new ShakeCommand(this, 2, 0.3));
+
+        var overrided:MacroCommand = new MacroCommand();
+        overrided.addCommand(new ShakeCommand(this, 2, 0.3));
+        overrided.addCommand(new TimeoutCommand(400, model.getKeyValue('done')));
+        model.overrideAction(overrided);
     }
 
     public override function getMarkers():Vector.<Object> {
@@ -32,6 +40,13 @@ public class TimeoutNode extends ActionNode{
     }
 
     override protected function draw():void {
+        var s:Shape = new Shape();
+        s.graphics.beginFill(0, 1);
+        s.graphics.drawRect(0, 0, 100, 50);
+        s.graphics.endFill();
+        super.addChild(s);
+        super._selectedShape = s;
+
         var p:Panel = new Panel();
         p.height = 50;
         super.addChild(p);

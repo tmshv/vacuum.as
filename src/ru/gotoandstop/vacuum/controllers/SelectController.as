@@ -1,11 +1,10 @@
 package ru.gotoandstop.vacuum.controllers{
-	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
-	
-	import ru.gotoandstop.IDisposable;
-	import ru.gotoandstop.vacuum.ISelectable;
-	
-	/**
+import flash.events.EventDispatcher;
+
+import ru.gotoandstop.IDisposable;
+import ru.gotoandstop.ui.ISelectable;
+
+/**
 	 *
 	 * Creation date: Jun 3, 2011 (7:58:22 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)

@@ -149,5 +149,8 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 		nodes = null;
 		nodeLibrary = null;
 	}
+
+    public function deleteNode(node:INode):void {
+    }
 }
 }

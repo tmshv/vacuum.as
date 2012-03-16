@@ -71,7 +71,9 @@ public class ValueObject extends EventDispatcher implements INode, IValue {
 	}
 
 	public function setValue(value:*):void {
-		_value.setValue(value);
+        if(_value) {
+            _value.setValue(value);
+        }
 	}
 
 	private function handleChange(event:Event):void {

@@ -9,6 +9,8 @@ package ru.gotoandstop.nodes.datatypes {
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
+import flash.display.Shape;
+
 import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.datatypes.CommandObject;
@@ -16,20 +18,27 @@ import ru.gotoandstop.nodes.datatypes.CommandObject;
 public class CommandNode extends Node{
 	public function CommandNode(model:CommandObject, vacuum:VacuumLayout) {
 		super(vacuum, model);
-
-		var h:Panel = new Panel();
-		h.width = 150;
-		h.height = 30;
-		super.addChild(h);
-
-		var label:Label;
-		label = new Label(null, 10, 5, model.description);
-		super.addChild(label);
-
-		super.createPoints(getMarkers());
 	}
 
-	public override function getMarkers():Vector.<Object> {
+    override protected function draw():void {
+        var s:Shape = new Shape();
+        s.graphics.beginFill(0, 1);
+        s.graphics.drawRect(0, 0, 150, 30);
+        s.graphics.endFill();
+        super.addChild(s);
+        super._selectedShape = s;
+
+        var h:Panel = new Panel();
+        h.width = 150;
+        h.height = 30;
+        super.addChild(h);
+
+        var label:Label;
+        label = new Label(null, 10, 5, super.model.getKeyValue('description'));
+        super.addChild(label);
+    }
+
+    public override function getMarkers():Vector.<Object> {
 		var result:Vector.<Object> = new Vector.<Object>;
 		result.push({param:'init', x:0, y:15, dir:'left', type:'in'});
 		return result;

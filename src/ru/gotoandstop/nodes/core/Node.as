@@ -4,10 +4,14 @@ import caurina.transitions.Tweener;
 import com.bit101.components.PushButton;
 
 import flash.display.DisplayObject;
+
+import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
+import flash.display.Shape;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.filters.GlowFilter;
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
@@ -15,6 +19,7 @@ import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.RelativeVertex;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.links.PortPoint;
+import ru.gotoandstop.ui.ISelectable;
 import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.ModifiableVertex;
@@ -24,7 +29,7 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class Node extends VertexView implements IVertex, INode {
+public class Node extends VertexView implements IVertex, INode, ISelectable {
 	private var dataContainer:DisplayObjectContainer;
 	protected var vacuum:VacuumLayout;
 	protected var _model:INode;
@@ -39,7 +44,11 @@ public class Node extends VertexView implements IVertex, INode {
 	internal var pos:ModifiableVertex;
 	private var mover:MouseController;
 
+    private var _selected:Boolean;
+
 	private var actives:Object;
+    
+    protected var _selectedShape:DisplayObject;
 
 	public function Node(vacuum:VacuumLayout, model:INode) {
 		pos = new ModifiableVertex();
@@ -62,7 +71,14 @@ public class Node extends VertexView implements IVertex, INode {
 		super.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
 		super.addEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
 		super.addEventListener(MouseEvent.MOUSE_OUT, handleMouseOut);
+
+        draw();
+        createPoints(getMarkers());
 	}
+
+    protected function draw():void{
+
+    }
 
 	override public function dispose():void {
 		mover.dispose();
@@ -231,5 +247,23 @@ public class Node extends VertexView implements IVertex, INode {
 	public function getParams():Vector.<String> {
 		return model.getParams();
 	}
+
+    public function select():void {
+        _selected = true;
+        if(_selectedShape) {
+            _selectedShape.filters = [new GlowFilter(0x0000ff, 0.3, 2, 2, 255)];
+        }
+    }
+
+    public function deselect():void {
+        _selected = false;
+        if(_selectedShape) {
+            _selectedShape.filters = [];
+        }
+    }
+
+    public function get isSelected():Boolean {
+        return _selected;
+    }
 }
 }
