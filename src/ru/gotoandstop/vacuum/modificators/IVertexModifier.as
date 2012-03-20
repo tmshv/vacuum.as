@@ -7,5 +7,7 @@ package ru.gotoandstop.vacuum.modificators{
 	 **/
 	public interface IVertexModifier{
 		function modify(x:Number, y:Number):Point;
+        function get active():Boolean;
+        function set active(value:Boolean):void;
 	}
 }
