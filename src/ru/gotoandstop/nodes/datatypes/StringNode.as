@@ -52,9 +52,7 @@ public class StringNode extends Node {
         text.y = 10;
         text.width = 150;
         text.height = 20;
-        //		text.editable = false;
-        //		text.selectable = false;
-        text.text = super._model.getKeyValue('value');
+        text.text = super._model.getKeyValue('value').value;
         super.addChild(text);
     }
 
@@ -64,7 +62,7 @@ public class StringNode extends Node {
     
 	private function handleChange(event:NodeEvent):void {
 		if (event.key == 'value' && event.value != text.text) {
-			text.text = event.value;
+            text.text = event.value;
 		}
 	}
 
