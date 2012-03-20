@@ -4,6 +4,7 @@ import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.events.MouseEvent;
+import flash.geom.Point;
 
 import mx.core.IFactory;
 
@@ -29,6 +30,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
         var timestamp:String = new Date().getTime().toString(0x10).toLowerCase();
         return prefix + '_' + timestamp;
     }
+    
+    private var _mouseDownCoord:Point;
 
     private var connections:Vector.<SingleConnection>;
     private var fakeConnection:uint;
@@ -97,6 +100,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
             var node:Node = new N(obj, vacuum);
             node.doubleClickEnabled = true;
             node.addEventListener(MouseEvent.MOUSE_DOWN, handleNodeMouseDown);
+            node.addEventListener(MouseEvent.MOUSE_UP, handleNodeMouseUp);
         } else {
             trace('lol happend again');
         }
@@ -116,17 +120,23 @@ public class NodeSystem extends Sprite implements INodeSystem {
     }
 
     private function handleNodeMouseDown(event:MouseEvent):void {
-        var node:Node = event.currentTarget as Node;
-        if (node.isSelected) {
-            var index:int = selectedNodes.indexOf(node);
-            selectedNodes.splice(index, 1);
-            node.deselect();
-        } else {
-            if(!event.shiftKey) {
-                clearSelection();
+        _mouseDownCoord = new Point(event.stageX, event.stageY);
+    }
+
+    private function handleNodeMouseUp(event:MouseEvent):void {
+        if(_mouseDownCoord.equals(new Point(event.stageX, event.stageY))) {
+            var node:Node = event.currentTarget as Node;
+            if (node.isSelected) {
+                var index:int = selectedNodes.indexOf(node);
+                selectedNodes.splice(index, 1);
+                node.deselect();
+            } else {
+                if(!event.shiftKey) {
+                    clearSelection();
+                }
+                selectedNodes.push(node);
+                node.select();
             }
-            selectedNodes.push(node);
-            node.select();
         }
     }
 
@@ -186,7 +196,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     public function deleteNode(node:INode):void {
         var vis:Node = node as Node;
-        vis.removeEventListener(MouseEvent.DOUBLE_CLICK, handleNodeMouseDown);
+        vis.removeEventListener(MouseEvent.MOUSE_DOWN, handleNodeMouseDown);
+        vis.removeEventListener(MouseEvent.MOUSE_UP, handleNodeMouseDown);
         for (var i:uint; i < connections.length; i++) {
             var connection:SingleConnection = connections[i];
             if (connection.from.node == vis.model || connection.to.node == vis.model) {

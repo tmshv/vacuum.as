@@ -48,6 +48,7 @@ public class TimeoutNode extends ActionNode{
         super._selectedShape = s;
 
         var p:Panel = new Panel();
+        p.shadow = false;
         p.height = 50;
         super.addChild(p);
 

@@ -28,6 +28,8 @@ public class ActionNode extends Node{
         super._selectedShape = s;
 
         var h:Panel = new Panel();
+        h.color = 0xf5f5f5;
+        h.shadow = false;
         h.width = 100;
         h.height = 30;
         super.addChild(h);

@@ -56,6 +56,7 @@ public class CommentNode extends Node {
         super._selectedShape = s;
 
         var h:Panel = new Panel();
+        h.shadow = false;
         h.width = 150;
         h.height = 150;
         super.addChild(h);

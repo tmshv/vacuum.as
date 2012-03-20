@@ -63,6 +63,7 @@ public class NumberNode extends Node {
         super._selectedShape = s;
 
         var h:Panel = new Panel();
+        h.shadow = false;
         h.height = 35;
         super.addChild(h);
         super.setDragTarget(h);

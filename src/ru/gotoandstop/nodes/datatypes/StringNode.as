@@ -40,6 +40,7 @@ public class StringNode extends Node {
         super._selectedShape = s;
 
         var h:Panel = new Panel();
+        h.shadow = false;
         h.width = 170;
         h.height = 40;
         super.addChild(h);
