@@ -18,6 +18,7 @@ import flash.utils.setTimeout;
 import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.RelativeVertex;
 import ru.gotoandstop.nodes.VacuumLayout;
+import ru.gotoandstop.nodes.events.NodeEvent;
 import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.ui.ISelectable;
 import ru.gotoandstop.vacuum.controllers.MouseController;
@@ -25,6 +26,8 @@ import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.ModifiableVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.vacuum.view.VertexView;
+
+[Event(name='move', type='ru.gotoandstop.nodes.events.NodeEvent')]
 
 /**
  * @author tmshv
@@ -52,6 +55,7 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
 	public function Node(vacuum:VacuumLayout, model:INode) {
 		pos = new ModifiableVertex();
+        pos.addEventListener(Event.CHANGE, handlePositionChange);
 		super(pos, vacuum.layout, null);
         _model = model;
         _model.addEventListener(Event.CHANGE, super.dispatchEvent);
@@ -81,19 +85,21 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
     }
 
 	override public function dispose():void {
+        pos.removeEventListener(Event.CHANGE, handlePositionChange);
 		mover.dispose();
-		Tweener.removeTweens(closeButton);
-		clearTimeout(closeButtonTimeout);
-		closeButton.removeEventListener(MouseEvent.CLICK, handleClickClose);
-		dataContainer.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
-		super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-		super.removeEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
-		super.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
-		super.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseOut);
+        Tweener.removeTweens(closeButton);
+        clearTimeout(closeButtonTimeout);
+        closeButton.removeEventListener(MouseEvent.CLICK, handleClickClose);
+        dataContainer.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
+        super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+        super.removeEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
+        super.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
+        super.removeEventListener(MouseEvent.MOUSE_OUT, handleMouseOut);
         _model.removeEventListener(Event.CHANGE, super.dispatchEvent);
         _model.dispose();
         _model = null;
-		super.dispose();
+        pos = null;
+        super.dispose();
 	}
 
 	protected function createPoints(markers:Vector.<Object>):void {
@@ -264,6 +270,10 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
     public function get isSelected():Boolean {
         return _selected;
+    }
+    
+    private function handlePositionChange(event:Event):void{
+        super.dispatchEvent(new NodeEvent(NodeEvent.MOVE));        
     }
 }
 }
