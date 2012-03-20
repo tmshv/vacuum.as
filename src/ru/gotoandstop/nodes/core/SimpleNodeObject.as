@@ -31,6 +31,14 @@ public class SimpleNodeObject extends EventDispatcher implements INode{
 
 	protected var _model:Object;
 
+    private var _system:INodeSystem;
+    public function get system():INodeSystem {
+        return _system;
+    }
+    public function set system(value:INodeSystem):void{
+        _system = value;
+    }
+
 	public function SimpleNodeObject() {
 		_model = new Object();
 	}

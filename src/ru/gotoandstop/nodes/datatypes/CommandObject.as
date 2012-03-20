@@ -11,6 +11,7 @@ import flash.events.EventDispatcher;
 
 import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.nodes.core.INodeSystem;
 import ru.gotoandstop.values.IValue;
 
 public class CommandObject extends EventDispatcher implements INode {
@@ -32,6 +33,14 @@ public class CommandObject extends EventDispatcher implements INode {
 
 	public var command:ICommand;
 	public var description:String;
+
+    private var _system:INodeSystem;
+    public function get system():INodeSystem {
+        return _system;
+    }
+    public function set system(value:INodeSystem):void{
+        _system = value;
+    }
 
 	public function CommandObject() {
 

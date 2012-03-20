@@ -22,5 +22,9 @@ public interface INode extends IEventDispatcher, IDisposable {
 	function setKeyValue(key:String, value:*):void;
 
 	function getParams():Vector.<String>;
+
+    function get system():INodeSystem;
+
+    function set system(value:INodeSystem):void;
 }
 }

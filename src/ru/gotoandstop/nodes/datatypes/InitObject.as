@@ -9,11 +9,21 @@ package ru.gotoandstop.nodes.datatypes {
 import flash.events.EventDispatcher;
 
 import ru.gotoandstop.command.ICommand;
+import ru.gotoandstop.nodes.core.INodeSystem;
 import ru.gotoandstop.nodes.datatypes.ExecuteValue;
 import ru.gotoandstop.nodes.core.INode;
 
 public class InitObject extends EventDispatcher implements INode{
 	private var _cmd:ICommand;
+
+    private var _system:INodeSystem;
+    public function get system():INodeSystem {
+        return _system;
+    }
+    public function set system(value:INodeSystem):void{
+        _system = value;
+    }
+
 	public function InitObject() {
 		_cmd = createExecuter();
 	}

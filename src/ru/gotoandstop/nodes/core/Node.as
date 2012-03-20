@@ -53,7 +53,13 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
     
     protected var _selectedShape:DisplayObject;
 
-	public function Node(vacuum:VacuumLayout, model:INode) {
+    public function get system():INodeSystem {
+        return model.system;
+    }
+    public function set system(value:INodeSystem):void{
+        model.system = value;
+    }
+    public function Node(vacuum:VacuumLayout, model:INode) {
 		pos = new ModifiableVertex();
         pos.addEventListener(Event.CHANGE, handlePositionChange);
 		super(pos, vacuum.layout, null);

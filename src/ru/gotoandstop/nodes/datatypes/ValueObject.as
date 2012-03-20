@@ -3,6 +3,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 
 import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.nodes.core.INodeSystem;
 
 import ru.gotoandstop.nodes.core.NodeChangeEvent;
 import ru.gotoandstop.values.IValue;
@@ -31,6 +32,14 @@ public class ValueObject extends EventDispatcher implements INode, IValue {
 		_name = value;
 		_value.name = value;
 	}
+
+    private var _system:INodeSystem;
+    public function get system():INodeSystem {
+        return _system;
+    }
+    public function set system(value:INodeSystem):void{
+        _system = value;
+    }
 
 	public function ValueObject(value:IValue) {
 		super();
