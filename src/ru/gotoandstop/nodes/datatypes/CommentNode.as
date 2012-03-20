@@ -15,7 +15,7 @@ import flash.events.Event;
 
 import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
-import ru.gotoandstop.nodes.core.NodeEvent;
+import ru.gotoandstop.nodes.core.NodeChangeEvent;
 
 public class CommentNode extends Node {
 	private var text:Text;
@@ -33,7 +33,7 @@ public class CommentNode extends Node {
 		text.text = txt;
 	}
 
-	private function handleStringChange(event:NodeEvent):void {
+	private function handleStringChange(event:NodeChangeEvent):void {
 		if (text.text != event.value) writeText(event.value);
 	}
 

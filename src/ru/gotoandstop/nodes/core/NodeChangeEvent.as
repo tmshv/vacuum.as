@@ -8,9 +8,9 @@
 package ru.gotoandstop.nodes.core {
 import flash.events.Event;
 
-import ru.gotoandstop.nodes.core.NodeEvent;
+import ru.gotoandstop.nodes.core.NodeChangeEvent;
 
-public class NodeEvent extends Event{
+public class NodeChangeEvent extends Event{
 	private var _key:String;
 	public function get key():String {
 		return _key;
@@ -21,14 +21,14 @@ public class NodeEvent extends Event{
 		return _value;
 	}
 
-	public function NodeEvent(key:String, value:*) {
+	public function NodeChangeEvent(key:String, value:*) {
 		super(Event.CHANGE, false, false);
 		_key = key;
 		_value = value;
 	}
 
 	override public function clone():Event {
-		return new NodeEvent(key,  value);
+		return new NodeChangeEvent(key,  value);
 	}
 
 	override public function toString():String {

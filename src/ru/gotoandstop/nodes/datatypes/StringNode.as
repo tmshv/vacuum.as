@@ -15,7 +15,7 @@ import flash.events.Event;
 
 import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
-import ru.gotoandstop.nodes.core.NodeEvent;
+import ru.gotoandstop.nodes.core.NodeChangeEvent;
 
 public class StringNode extends Node {
 	private var text:Text;
@@ -60,7 +60,7 @@ public class StringNode extends Node {
         super.model.setKeyValue('value', text.text);
     }
     
-	private function handleChange(event:NodeEvent):void {
+	private function handleChange(event:NodeChangeEvent):void {
 		if (event.key == 'value' && event.value != text.text) {
             text.text = event.value;
 		}

@@ -8,7 +8,7 @@ import flash.events.Event;
 
 import ru.gotoandstop.nodes.*;
 import ru.gotoandstop.nodes.core.Node;
-import ru.gotoandstop.nodes.core.NodeEvent;
+import ru.gotoandstop.nodes.core.NodeChangeEvent;
 
 /**
  * @author tmshv
@@ -45,7 +45,7 @@ public class NumberNode extends Node {
 		return result;
 	}
 
-	private function handleChange(event:NodeEvent):void {
+	private function handleChange(event:NodeChangeEvent):void {
 		if (event.key == 'value') {
 			if (currentValue != event.value) {
 				num.value = event.value;

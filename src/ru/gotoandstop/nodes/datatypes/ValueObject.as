@@ -4,7 +4,7 @@ import flash.events.EventDispatcher;
 
 import ru.gotoandstop.nodes.core.INode;
 
-import ru.gotoandstop.nodes.core.NodeEvent;
+import ru.gotoandstop.nodes.core.NodeChangeEvent;
 import ru.gotoandstop.values.IValue;
 
 /**
@@ -44,7 +44,7 @@ public class ValueObject extends EventDispatcher implements INode, IValue {
 	}
 
 	public function update():void {
-		super.dispatchEvent(new NodeEvent('value', _value.getValue()));
+		super.dispatchEvent(new NodeChangeEvent('value', _value.getValue()));
 	}
 
 	public function setKeyValue(key:String, value:*):void {

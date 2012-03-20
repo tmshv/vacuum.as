@@ -7,7 +7,7 @@
 package ru.gotoandstop.nodes.core {
 import flash.events.EventDispatcher;
 
-[Event(name="change", type="ru.gotoandstop.nodes.core.NodeEvent")]
+[Event(name="change", type="ru.gotoandstop.nodes.core.NodeChangeEvent")]
 
 public class SimpleNodeObject extends EventDispatcher implements INode{
 	private var _name:String;
@@ -53,11 +53,11 @@ public class SimpleNodeObject extends EventDispatcher implements INode{
 	}
 
 	protected function notifyAbout(key:String, value:*):void{
-		super.dispatchEvent(new NodeEvent(key, value));
+		super.dispatchEvent(new NodeChangeEvent(key, value));
 	}
 
 	public function update():void {
-		super.dispatchEvent(new NodeEvent('', null));
+		super.dispatchEvent(new NodeChangeEvent('', null));
 	}
 
 	public function dispose():void {
