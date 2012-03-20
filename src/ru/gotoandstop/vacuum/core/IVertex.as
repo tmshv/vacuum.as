@@ -16,5 +16,6 @@ package ru.gotoandstop.vacuum.core{
 		function getCoord(params:Object=null):Point;
 		function toPoint():Point;
 		function update():void;
+        function clone():IVertex;
 	}
 }

@@ -189,5 +189,9 @@ package ru.gotoandstop.vacuum.view{
 		public function getController(name:String):*{
 			return this.controllers[name];
 		}
-	}
+
+    public function clone():IVertex {
+        return new VertexView(_vertex.clone(), layout, _icon);
+    }
+}
 }
