@@ -19,6 +19,7 @@ import ru.gotoandstop.vacuum.core.Vertex;
 			super();
 			this.list = list;
             thresholdQuad = threshold * threshold;
+            active = true;
 		}
 		
 		public function modify(x:Number, y:Number):Point{
