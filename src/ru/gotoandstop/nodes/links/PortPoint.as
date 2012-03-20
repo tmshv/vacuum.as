@@ -44,9 +44,10 @@ public class PortPoint extends VertexView implements IPort {
 
     public function getValue():* {
         if (node) {
-            if (node[property]) {
-                return node[property];
-            } else {
+            try{
+                var value:* = node[property];
+                return value;
+            }catch(error:Error){
                 return node.getKeyValue(property);
             }
         } else {
