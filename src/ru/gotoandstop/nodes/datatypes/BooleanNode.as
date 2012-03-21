@@ -25,7 +25,7 @@ public class BooleanNode extends Node{
 
     public function BooleanNode(object:ValueObject, vacuum:VacuumLayout) {
         super(vacuum, object);
-        contol.selected = super.model.getKeyValue('value');
+        contol.selected = super.model.getKeyValue('value').getValue();
     }
 
     public override function getMarkers():Vector.<Object> {
@@ -66,7 +66,7 @@ public class BooleanNode extends Node{
     }
 
     private function handleControlClick(event:Event):void{
-        super._model.setKeyValue('value', contol.selected);
+        super.model.setKeyValue('value', contol.selected);
     }
 
     private function handleControlMouseUp(event:MouseEvent):void{

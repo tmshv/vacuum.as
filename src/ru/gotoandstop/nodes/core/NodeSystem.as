@@ -91,8 +91,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         var prototype:Object = manifest.model;
         model = model ? model : new Object();
         for (var v:String in prototype) {
-            var val:* = model[v] ? model[v] : prototype[v];
-            //trace('setting', v, val, 'to', node.name);
+            var val:* = model[v] == undefined ? prototype[v] : model[v];
             obj.setKeyValue(v, val);
         }
         obj.system = this;
