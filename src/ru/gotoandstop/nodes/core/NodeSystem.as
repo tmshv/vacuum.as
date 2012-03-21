@@ -214,9 +214,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
         index = selectedNodes.indexOf(vis);
         selectedNodes.splice(index, 1);
 
-        var props:Vector.<String> = vis.getParams();
-        for each(var prop:String in props) {
-            var point:PortPoint = vis.getPoint(prop);
+        var points:Vector.<PortPoint> = vis.getPointList();
+        for each(var point:PortPoint in points) {
             if (point) vacuum.deletePoint(point);
         }
 
@@ -242,10 +241,10 @@ public class NodeSystem extends Sprite implements INodeSystem {
             var params:Vector.<String> = node.getParams();
             for each(var prop:String in params) {
                 var val:* = node.getKeyValue(prop);
-                if (val) {
+                if (val != null && val != undefined) {
                     if (val is IValue) {
                         var ival:* = (val as IValue).getValue();
-                        if (ival) model[prop] = ival;
+                        model[prop] = ival;
                     } else {
                         model[prop] = val;
                     }

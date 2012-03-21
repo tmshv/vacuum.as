@@ -25,6 +25,7 @@ public class BooleanNode extends Node{
 
     public function BooleanNode(object:ValueObject, vacuum:VacuumLayout) {
         super(vacuum, object);
+        contol.selected = super.model.getKeyValue('value');
     }
 
     public override function getMarkers():Vector.<Object> {
@@ -53,7 +54,6 @@ public class BooleanNode extends Node{
         contol.x = 5;
         contol.y = 5;
         contol.label = 'true or false';
-        contol.selected = super._model.getKeyValue('value');
         super.addChild(contol);
 
         var s2:Sprite = new Sprite();

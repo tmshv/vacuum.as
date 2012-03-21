@@ -135,6 +135,14 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 		actives[property] = point;
 	}
 
+    public function getPointList():Vector.<PortPoint>{
+        var result:Vector.<PortPoint> = new Vector.<PortPoint>();
+        for each(var port:PortPoint in actives) {
+            result.push(port);
+        }
+        return result;
+    }
+
 	public function getPoint(property:String):PortPoint {
 		return actives[property];
 	}
