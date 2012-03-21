@@ -11,6 +11,8 @@ import com.bit101.components.IndicatorLight;
 import com.bit101.components.Panel;
 import com.bit101.components.PushButton;
 
+import flash.display.DisplayObject;
+
 import flash.display.Shape;
 import flash.display.Sprite;
 import flash.events.Event;
@@ -20,12 +22,13 @@ import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.core.SimpleNodeObject;
 
-public class BooleanNode extends Node{
+public class BooleanNode extends Node {
     private var contol:CheckBox;
 
     public function BooleanNode(object:ValueObject, vacuum:VacuumLayout) {
         super(vacuum, object);
-        contol.selected = super.model.getKeyValue('value').getValue();
+        object.addEventListener(Event.CHANGE, handleChange);
+        handleChange(null);
     }
 
     public override function getMarkers():Vector.<Object> {
@@ -65,15 +68,20 @@ public class BooleanNode extends Node{
         super.setDragTarget(s2);
     }
 
-    private function handleControlClick(event:Event):void{
+    private function handleChange(event:Event):void {
+        contol.selected = super.model.getKeyValue('value').getValue();
+    }
+
+    private function handleControlClick(event:Event):void {
         super.model.setKeyValue('value', contol.selected);
     }
 
-    private function handleControlMouseUp(event:MouseEvent):void{
+    private function handleControlMouseUp(event:MouseEvent):void {
         event.stopImmediatePropagation();
     }
 
-        override public function dispose():void {
+    override public function dispose():void {
+        super.model.removeEventListener(Event.CHANGE, handleChange);
         contol.removeEventListener(MouseEvent.MOUSE_UP, handleControlMouseUp);
         contol.removeEventListener(MouseEvent.CLICK, handleControlClick);
         super.dispose();
