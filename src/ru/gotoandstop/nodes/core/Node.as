@@ -16,6 +16,8 @@ import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
 import ru.gotoandstop.command.ICommand;
+import ru.gotoandstop.nodes.CloneVertex;
+import ru.gotoandstop.nodes.CombinedVertex;
 import ru.gotoandstop.nodes.RelativeVertex;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.events.NodeEvent;
@@ -49,8 +51,15 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
     private var _selected:Boolean;
 
-	private var actives:Object;
-    
+	private var _ports:Object;
+
+    private var _lt:IVertex;
+    private var _rb:IVertex;
+    private var _lb:IVertex;
+    private var _rt:IVertex;
+    protected var leftTop:IVertex;
+    protected var rightBottom:IVertex;
+
     protected var _selectedShape:DisplayObject;
 
     public function get system():INodeSystem {
@@ -66,10 +75,18 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
         _model = model;
         _model.addEventListener(Event.CHANGE, super.dispatchEvent);
 		mover = new MouseController(this);
-		actives = new Object();
+		_ports = new Object();
 		this.vacuum = vacuum;
 		this.dataContainer = new Sprite();
 		super.addChild(this.dataContainer);
+
+        leftTop = new Vertex();
+        rightBottom = new Vertex();
+//        _left = new CloneVertex(leftTop, 2);
+        _lt = new RelativeVertex(this, leftTop);
+        _rb = new RelativeVertex(this, rightBottom);
+        _lb = new CombinedVertex(_lt, _rb, true);
+        _rt = new CombinedVertex(_lt, _rb, false);
 
 		closeButton = new PushButton(null, 0, -18, 'X');
 		closeButton.addEventListener(MouseEvent.CLICK, handleClickClose);
@@ -115,36 +132,69 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 		for each(var p:Object in markers) {
 			var prop:String = p.param;
 			var type:String = p.type;
-			var x:Number = p.x * scale_x;
-			var y:Number = p.y * scale_y;
+            if(p.position == undefined){
+                var x:Number = p.x * scale_x;
+                var y:Number = p.y * scale_y;
 
-			x /= vacuum.layout.scale.value;
-			y /= vacuum.layout.scale.value;
+                x /= vacuum.layout.scale.value;
+                y /= vacuum.layout.scale.value;
 
-			addPort(x, y, prop, type, p.dir);
+                addPort(x, y, prop, type, p.dir);
+            }else{
+                var pattr:RegExp = /(-?[\d]+)\s(left|right|top|bottom)/;
+                var x_match:Array = String(p.position.x).match(pattr);
+                var y_match:Array = String(p.position.y).match(pattr);
+                var x_snap:String = x_match[2];
+                var y_snap:String = y_match[2];
+
+                var x:Number = parseFloat(x_match[1]);
+                var y:Number = parseFloat(y_match[1]);
+
+                var targ:IVertex;
+                if(x_snap == 'left' && y_snap == 'top'){
+                    targ = _lt;
+                }else if(x_snap == 'left' && y_snap == 'bottom'){
+                    targ = _lt;                    
+                }else if(x_snap == 'right' && y_snap == 'top'){
+                    targ = _rt;
+                }else if(x_snap == 'right' && y_snap == 'bottom'){
+                    targ = _rb;
+                }
+                addPortRelatively(x, y, prop, type, p.dir, targ);
+            }
 		}
 	}
 
 	protected function addPort(x:Number, y:Number, property:String, type:String, direction:String):void {
 		var xy:IVertex = new Vertex(x, y);
-		var rel:IVertex = new RelativeVertex(this, xy);
+		var port_vertex:IVertex = new RelativeVertex(this, xy);
 
-		var point:PortPoint = new PortPoint(rel, vacuum.layout, _model, property, type, direction);
+		var point:PortPoint = new PortPoint(port_vertex, vacuum.layout, _model, property, type, direction);
 		vacuum.showPort(point);
 
-		actives[property] = point;
+		_ports[property] = point;
 	}
+
+    private function addPortRelatively(x:Number, y:Number, property:String, type:String, direction:String, target:IVertex):void {
+        var xy:IVertex = new Vertex(x, y);
+        var port_vertex:IVertex = new RelativeVertex(target, xy);
+
+        var point:PortPoint = new PortPoint(port_vertex, vacuum.layout, _model, property, type, direction);
+        vacuum.showPort(point);
+
+        _ports[property] = point;
+    }
 
     public function getPointList():Vector.<PortPoint>{
         var result:Vector.<PortPoint> = new Vector.<PortPoint>();
-        for each(var port:PortPoint in actives) {
+        for each(var port:PortPoint in _ports) {
             result.push(port);
         }
         return result;
     }
 
 	public function getPoint(property:String):PortPoint {
-		return actives[property];
+		return _ports[property];
 	}
 
 	override public function get name():String {
