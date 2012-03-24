@@ -26,11 +26,12 @@ public class TimeoutNode extends ActionNode{
 	public function TimeoutNode(model:TimeoutObject, vacuum:VacuumLayout) {
         timeout = model;
         super(model, vacuum);
+        super.rightBottom.setCoord(100, 50);
 
-        var overrided:MacroCommand = new MacroCommand();
-        overrided.addCommand(new ShakeCommand(this, 2, 0.3));
-        overrided.addCommand(new TimeoutCommand(400, model.getKeyValue('done')));
-        model.overrideAction(overrided);
+//        var overrided:MacroCommand = new MacroCommand();
+//        overrided.addCommand(new ShakeCommand(this, 2, 0.3));
+//        overrided.addCommand(new TimeoutCommand(400, model.getKeyValue('done')));
+//        model.overrideAction(overrided);
     }
 
     public override function getMarkers():Vector.<Object> {

@@ -72,5 +72,10 @@ public class CommentNode extends Node {
         text.height = 130;
         super.addChild(text);
     }
+
+
+    override public function getMarkers():Vector.<Object> {
+        return new Vector.<Object>();
+    }
 }
 }

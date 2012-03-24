@@ -12,6 +12,7 @@ import ru.gotoandstop.nodes.*;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
 import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.links.PortPointType;
+import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.ui.ISelectable;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.IVertex;
@@ -39,6 +40,12 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     private var nodeLibrary:Object;
     private var nodes:Vector.<Node>;
+
+    private var _storage:Storage;
+    public function get storage():Storage {
+        return _storage;
+    }
+
     private var vacuum:VacuumLayout;
     private var _stage:Stage;
 
@@ -46,8 +53,9 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     private var selectedNodes:Vector.<ISelectable> = new Vector.<ISelectable>();
 
-    public function NodeSystem(stage:Stage) {
+    public function NodeSystem(stage:Stage, storage:Storage=null) {
         _stage = stage;
+        _storage = storage ? storage : new Storage();
         nodeLibrary = new Object();
         nodes = new Vector.<Node>();
         connections = new Vector.<SingleConnection>();
@@ -218,12 +226,12 @@ public class NodeSystem extends Sprite implements INodeSystem {
             if (point) vacuum.deletePoint(point);
         }
 
+        super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.REMOVED_NODE, false, false, node));
+        vis.dispose();
         var container:DisplayObjectContainer = vacuum.getLayer('nodes');
         if (container.contains(vis)) {
             container.removeChild(vis);
         }
-        super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.REMOVED_NODE, false, false, node));
-        vis.dispose();
     }
 
     public function getStructure():Object {

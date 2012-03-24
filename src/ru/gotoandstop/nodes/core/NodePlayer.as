@@ -16,6 +16,7 @@ import ru.gotoandstop.nodes.SingleConnection;
 import ru.gotoandstop.nodes.core.INodeSystem;
 import ru.gotoandstop.nodes.core.NodeSystem;
 import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.values.IValue;
 
 public class NodePlayer extends EventDispatcher implements INodeSystem{
@@ -151,6 +152,10 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 	}
 
     public function deleteNode(node:INode):void {
+    }
+
+    public function get storage():Storage {
+        return null;
     }
 }
 }

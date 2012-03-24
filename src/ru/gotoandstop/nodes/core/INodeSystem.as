@@ -12,6 +12,7 @@ import flash.utils.getDefinitionByName;
 import ru.gotoandstop.IDisposable;
 
 import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.storage.Storage;
 
 public interface INodeSystem extends IEventDispatcher, IDisposable {
     function registerNode(node:Object):void;
@@ -35,5 +36,7 @@ public interface INodeSystem extends IEventDispatcher, IDisposable {
     function connect(fromName:String, fromProp:String, toName:String, toProp:String):void;
 
     function breakConnection(nodeName:String, nodeProp:String):void;
+
+    function get storage():Storage;
 }
 }

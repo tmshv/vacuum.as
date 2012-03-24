@@ -43,7 +43,7 @@ public class ActionNode extends Node {
     }
 
     public override function getMarkers():Vector.<Object> {
-        var result:Vector.<Object> = new Vector.<Object>;
+        var result:Vector.<Object> = super.getMarkers();
         result.push({param:'init', dir:'left', type:'in', position:{x:"-3 left", y:"15 top"}});
         result.push({param:'done', dir:'right', type:'out', position:{x:"3 right", y:"15 top"}});
         return result;

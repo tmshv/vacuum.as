@@ -263,6 +263,7 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
 	public function getMarkers():Vector.<Object> {
 		var result:Vector.<Object> = new Vector.<Object>;
+        result.push({param:'name', type:'out', dir:'up', x:0, y:0});
 		return result;
 	}
 
