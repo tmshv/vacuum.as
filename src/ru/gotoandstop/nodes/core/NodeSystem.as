@@ -61,11 +61,11 @@ public class NodeSystem extends Sprite implements INodeSystem {
         connections = new Vector.<SingleConnection>();
         vacuum = new VacuumLayout(this, new Layout());
         vacuum.cursor = new MouseVertex(stage);
-        vacuum.addEventListener(VacuumEvent.ADDED_VERTEX, this.handleAddedVertexToVacuum);
+        vacuum.addEventListener(VacuumEvent.ADDED_VERTEX, handleAddedVertexToVacuum);
 
-        _stage.addEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
-        _stage.addEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
-        _stage.addEventListener(MouseEvent.CLICK, this.handleStageClick);
+        _stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+        _stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+        _stage.addEventListener(MouseEvent.CLICK, handleStageClick);
     }
 
     public function registerNode(node:Object):void {
@@ -96,13 +96,13 @@ public class NodeSystem extends Sprite implements INodeSystem {
             trace('lol happend');
             return null;
         }
+        obj.system = this;
         var prototype:Object = manifest.model;
         model = model ? model : new Object();
         for (var v:String in prototype) {
             var val:* = model[v] == undefined ? prototype[v] : model[v];
             obj.setKeyValue(v, val);
         }
-        obj.system = this;
 
         var N:Class = manifest.node;
         if (N) {
