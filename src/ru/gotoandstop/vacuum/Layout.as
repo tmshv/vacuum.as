@@ -15,6 +15,7 @@ package ru.gotoandstop.vacuum{
 	 *
 	 * Creation date: May 2, 2011 (12:41:46 PM)
 	 * @author Roman Timashev (roman@tmshv.ru)
+     *
 	 */
 	public class Layout extends EventDispatcher{
 		private var _scale:NumberValue;
