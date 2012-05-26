@@ -23,13 +23,13 @@ public class TimeoutObject extends ActionObject{
 		_delay = new NumberValue();
 	}
 
-	override public function setKeyValue(key:String, value:*):void {
+	override public function set(key:String, value:*):void {
 		if (key == 'delay') {
 			if (value is IValue) {
 				if (_delayObject) _delayObject.removeEventListener(Event.CHANGE, handleChange);
 				_delayObject = value;
 				_delayObject.addEventListener(Event.CHANGE, handleChange);
-				delay = _delayObject.name;
+				delay = _delayObject.id;
 			} else if (value is Number) {
 				_delay.value = value;
 			} else {
@@ -38,14 +38,14 @@ public class TimeoutObject extends ActionObject{
 				delay = '';
 			}
 		}else {
-			super.setKeyValue(key, value);
+			super.set(key, value);
 		}
 	}
 
 	override public function update():void {
 		clearTimeout(_timeoutID);
 		var delay:uint = getDelay();
-		_timeoutID = setTimeout(super._done.execute, delay);
+//		_timeoutID = setTimeout(super._done.execute, delay);
 	}
 
 	override public function dispose():void {
@@ -61,11 +61,11 @@ public class TimeoutObject extends ActionObject{
         update();
     }
 
-    override public function getKeyValue(key:String):* {
+    override public function get(key:String):* {
 		if (key == 'delay') {
 			return _delay;
 		}
-		return super.getKeyValue(key);
+		return super.get(key);
 	}
 
 	override public function getParams():Vector.<String> {

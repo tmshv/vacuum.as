@@ -7,24 +7,32 @@ import ru.gotoandstop.IDisposable;
  * @author tmshv
  */
 public interface INode extends IEventDispatcher, IDisposable {
-	function get name():String;
+    function get lastTransfer():TransportObject;
 
-	function set name(value:String):void;
+    function set lastTransfer(value:TransportObject):void;
+
+	function get id():String;
+
+	function set id(value:String):void;
 
 	function get type():String;
 
 	function set type(value:String):void;
 
-	function update():void;
-
-	function getKeyValue(key:String):*;
-
-	function setKeyValue(key:String, value:*):void;
-
-	function getParams():Vector.<String>;
-
     function get system():INodeSystem;
 
     function set system(value:INodeSystem):void;
+
+    function update():void;
+
+	function get(key:String):*;
+
+	function set(key:String, value:*):void;
+
+    function exist(key:String):Boolean;
+
+    function kill(key:String):void;
+
+	function getParams():Vector.<String>;
 }
 }

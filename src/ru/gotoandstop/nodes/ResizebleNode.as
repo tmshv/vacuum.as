@@ -31,7 +31,7 @@ public class ResizebleNode extends ActionNode {
         super(object, vacuum);
 
         handleChange(null);
-        super.model.addEventListener(Event.CHANGE, handleChange);
+        super.object.addEventListener(Event.CHANGE, handleChange);
         super.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
     }
 
@@ -44,8 +44,8 @@ public class ResizebleNode extends ActionNode {
     }
 
     private function handleChange(event:NodeChangeEvent):void {
-        var w:uint = super.model.getKeyValue('width');
-        var h:uint = super.model.getKeyValue('height');
+        var w:uint = super.object.get('width');
+        var h:uint = super.object.get('height');
         super.rightBottom.setCoord(w, h);
         _panel.width = w;
         _panel.height = h;
@@ -74,8 +74,8 @@ public class ResizebleNode extends ActionNode {
             w += _localMouseDownRightBottom.x;
             h += _localMouseDownRightBottom.y;
             if (w > 30 && h > 30) {
-                super.model.setKeyValue('width', w);
-                super.model.setKeyValue('height', h);
+                super.object.set('width', w);
+                super.object.set('height', h);
             }
             event.stopImmediatePropagation();
         }
@@ -94,7 +94,7 @@ public class ResizebleNode extends ActionNode {
     }
 
     override public function dispose():void {
-        super.model.removeEventListener(Event.CHANGE, handleChange);
+        super.object.removeEventListener(Event.CHANGE, handleChange);
         super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
         super.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
         super.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove, true);

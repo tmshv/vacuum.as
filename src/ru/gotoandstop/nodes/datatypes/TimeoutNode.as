@@ -34,12 +34,6 @@ public class TimeoutNode extends ActionNode{
 //        model.overrideAction(overrided);
     }
 
-    public override function getMarkers():Vector.<Object> {
-        var result:Vector.<Object> = super.getMarkers();
-        result.push({param:'delay', x:50, y:50, dir:'down', type:'in'});
-        return result;
-    }
-
     override protected function draw():void {
         var s:Shape = new Shape();
         s.graphics.beginFill(0, 1);

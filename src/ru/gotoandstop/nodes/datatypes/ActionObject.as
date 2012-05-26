@@ -9,84 +9,48 @@ package ru.gotoandstop.nodes.datatypes {
 import flash.events.Event;
 
 import ru.gotoandstop.command.ICommand;
+import ru.gotoandstop.nodes.core.NodeChangeEvent;
+import ru.gotoandstop.nodes.core.NodeObject;
 import ru.gotoandstop.nodes.core.NodeSystem;
-import ru.gotoandstop.nodes.core.SimpleNodeObject;
+import ru.gotoandstop.nodes.core.TransportOrigin;
 import ru.gotoandstop.values.IValue;
 
-public class ActionObject extends SimpleNodeObject {
-    private var _initObjectName:String;
-
-    public function get init():String {
-        return _initObjectName;
-    }
-
-    private var _init:IValue;
-    protected var _done:ICommand;
-
+public class ActionObject extends NodeObject {
     private var _overridedCommand:ICommand;
 
     public function ActionObject() {
-        _done = createExecuter();
+        super.set('init', 0);
+        super.set('done', 0);
     }
 
     public function overrideAction(cmd:ICommand):void {
         _overridedCommand = cmd;
     }
 
-    override public function setKeyValue(key:String, value:*):void {
-        if (key == 'init') {
-            if (_init) _init.removeEventListener(Event.CHANGE, handleChange);
-
-            if (value is IValue) {
-                _init = value;
-                _init.addEventListener(Event.CHANGE, handleChange);
-                _initObjectName = this._init.name;
-            } else {
-                _init = null;
-                _initObjectName = '';
+    override protected function notifyAbout(key:String, value:*):void {
+        var p:String = param(key);
+        if(p == "init"){
+            var origin:String = lastTransfer ? lastTransfer.origin : '';
+            var changing_is_update:Boolean = origin == TransportOrigin.NODE_UPDATE;
+            var value_is_valid:Boolean = value != null && value != undefined;
+            if (value_is_valid && changing_is_update) {
+                if (_overridedCommand) {
+                    _overridedCommand.execute();
+                } else {
+                    executeAction();
+                }
             }
-        } else {
-            super.setKeyValue(key, value);
         }
+        super.notifyAbout(key, value);
     }
 
-    override public function getKeyValue(key:String):* {
-        if (key == 'done') {
-            return _done;
-        }
-        return super.getKeyValue(key);
-    }
-
-    private function handleChange(event:Event):void {
-        if (_overridedCommand) {
-            _overridedCommand.execute();
-        } else {
-            executeAction();
-        }
-    }
-
-    protected function executeAction():void{
-        _done.execute();
+    protected function executeAction():void {
+        var done:Object = get("init");
+        set('done', done);
     }
 
     override public function dispose():void {
-        if (_init) _init.removeEventListener(Event.CHANGE, handleChange);
-        _init = null;
-        _done = null;
         super.dispose();
-    }
-
-    private function createExecuter():ICommand {
-        var cmd:ExecuteValue = new ExecuteValue();
-        cmd.name = NodeSystem.getUniqueName();
-        return cmd;
-    }
-
-    override public function getParams():Vector.<String> {
-        var list:Vector.<String> = super.getParams();
-        list.push('init');
-        list.push('done');
-        return list;
     }
 }
 }

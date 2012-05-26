@@ -6,16 +6,8 @@
  *
  */
 package ru.gotoandstop.nodes.core {
-import com.junkbyte.console.Cc;
-
 import flash.events.EventDispatcher;
-import flash.utils.ByteArray;
 
-import ru.gotoandstop.nodes.SingleConnection;
-
-import ru.gotoandstop.nodes.core.INodeSystem;
-import ru.gotoandstop.nodes.core.NodeSystem;
-import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.values.IValue;
 
@@ -58,12 +50,12 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 		}
 		var prototype:Object = manifest.model;
 		model = model ? model : new Object();
-		node.name = model.name ? model.name : NodeSystem.getUniqueName({type:type});
+		node.id = model.name ? model.name : NodeSystem.getUniqueName({type:type});
 		node.type = type;
 		
 		for (var v:String in prototype) {
 			var val:* = model[v] ? model[v] : prototype[v];
-			node.setKeyValue(v, val);
+			node.set(v, val);
 		}
 
 		nodes.push(node);
@@ -73,7 +65,7 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 
 	public function getNodeByName(name:String):INode {
 		for each(var node:INode in nodes) {
-			if (node.name == name) return node;
+			if (node.id == name) return node;
 		}
 		return null;
 	}
@@ -81,7 +73,7 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 	public function getNodeNames():Vector.<String> {
 		var names:Vector.<String> = new Vector.<String>();
 		for each(var node:INode in nodes) {
-			names.push(node.name);
+			names.push(node.id);
 		}
 		return names;
 	}
@@ -89,7 +81,7 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 	public function connect(firstNodeName:String, firstProp:String, secondNodeName:String, secondProp:String):void {
 		var from_node:INode = getNodeByName(firstNodeName);
 		var to_node:INode = getNodeByName(secondNodeName);
-		to_node.setKeyValue(secondProp, from_node.getKeyValue(firstProp));
+		to_node.set(secondProp, from_node.get(firstProp));
 	}
 
 	public function getStructure():Object {
@@ -105,7 +97,7 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 			var model:Object = {};
 			var params:Vector.<String> = node.getParams();
 			for each(var prop:String in params) {
-				var val:* = node.getKeyValue(prop);
+				var val:* = node.get(prop);
 				if (val) {
 					if (val is IValue) {
 						var ival:* = (val as IValue).getValue();
@@ -115,7 +107,7 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
 					}
 				}
 			}
-			model.name = node.name;
+			model.name = node.id;
 
 			raw_node.model = model;
 			nodes.push(raw_node);
@@ -155,6 +147,10 @@ public class NodePlayer extends EventDispatcher implements INodeSystem{
     }
 
     public function get storage():Storage {
+        return null;
+    }
+
+    public function getLinkedValue(link:String):Object {
         return null;
     }
 }

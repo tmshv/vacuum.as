@@ -16,6 +16,7 @@ import ru.gotoandstop.nodes.links.SimpleLineConnection;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
+import ru.gotoandstop.vacuum.view.VertexView;
 
 [Event(name="addedVertex", type="ru.gotoandstop.nodes.VacuumEvent")]
 /**
@@ -50,6 +51,7 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 		this.addLayer('lines');
 		this.addLayer('nodes');
 		this.addLayer('activepoints');
+        this.addLayer("vertex");
 	}
 
 	public function addLayer(name:String):void {
@@ -106,6 +108,16 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 			}
 		}
 	}
+
+    public function showVertex(v:VertexView):void {
+        const layer:Sprite = this.layers['vertex'];
+        layer.addChild(v);
+    }
+
+    public function hideVertex(v:VertexView):void {
+        const layer:Sprite = this.layers['vertex'];
+        if(v && layer.contains(v)) layer.removeChild(v);
+    }
 
 	public function showPort(point:PortPoint):void {
 		const layer:Sprite = this.layers['activepoints'];

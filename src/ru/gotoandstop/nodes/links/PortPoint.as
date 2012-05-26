@@ -33,7 +33,7 @@ public class PortPoint extends VertexView implements IPort {
 
         var icon:VertexIcon;
         if (this.type == 'in') {
-            icon = new RectIcon(0xff000000, 0xffffffff);
+            icon = new RectIcon(0xffbbbbbb, 0xffffffff);
         } else {
             icon = new RectIcon(0xff000000, 0xff000000);
         }
@@ -48,7 +48,7 @@ public class PortPoint extends VertexView implements IPort {
                 var value:* = node[property];
                 return value;
             }catch(error:Error){
-                return node.getKeyValue(property);
+                return node.get(property);
             }
         } else {
             return null;
@@ -74,6 +74,14 @@ public class PortPoint extends VertexView implements IPort {
 
     public function get dataType():String {
         return "";
+    }
+
+    override public function toString():String {
+        var msg:String = '[port type for property of node]';
+        msg = msg.replace(/type/, type);
+        msg = msg.replace(/property/, property);
+        msg = msg.replace(/node/, node);
+        return msg;
     }
 }
 }

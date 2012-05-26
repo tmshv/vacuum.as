@@ -10,7 +10,7 @@ import flash.utils.setTimeout;
 
 import ru.gotoandstop.command.ICommand;
 
-public class TimeoutCommand implements ICommand{
+public class TimeoutCommand implements ICommand {
     private var _delay:uint;
     private var _command:ICommand;
 
@@ -19,7 +19,7 @@ public class TimeoutCommand implements ICommand{
         _command = command;
     }
 
-    public function execute():void {
+    public function execute(data:Object = null):void {
         setTimeout(_command.execute, _delay);
     }
 }

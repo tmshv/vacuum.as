@@ -14,22 +14,21 @@ import flash.display.Shape;
 import flash.events.Event;
 
 import ru.gotoandstop.nodes.core.Node;
+
+import ru.gotoandstop.nodes.core.Node;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.core.NodeChangeEvent;
+import ru.gotoandstop.nodes.core.NodeObject;
 
 public class CommentNode extends Node {
 	private var text:Text;
-	private var string:StringObject;
-
-	public function CommentNode(model:StringObject, vacuum:VacuumLayout) {
-		super(vacuum, model);
-		super.model.addEventListener(Event.CHANGE, handleStringChange);
-		string = model;
+	public function CommentNode(object:NodeObject, vacuum:VacuumLayout) {
+		super(object, vacuum);
 		writeText();
 	}
 
 	private function writeText(comment:String = null):void {
-		var txt:String = comment ? comment : string.getValue();
+		var txt:String = comment ? comment : super.object.get('value');
 		text.text = txt;
 	}
 
@@ -38,13 +37,7 @@ public class CommentNode extends Node {
 	}
 
 	private function handleTextChange(event:Event):void {
-		string.setValue(text.text);
-	}
-
-	override public function getParams():Vector.<String> {
-		var params:Vector.<String> = new Vector.<String>();
-		params.push('value');
-		return params;
+		super.object.set('value', text.text);
 	}
 
     override protected function draw():void {
@@ -71,11 +64,6 @@ public class CommentNode extends Node {
         text.width = 130;
         text.height = 130;
         super.addChild(text);
-    }
-
-
-    override public function getMarkers():Vector.<Object> {
-        return new Vector.<Object>();
     }
 }
 }

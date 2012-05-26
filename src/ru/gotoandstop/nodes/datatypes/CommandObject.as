@@ -12,88 +12,57 @@ import flash.events.EventDispatcher;
 import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.nodes.core.INodeSystem;
+import ru.gotoandstop.nodes.core.NodeChangeEvent;
+import ru.gotoandstop.nodes.datatypes.ActionObject;
 import ru.gotoandstop.values.IValue;
 
-public class CommandObject extends EventDispatcher implements INode {
-	private var _name:String;
-	public function get name():String {
-		return _name;
-	}
+public class CommandObject extends ActionObject implements ICommand {
+    public var command:ICommand;
+    public var reserve:Boolean = false;
 
-	public function set name(value:String):void {
-		_name = value;
-	}
-
-	private var _init:IValue;
-
-	public function dispose():void {
-	}
-
-	public var init:String;
-
-	public var command:ICommand;
-	public var description:String;
-
-    private var _system:INodeSystem;
-    public function get system():INodeSystem {
-        return _system;
-    }
-    public function set system(value:INodeSystem):void{
-        _system = value;
+    public function CommandObject() {
+        super();
+//        super.addEventListener(Event.CHANGE, handleChange);
     }
 
-	public function CommandObject() {
 
-	}
+    override protected function executeAction():void {
+        var data:Object = get("init");
+        if (reserve) {
+            data.next = super.executeAction;
+            execute(data);
+        } else {
+            execute(data);
+            super.executeAction();
+        }
+    }
 
-	private var _type:String;
-	public function get type():String {
-		return _type;
-	}
+    public function execute(data:Object = null):void {
+        if (command) {
+            command.execute(data);
+        }
+    }
 
-	public function set type(value:String):void {
-		_type = value;
-	}
+//	private function handleChange(event:Event):void {
+//        var change:NodeChangeEvent = event as NodeChangeEvent;
+//        if(change) {
+//            if(change.key == "init" && Boolean(change.value)){
+//                execute(get("init"));
+//            }
+//        }
+//	}
+//
+//    public function execute(data:Object = null):void {
+//        if (command) {
+//            command.execute(data);
+//        }
+//        executeAction();
+//    }
 
-	public function setKeyValue(key:String, value:*):void {
-		if (key == 'init') {
-			if (this._init) this._init.removeEventListener(Event.CHANGE, this.handleChange);
-
-			if (value is IValue) {
-				this._init = value;
-				this._init.addEventListener(Event.CHANGE, this.handleChange);
-				this.init = this._init.name;
-			} else {
-				this._init = null;
-				this.init = '';
-			}
-		} else {
-			this[key] = value;
-		}
-	}
-
-	private function handleChange(event:Event):void {
-		if (command) {
-			command.execute();
-		}
-	}
-
-	public function getKeyValue(key:String):* {
-		if (key == 'init') {
-			return _init;
-		} else {
-			return this[key];
-		}
-	}
-
-	public function getParams():Vector.<String> {
-		var params:Vector.<String> = new Vector.<String>();
-		params.push('init');
-		params.push('description');
-		return params;
-	}
-
-	public function update():void {
-	}
+    override public function dispose():void {
+//        super.removeEventListener(Event.CHANGE, handleChange);
+        command = null;
+        super.dispose();
+    }
 }
 }

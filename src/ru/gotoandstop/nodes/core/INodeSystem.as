@@ -27,6 +27,8 @@ public interface INodeSystem extends IEventDispatcher, IDisposable {
 
     function getNodeByName(name:String):INode;
 
+    function getLinkedValue(link:String):Object;
+
     function matchNodeName(pattern:RegExp):Vector.<INode>;
 
     function getRegistredTypes():Vector.<String>;

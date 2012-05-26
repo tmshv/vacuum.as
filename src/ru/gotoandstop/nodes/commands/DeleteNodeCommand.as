@@ -9,17 +9,17 @@ package ru.gotoandstop.nodes.commands {
 import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.core.INode;
 
-public class DeleteNodeCommand implements ICommand{
-	private var _node:INode;
-	private var _kill:Function;
-	
-	public function DeleteNodeCommand(node:INode, kill:Function) {
-		_node = node;
-		_kill = kill;
-	}
+public class DeleteNodeCommand implements ICommand {
+    private var _node:INode;
+    private var _kill:Function;
 
-	public function execute():void {
-		_kill(_node);
-	}
+    public function DeleteNodeCommand(node:INode, kill:Function) {
+        _node = node;
+        _kill = kill;
+    }
+
+    public function execute(data:Object = null):void {
+        _kill(_node);
+    }
 }
 }

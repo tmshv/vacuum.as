@@ -10,8 +10,6 @@ import caurina.transitions.Tweener;
 
 import flash.display.DisplayObject;
 
-import flash.display.DisplayObject;
-
 import ru.gotoandstop.command.ICommand;
 
 public class ShakeCommand implements ICommand {
@@ -30,7 +28,7 @@ public class ShakeCommand implements ICommand {
         this.time = time;
     }
 
-    public function execute():void {
+    public function execute(data:Object = null):void {
         _startScaleX = object.scaleX;
         _startScaleY = object.scaleY;
         _startX = object.x;
