@@ -2,15 +2,17 @@ package ru.gotoandstop.vacuum.core{
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Point;
-	
-	[Event(name="change", type="flash.events.Event")]
+
+import ru.gotoandstop.ILockable;
+
+[Event(name="change", type="flash.events.Event")]
 	
 	/**
 	 *
 	 * Creation date: May 1, 2011 (1:28:18 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 */
-	public class Vertex extends EventDispatcher implements IVertex{
+	public class Vertex extends EventDispatcher implements IVertex, ILockable{
 		private var _x:Number;
 		public function get x():Number{
 			return this._x;
@@ -33,7 +35,7 @@ package ru.gotoandstop.vacuum.core{
 		
 		private var changed:Boolean;
 		private var _locked:Boolean;
-		public function get locked():Boolean{
+		public function get isLocked():Boolean{
 			return this._locked;
 		}
 		
@@ -68,7 +70,7 @@ package ru.gotoandstop.vacuum.core{
 		}
 		
 		public function update():void{
-			if(!this.locked){
+			if(!this.isLocked){
 				super.dispatchEvent(new Event(Event.CHANGE));
 				this.changed = false;
 			}
