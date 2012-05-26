@@ -14,101 +14,104 @@ import ru.gotoandstop.vacuum.view.VertexView;
  * @author Roman Timashev (roman@tmshv.ru)
  */
 public class MouseController extends EventDispatcher implements IDisposable {
-	private var _dot:VertexView;
-	private var _target:DisplayObject;
-	private var _mouseDown:Boolean;
+    private var _dot:VertexView;
+    private var _target:DisplayObject;
+    private var _mouseDown:Boolean;
 
-	private var _mouseOffset:Point;
+    private var _mouseOffset:Point;
 
-	public function MouseController(dot:VertexView, target:DisplayObject = null) {
-		super();
-		_dot = dot;
-		if (target) {
-			_target = target;
-		} else {
-			_target = dot;
-		}
-		setTarget(_target);
-	}
+    public function MouseController(dot:VertexView, target:DisplayObject = null) {
+        super();
+        _dot = dot;
+        if (target) {
+            _target = target;
+        } else {
+            _target = dot;
+        }
+        setTarget(_target);
+    }
 
-	private function handleAddedToStage(event:Event):void {
-		_target.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-		setTarget(_target);
-	}
+    private function handleAddedToStage(event:Event):void {
+        _target.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+        setTarget(_target);
+    }
 
-	public function setTarget(target:DisplayObject):void {
-		if(_target && _target.stage){
-			_target.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
-			_target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
-			_target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
-		}
+    public function setTarget(target:DisplayObject):void {
+        if (_target && _target.stage) {
+            _target.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+            _target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+            _target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+        }
 
-		_target = target;
-		if (_target.stage) {
-			_target.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
-			_target.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
-			_target.stage.addEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
-		} else {
-			_target.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-		}
-	}
+        _target = target;
+        if (_target.stage) {
+            _target.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+            _target.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+            _target.stage.addEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+        } else {
+            _target.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+        }
+    }
 
-	public function dispose():void {
-		if(_target){
-			_target.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
-		}
-		
-		if(_target.stage){
-			_target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
-			_target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
-		}
+    public function dispose():void {
+        if (_target) {
+            _target.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+        }
 
-		_target = null;
-		_dot = null;
-	}
+        if (_target.stage) {
+            _target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+            _target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+        }
 
-	public function startMove():void {
-		this._mouseDown = true;
-		//			this.dot.active.value = true;
-		this._mouseOffset = new Point(-this._dot.mouseX, -this._dot.mouseY);
-	}
+        _target = null;
+        _dot = null;
+    }
 
-	public function stopMove():void {
-		this._mouseDown = false;
-		//			this.dot.active.value = false;
-	}
+    public function startMove():void {
+        this._mouseDown = true;
+        //			this.dot.active.value = true;
+        this._mouseOffset = new Point(-this._dot.mouseX, -this._dot.mouseY);
+    }
 
-	/**
-	 * Если мышь нажата, менять модель
-	 * @param event
-	 *
-	 */
-	private function handleMouseMove(event:MouseEvent):void {
-		if (this._mouseDown) {
-			var coord:Point = VertexView.screenToLayout(
-			this._dot,
-			event.stageX + this._mouseOffset.x,
-			event.stageY + this._mouseOffset.y
-			);
+    public function stopMove():void {
+        this._mouseDown = false;
+        //			this.dot.active.value = false;
+    }
 
-			this._dot.vertex.setCoord(
-			coord.x,
-			coord.y
-			);
-		}
-	}
+    /**
+     * Если мышь нажата, менять модель
+     * @param event
+     *
+     */
+    private function handleMouseMove(event:MouseEvent):void {
+        if (_mouseDown) {
+            var coord:Point = VertexView.screenToLayout(
+                    _dot,
+                    event.stageX + _mouseOffset.x,
+                    event.stageY + _mouseOffset.y
+            );
 
-	/**
-	 * При нажатии на вьюшку она активирутся.
-	 * @param event
-	 *
-	 */
-	private function handleMouseDown(event:MouseEvent):void {
-		this.startMove();
-	}
+            var c:Boolean = _dot.considerScaleLayout;
+            _dot.considerScaleLayout = true;
+            _dot.vertex.setCoord(
+                    coord.x,
+                    coord.y
+            );
+            _dot.considerScaleLayout = c;
+        }
+    }
 
-	private function handleMouseUp(event:MouseEvent):void {
-		this.stopMove();
-	}
+    /**
+     * При нажатии на вьюшку она активирутся.
+     * @param event
+     *
+     */
+    private function handleMouseDown(event:MouseEvent):void {
+        this.startMove();
+    }
+
+    private function handleMouseUp(event:MouseEvent):void {
+        this.stopMove();
+    }
 }
 }

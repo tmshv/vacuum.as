@@ -6,12 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 package ru.gotoandstop.vacuum {
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 
 import ru.gotoandstop.IDisposable;
+import ru.gotoandstop.vacuum.core.IVertex;
 
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.splines.RectSpline;
@@ -37,10 +40,15 @@ public class VacuumSpace extends Sprite implements IDisposable{
         super.addChild(new SplineView(selector));
     }
 
-    public function showVertex(vertex:IVertex, icon:VertexIcon=null):void{
-        if(icon) {
-            super.addChild(new VertexView(vertex, _layout, icon));
+    public function showVertex(vertex:IVertex, icon:VertexIcon=null):IVertex{
+        var view:VertexView;
+        if(vertex is VertexView) {
+            super.addChild(vertex as VertexView);
+        }else{
+            view = new VertexView(vertex, _layout, icon)
+            super.addChild(view);
         }
+        return view;
     }
 
     private function handleAddedToStage(event:Event):void{
@@ -51,7 +59,12 @@ public class VacuumSpace extends Sprite implements IDisposable{
     }
 
     private function handleMouseDown(event:MouseEvent):void{
-        _mouseDown = new Point(event.stageX, event.stageY);
+        var under:DisplayObject = event.target as DisplayObject;
+        trace(this.contains(event.target as DisplayObject), event.target, this, event.currentTarget);
+
+        if(!(event.currentTarget as DisplayObjectContainer).contains(under)) {
+            _mouseDown = new Point(event.stageX, event.stageY);
+        }
     }
 
     private function handleMouseUp(event:Event):void{
