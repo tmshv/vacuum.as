@@ -11,8 +11,6 @@ import com.bit101.components.Panel;
 
 import flash.display.Shape;
 
-import mx.olap.OLAPMeasure;
-
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.core.Node;
 

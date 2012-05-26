@@ -7,7 +7,6 @@ import com.bit101.components.Label;
 import com.bit101.components.Panel;
 import com.bit101.components.PushButton;
 import com.bit101.components.Text;
-import com.junkbyte.console.KeyBind;
 
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;

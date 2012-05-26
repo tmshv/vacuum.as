@@ -1,6 +1,4 @@
 package ru.gotoandstop.nodes.core {
-import com.junkbyte.console.Cc;
-
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
