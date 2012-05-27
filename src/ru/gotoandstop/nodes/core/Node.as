@@ -534,5 +534,12 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
     }
 
 
+    public function on(key:String, listener:Function, useWeakReference:Boolean = false):void {
+        object.on(key, listener, useWeakReference);
+    }
+
+    public function off(key:String, listener:Function):void {
+        object.off(key, listener);
+    }
 }
 }

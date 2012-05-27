@@ -23,6 +23,10 @@ public class NodeObject extends EventDispatcher implements INode{
         return key;
     }
 
+    public static function eventName(key:String):String{
+        return "keyChange".replace("key", key.toLowerCase());
+    }
+
     private var _name:String;
     public function get id():String {
         return _name;
@@ -85,8 +89,12 @@ public class NodeObject extends EventDispatcher implements INode{
     public function update():void {
     }
 
-    protected function on(key:String, callback:Function):void{
+    public function on(key:String, listener:Function, useWeakReference:Boolean = false):void {
+        super.addEventListener(eventName(key), listener, false, 0, useWeakReference);
+    }
 
+    public function off(key:String, listener:Function):void {
+        super.removeEventListener(eventName(key), listener);
     }
 
     public function get(key:String):* {

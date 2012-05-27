@@ -34,5 +34,9 @@ public interface INode extends IEventDispatcher, IDisposable {
     function kill(key:String):void;
 
 	function getParams():Vector.<String>;
+
+    function on(key:String, listener:Function, useWeakReference:Boolean = false):void;
+
+    function off(key:String, listener:Function):void;
 }
 }
