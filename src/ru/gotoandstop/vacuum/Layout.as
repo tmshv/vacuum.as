@@ -27,6 +27,11 @@ public class Layout extends EventDispatcher implements IDisposable, ILockable {
         return this._scale;
     }
 
+    private var _rotation:NumberValue;
+    public function get rotation():NumberValue {
+        return this._rotation;
+    }
+
     private var _center:Vertex;
     public function get center():Vertex {
         return this._center;
@@ -52,22 +57,26 @@ public class Layout extends EventDispatcher implements IDisposable, ILockable {
     public function Layout() {
         super();
         _scale = new NumberValue(1);
+        _rotation = new NumberValue(0);
         _center = new Vertex();
         _directionX = new DirectionValue();
         _directionY = new DirectionValue();
 
+        rotation.addEventListener(Event.CHANGE, handleChange);
         scale.addEventListener(Event.CHANGE, handleChange);
         center.addEventListener(Event.CHANGE, handleChange);
     }
 
     public function dispose():void {
-        scale.addEventListener(Event.CHANGE, handleChange);
-        center.addEventListener(Event.CHANGE, handleChange);
+        rotation.removeEventListener(Event.CHANGE, handleChange);
+        scale.removeEventListener(Event.CHANGE, handleChange);
+        center.removeEventListener(Event.CHANGE, handleChange);
     }
 
     public function configure(scale:Number = 1, x:Number = 0, y:Number = 0, rotation:Number = 0):void {
         lock();
         this.scale.value = scale;
+        this.rotation.value = rotation;
         center.setCoord(x, y);
         unlock();
     }
