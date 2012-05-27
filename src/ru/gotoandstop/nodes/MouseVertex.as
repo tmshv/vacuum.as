@@ -58,8 +58,8 @@ public class MouseVertex extends Vertex implements IPort{
 		return "";
 	}
 
-	public function get isLocked():Boolean {
-		return false;
-	}
+    override public function get isLocked():Boolean {
+        return false;
+    }
 }
 }
