@@ -77,6 +77,14 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
         super.dispatchEvent(new Event(Event.CHANGE));
     }
 
+    public function onChange(listener:Function, useWeakReference:Boolean = false):void {
+        super.addEventListener(Event.CHANGE, listener, false, 0, useWeakReference);
+    }
+
+    public function offChange(listener:Function):void {
+        super.removeEventListener(Event.CHANGE, listener);
+    }
+
     public function dispose():void {
         this.vertex.removeEventListener(Event.CHANGE, this.handleVertexChange);
         this.layout.scale.removeEventListener(Event.CHANGE, this.handleLayoutChange);
