@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package ru.gotoandstop.nodes.core {
+import by.blooddy.crypto.serialization.JSON;
+
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
 
@@ -114,7 +116,13 @@ public class NodeField extends Panel {
     }
 
     public function updateValue(value:Object):void {
-        var txt:String = (value == undefined || value == null) ? '' : value.toString();
+        var txt:String;
+        try{
+            txt = by.blooddy.crypto.serialization.JSON.encode(value);
+        }catch(error:Error){
+            trace(error)
+            txt = (value == undefined || value == null) ? '' : value.toString();
+        }
         label.text = getLabelText(display, {
             key:key,
             value:txt
