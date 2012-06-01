@@ -80,6 +80,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
             throw new ArgumentError('node argument must contain String type, Class object and Class node fields');
         }
 
+        trace('reg node', node.type);
         nodeLibrary[node.type] = node;
     }
 
@@ -88,7 +89,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         var prototype:Object = getDefinition(type);
         if (!prototype) throw new Error('node with type %type is not registred in system'.replace(/%type/, type));
 
-        trace('creating node', type)
+        trace('creating node', type);
 
         var object_definition_name:String = prototype.object;
         var node_definition_name:String = prototype.node;
@@ -110,11 +111,17 @@ public class NodeSystem extends Sprite implements INodeSystem {
         node.type = type;
         node.pos.addModifier(new SnapModifier(snapVerticles, 10));
 
-        var has_extras:Boolean = Boolean(data.extras);
+        var extras:Object = merge(prototype.extras, data.extras);
+        var has_extras:Boolean = Boolean(extras);
         if (has_extras) {
-            if (data.extras.position) {
-                var pos:Object = data.extras.position;
+            if (extras.position) {
+                var pos:Object = extras.position;
                 node.setCoord(pos.x, pos.y);
+            }
+
+            if (extras.color){
+                var col:uint = uint(extras.color);
+                node.setTitleColor(col);
             }
         }
 
@@ -316,7 +323,9 @@ public class NodeSystem extends Sprite implements INodeSystem {
 //            var key_list:Vector.<String> = node.getParams();
             var key_list:Vector.<String> = getParamsFromPrototypeForSave(proto);
             for each(var key:String in key_list) {
-                var value:Object = node.get(key);
+                var forced_key:String = "+key".replace("key", key);
+//                forced_key = key;
+                var value:Object = node.get(forced_key);
                 params.push({key:key, value:value});
             }
 
