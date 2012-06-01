@@ -16,11 +16,20 @@ public class NodeObject extends EventDispatcher implements INode{
         return key.charAt(0) == '-';
     }
 
+    public static function forceRequestToOwnKey(key:String):Boolean{
+        return key.charAt(0) == '+';
+    }
+
     public static function param(key:String):String{
-        if(isLink(key)){
-           key = key.substr(1);
+        var linked:Boolean = isLink(key);
+        var forced:Boolean = forceRequestToOwnKey(key);
+        if(linked && forced){
+            return key.substr(2);
+        }else if(linked || forced){
+           return key.substr(1);
+        }else{
+            return key;
         }
-        return key;
     }
 
     public static function eventName(key:String):String{
@@ -81,6 +90,7 @@ public class NodeObject extends EventDispatcher implements INode{
         }
 
         super.dispatchEvent(new NodeChangeEvent(p, value));
+        super.dispatchEvent(new Event(eventName(key)));
     }
 
     /**
@@ -98,14 +108,18 @@ public class NodeObject extends EventDispatcher implements INode{
     }
 
     public function get(key:String):* {
-        if (isLink(key)) {
-            return _storage.get(key);
-        } else {
-            var link:String = '-' + key;
-            if (exist(link)) {
-                return system.getLinkedValue(get(link));
-            }else{
+        if(forceRequestToOwnKey(key)){
+            return _storage.get(param(key));
+        }else{
+            if (isLink(key)) {
                 return _storage.get(key);
+            } else {
+                var link:String = '-' + key;
+                if (exist(link)) {
+                    return system.getLinkedValue(get(link));
+                }else{
+                    return _storage.get(key);
+                }
             }
         }
     }
