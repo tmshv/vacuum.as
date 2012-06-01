@@ -12,6 +12,9 @@ import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.nodes.core.INodeSystem;
 
 public class JSONEncoder {
+    public var readDefinition:Boolean = true;
+    public var readConnections:Boolean = true;
+
     private var system:INodeSystem;
 
     public function JSONEncoder(system:INodeSystem) {
@@ -32,21 +35,25 @@ public class JSONEncoder {
         var links:Array = object.links;
         var defs:Array = object.definitions;
 
-        for each(var d:Object in defs) {
-            system.registerNode(d);
+        if(readDefinition) {
+            for each(var d:Object in defs) {
+                system.registerNode(d);
+            }
         }
 
         for each(var n:Object in nodes) {
             system.createNode(n.type, n);
         }
 
-        for each(var link:Object in links) {
-            var from_name:String = link.from[0];
-            var from_prop:String = link.from[1];
-            var to_name:String = link.to[0];
-            var to_prop:String = link.to[1];
+        if(readConnections) {
+            for each(var link:Object in links) {
+                var from_name:String = link.from[0];
+                var from_prop:String = link.from[1];
+                var to_name:String = link.to[0];
+                var to_prop:String = link.to[1];
 
-            system.connect(from_name, from_prop, to_name, to_prop);
+                system.connect(from_name, from_prop, to_name, to_prop);
+            }
         }
     }
 
