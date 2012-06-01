@@ -5,6 +5,7 @@ import caurina.transitions.Tweener;
 
 import com.bit101.components.Label;
 import com.bit101.components.Panel;
+import com.bit101.components.Panel;
 import com.bit101.components.PushButton;
 import com.bit101.components.Text;
 
@@ -86,6 +87,9 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
     private var _ports:Storage;
     private var _fieldSnapPoints:Storage = new Storage();
 
+    private var _titlebar:Panel;
+    private var _titlebarLabel:Label = new Label();
+
     private var _panel:Panel;
     private var _input:Text;
     private var editableParam:String;
@@ -119,6 +123,7 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
     public function set type(value:String):void {
         object.type = value;
+        _titlebarLabel.text = value;
     }
 
     public function get system():INodeSystem {
@@ -195,7 +200,6 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
     protected function setSize(w:uint, h:uint):void {
         w = w == 0 ? _nativeSize.x : w;
-        h += 20;
         _nativeSize.x = w;
         _nativeSize.y = h;
         scaleNode(_vacuum.layout.scale.value);
@@ -410,13 +414,20 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
     protected function draw():void {
         _panel = new Panel();
         _panel.shadow = false;
-        mover.setTarget(_panel);
-        _drawContainer.addChild(_panel);
 //        _selectedShape = _panel;
+        _drawContainer.addChild(_panel);
+
+        _titlebar = new Panel(null, 0, -16);
+        _titlebar.shadow = false;
+        _titlebar.setSize(100, 16);
+        _titlebar.addChild(_titlebarLabel);
+        mover.setTarget(_titlebar);
+        _drawContainer.addChild(_titlebar);
+
+        _titlebarLabel.textField.defaultTextFormat.color = 0x000000;
 
         _input = new Bit101Text();
         _input.addEventListener(Event.CHANGE, modifyEditableParam);
-//        _input.addEventListener(TextEvent.TEXT_INPUT, modifyEditableParam);
         _input.width = 50;
         _input.height = 21;
         _input.visible = false;
@@ -540,6 +551,10 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
     public function off(key:String, listener:Function):void {
         object.off(key, listener);
+    }
+
+    public function setTitleColor(color:uint):void {
+        _titlebar.color = color;
     }
 }
 }
