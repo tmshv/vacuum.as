@@ -154,8 +154,6 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
         super.x = this.layout.center.x + dx;
         super.y = this.layout.center.y + dy;
 
-        trace(super.x, super.y);
-
         update();
     }
 

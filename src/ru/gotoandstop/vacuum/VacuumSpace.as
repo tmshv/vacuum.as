@@ -60,8 +60,6 @@ public class VacuumSpace extends Sprite implements IDisposable{
 
     private function handleMouseDown(event:MouseEvent):void{
         var under:DisplayObject = event.target as DisplayObject;
-        trace(this.contains(event.target as DisplayObject), event.target, this, event.currentTarget);
-
         if(!(event.currentTarget as DisplayObjectContainer).contains(under)) {
             _mouseDown = new Point(event.stageX, event.stageY);
         }
