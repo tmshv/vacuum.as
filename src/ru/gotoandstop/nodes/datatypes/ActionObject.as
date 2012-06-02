@@ -28,6 +28,7 @@ public class ActionObject extends NodeObject {
     }
 
     override protected function notifyAbout(key:String, value:*):void {
+        super.notifyAbout(key, value);
         var p:String = param(key);
         if(p == "init"){
             var origin:String = lastTransfer ? lastTransfer.origin : '';
@@ -41,7 +42,6 @@ public class ActionObject extends NodeObject {
                 }
             }
         }
-        super.notifyAbout(key, value);
     }
 
     protected function executeAction():void {

@@ -55,12 +55,16 @@ public class MouseObject extends NodeObject {
         }
     }
 
+    override public function dispose():void {
+        clearTarget();
+        _target = null;
+        super.dispose();
+    }
+
     private function updateListeners():void {
         if (!_target) return;
+        clearTarget();
 
-        if (listener && _target.hasEventListener(listener)) {
-            _target.removeEventListener(listener, handleMouseEvent);
-        }
         var event_type:String = getTypeKey(get("event"));
         if (event_type) {
             listener = event_type;
@@ -86,7 +90,6 @@ public class MouseObject extends NodeObject {
             if (listener && _target.hasEventListener(listener)) {
                 _target.removeEventListener(listener, handleMouseEvent);
             }
-            _target = null;
         }
     }
 }
