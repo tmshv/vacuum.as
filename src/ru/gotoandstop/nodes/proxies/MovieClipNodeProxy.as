@@ -48,11 +48,18 @@ public class MovieClipNodeProxy implements IDisposable {
         const change:NodeChangeEvent = event as NodeChangeEvent;
         if(change) {
             const key:String = change.key;
+            const val:Object = node.get(key);
 
             if (key == 'asset') {
                 recreateObject();
             } else if(DISPLAY_OBJECT_PROPERTIES.indexOf(key) > -1){
-                updateObjectProperty(key, node.get(key));
+                updateObjectProperty(key, val);
+            } else if(key == "visible"){
+                var true_string:Boolean = String(val) == "true";
+                var false_string:Boolean = String(val) == "false";
+                if(true_string || false_string) {
+                    updateObjectProperty(key, true_string ? true : false);
+                }
             }
         }
     }
