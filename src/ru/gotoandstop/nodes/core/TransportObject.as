@@ -19,15 +19,17 @@ public class TransportObject {
     public function TransportObject() {
     }
 
-    public function transfer():void{
-        to.lastTransfer = this;
+    public function transfer():void {
+        if (from.system == system && to.system == system) {
+            to.lastTransfer = this;
 
-        var link_name:String = '-property'.
-                replace('property', toField);
-        var link:String = 'fromnode.property'.
-                replace('fromnode', from.id).
-                replace('property', fromField);
-        to.set(link_name, link);
+            var link_name:String = '-property'.
+                    replace('property', toField);
+            var link:String = 'fromnode.property'.
+                    replace('fromnode', from.id).
+                    replace('property', fromField);
+            to.set(link_name, link);
+        }
     }
 }
 }

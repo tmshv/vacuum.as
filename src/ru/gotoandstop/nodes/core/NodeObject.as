@@ -43,7 +43,7 @@ public class NodeObject extends EventDispatcher implements INode{
 
     public function set id(value:String):void {
         _name = value;
-        notifyAbout('id', _name);
+//        notifyAbout('id', _name);
     }
 
     private var _type:String;
@@ -52,7 +52,7 @@ public class NodeObject extends EventDispatcher implements INode{
     }
     public function set type(value:String):void{
         _type = value;
-        notifyAbout('type', _type);
+//        notifyAbout('type', _type);
     }
 
     private var _system:INodeSystem;
@@ -84,6 +84,7 @@ public class NodeObject extends EventDispatcher implements INode{
      * @param value
      */
     protected function notifyAbout(key:String, value:*):void{
+        if(!_storage) return;
         const p:String = param(key);
         if(isLink(key) && value == null) {
             value = get(p);
@@ -108,6 +109,7 @@ public class NodeObject extends EventDispatcher implements INode{
     }
 
     public function get(key:String):* {
+        if(!_storage) return null;
         if(forceRequestToOwnKey(key)){
             return _storage.get(param(key));
         }else{
@@ -125,20 +127,24 @@ public class NodeObject extends EventDispatcher implements INode{
     }
 
     public function set(key:String, value:*):void {
+        if(!_storage) return;
         _storage.set(key, value);
         notifyAbout(key, value);
     }
 
     public function exist(key:String):Boolean {
+        if(!_storage) false;
         return _storage.exist(key);
     }
 
     public function kill(key:String):void {
+        if(!_storage) return;
         _storage.kill(key);
         notifyAbout(key, null);
     }
 
     public function getParams():Vector.<String> {
+        if(!_storage) return null;
         var list:Vector.<String> = _storage.getKeyList();
         var result:Vector.<String> = new Vector.<String>();
         for each(var key:String in list) {
@@ -150,8 +156,10 @@ public class NodeObject extends EventDispatcher implements INode{
     }
 
     public function dispose():void {
+        if(!_storage) return;
         _storage.clear();
         _storage = null;
+        _lastTransfer = null;
     }
 
     override public function toString():String {

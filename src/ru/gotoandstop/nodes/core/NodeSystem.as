@@ -119,7 +119,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
                 node.setCoord(pos.x, pos.y);
             }
 
-            if (extras.color){
+            if (extras.color) {
                 var col:uint = uint(extras.color);
                 node.setTitleColor(col);
             }
@@ -525,9 +525,16 @@ public class NodeSystem extends Sprite implements INodeSystem {
     }
 
     public function dispose():void {
+        for (var i:uint; i < connections.length; i++) {
+            var connection:Object = connections[i];
+            unlink(connection, true);
+            i--;
+        }
+
         var node_names:Vector.<String> = getNodeNames();
         for each(var name:String in node_names) {
-            var n:INode = getNodeByName(name);
+            var n:Node = getNodeByName(name) as Node;
+            n.object.system = null;
             deleteNode(n);
         }
         nodes = null;
@@ -540,6 +547,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
         _vacuum.removeEventListener(VacuumEvent.ADDED_VERTEX, this.handleAddedVertexToVacuum);
         _vacuum.dispose();
         _vacuum = null;
+
+        trace("nodesystem destroyed");
     }
 
     public function addSnapVertex(vertex:IVertex):void {

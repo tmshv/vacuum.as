@@ -370,7 +370,7 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
     private function handleObjectChange(event:Event):void {
         var change:NodeChangeEvent = event as NodeChangeEvent;
-        if (change) {
+        if (change && object) {
             var key:String = change.key;
             var value:String = object.get(key);
             var field:NodeField = _fieldsContainer.getChildByName(key) as NodeField;
