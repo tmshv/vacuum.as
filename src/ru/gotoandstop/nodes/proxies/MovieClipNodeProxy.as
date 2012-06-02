@@ -18,7 +18,7 @@ import ru.gotoandstop.nodes.core.NodeChangeEvent;
 import ru.gotoandstop.storage.Storage;
 
 public class MovieClipNodeProxy implements IDisposable {
-    private static const DISPLAY_OBJECT_PROPERTIES:Array = ['x', 'y', 'width', 'height', 'alpha'];
+    private static const DISPLAY_OBJECT_PROPERTIES:Array = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
     private var node:INode;
     private var container:DisplayObjectContainer;
     private var assets:Storage;
