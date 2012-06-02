@@ -90,7 +90,7 @@ public class NodeObject extends EventDispatcher implements INode{
         }
 
         super.dispatchEvent(new NodeChangeEvent(p, value));
-        super.dispatchEvent(new Event(eventName(key)));
+        super.dispatchEvent(new Event(eventName(p)));
     }
 
     /**
