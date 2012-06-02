@@ -158,7 +158,7 @@ package ru.gotoandstop.vacuum.controllers{
 			this.center = center;
 			
 			//creating spline
-			var spline:Spline = new Spline();
+			var spline:Spline = new Spline(target);
 			spline.closed = true;
 			spline.addVertex(c1.vertex);
 			spline.addVertex(c2.vertex);

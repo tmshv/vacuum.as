@@ -1,5 +1,6 @@
 package ru.gotoandstop.vacuum.splines{
-	import flash.geom.Rectangle;
+import flash.events.IEventDispatcher;
+import flash.geom.Rectangle;
 	
 	import ru.gotoandstop.vacuum.Spline;
 	import ru.gotoandstop.vacuum.core.Vertex;
@@ -15,9 +16,9 @@ package ru.gotoandstop.vacuum.splines{
 		protected var rt:Vertex;
 		protected var rb:Vertex;
 		
-		public function RectSpline(x:Number=0, y:Number=0, width:Number=0, height:Number=0){
-			super();
-			
+		public function RectSpline(target:IEventDispatcher, onEnterFrame:Boolean = true, x:Number=0, y:Number=0, width:Number=0, height:Number=0){
+			super(target, onEnterFrame, true);
+
 			var left:Number = x;
 			var right:Number = x + width;
 			var top:Number = y;

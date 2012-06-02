@@ -35,7 +35,7 @@ public class BezierQuadConnection implements ILineConnection {
 	public function BezierQuadConnection(canvas:DisplayObjectContainer) {
 		_canvas = canvas;
 		_index = SimpleLineConnection.getIndex();
-		spline = new Spline();
+		spline = new Spline(canvas);
 
 		_view = new SplineView(spline);
 		_view.alpha = 0.75;
@@ -46,8 +46,8 @@ public class BezierQuadConnection implements ILineConnection {
 		_second = new TargetVertex();
 		secondMid = new RibbonVertex();
 		spline.addVertex(_first);
-		spline.addVertex(firstMid, true);
-		spline.addVertex(secondMid, true);
+		spline.addVertex2(firstMid, true);
+		spline.addVertex2(secondMid, true);
 		spline.addVertex(_second);
 	}
 

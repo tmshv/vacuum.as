@@ -18,7 +18,7 @@ package ru.gotoandstop.vacuum.controllers{
 		private var target:IEventDispatcher;
 		
 		public function SelectRectangle(target:DisplayObject, x:Number=0, y:Number=0, width:Number=0, height:Number=0){
-			super(x, y, width, height);
+			super(target, true, x, y, width, height);
 			super.closed = true;
 			
 			this.target = target;

@@ -42,7 +42,7 @@ public class SimpleLineConnection implements ILineConnection {
 		_first = new TargetVertex();
 		_second = new TargetVertex();
 
-		_spline = new Spline();
+		_spline = new Spline(canvas);
 		_view = new SplineView(_spline);
 		_view.alpha = 0.25;
 		_canvas.addChild(_view);

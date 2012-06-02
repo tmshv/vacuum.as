@@ -34,10 +34,6 @@ public class VacuumSpace extends Sprite implements IDisposable{
     public function VacuumSpace() {
         _layout = new Layout();
         super.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
-
-        selector = new RectSpline();
-        selector.closed = true;
-        super.addChild(new SplineView(selector));
     }
 
     public function showVertex(vertex:IVertex, icon:VertexIcon=null):IVertex{
@@ -56,6 +52,10 @@ public class VacuumSpace extends Sprite implements IDisposable{
         super.stage.addEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
         super.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
         super.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+
+        selector = new RectSpline(super.stage, true);
+        selector.closed = true;
+        super.addChild(new SplineView(selector));
     }
 
     private function handleMouseDown(event:MouseEvent):void{
