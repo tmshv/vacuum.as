@@ -95,7 +95,7 @@ public class MovieClipNodeProxy implements IDisposable {
         if (_clip) {
             for each(var prop:String in DISPLAY_OBJECT_PROPERTIES) {
                 const value:Object = node.get(prop);
-                if (value != null && value != undefined) {
+                if (value != null){// && value != undefined) {
                     _clip[prop] = value;
                 }
             }
