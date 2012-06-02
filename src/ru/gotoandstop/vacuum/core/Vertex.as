@@ -15,31 +15,31 @@ import ru.gotoandstop.ILockable;
 public class Vertex extends EventDispatcher implements IVertex, ILockable {
     private var _x:Number;
     public function get x():Number {
-        return this._x;
+        return _x;
     }
 
     public function set x(value:Number):void {
-        this._x = value;
-        this.changed = true;
-        this.update();
+        _x = value;
+        changed = true;
+        update();
     }
 
     private var _y:Number;
     public function get y():Number {
-        return this._y;
+        return _y;
     }
 
     public function set y(value:Number):void {
-        this._y = value;
-        this.changed = true;
-        this.update();
+        _y = value;
+        changed = true;
+        update();
     }
 
-    private var changed:Boolean;
+    protected var changed:Boolean;
     private var _locked:Boolean;
 
     public function get isLocked():Boolean {
-        return this._locked;
+        return _locked;
     }
 
     public function Vertex(x:Number = 0, y:Number = 0) {
@@ -51,31 +51,31 @@ public class Vertex extends EventDispatcher implements IVertex, ILockable {
     }
 
     public function setCoord(x:Number, y:Number):void {
-        this.lock();
+        lock();
         this.x = x;
         this.y = y;
-        this.unlock();
+        unlock();
     }
 
     public function getCoord(params:Object = null):Point {
-        return new Point(this.x, this.y);
+        return new Point(x, y);
     }
 
     public function lock():void {
-        this._locked = true;
+        _locked = true;
     }
 
     public function unlock():void {
-        this._locked = false;
-        if (this.changed) {
-            this.update();
+        _locked = false;
+        if (changed) {
+            update();
         }
     }
 
     public function update():void {
-        if (!this.isLocked) {
+        if (!isLocked) {
             super.dispatchEvent(new Event(Event.CHANGE));
-            this.changed = false;
+            changed = false;
         }
     }
 
@@ -88,11 +88,11 @@ public class Vertex extends EventDispatcher implements IVertex, ILockable {
     }
 
     public override function toString():String {
-        return this.toPoint().toString();
+        return toPoint().toString();
     }
 
     public function toPoint():Point {
-        return new Point(this.x, this.y);
+        return new Point(x, y);
     }
 }
 }
