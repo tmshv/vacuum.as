@@ -231,7 +231,7 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
         Tweener.removeTweens(closeButton);
         clearTimeout(closeButtonTimeout);
         closeButton.removeEventListener(MouseEvent.CLICK, handleClickClose);
-        super.stage.removeEventListener(MouseEvent.CLICK, handleStageClick);
+        if(stage) super.stage.removeEventListener(MouseEvent.CLICK, handleStageClick);
         super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
         super.removeEventListener(Event.REMOVED_FROM_STAGE, handleRemovedFromStage);
         super.removeEventListener(MouseEvent.MOUSE_OVER, handleMouseOver);
