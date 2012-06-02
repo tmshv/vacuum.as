@@ -525,8 +525,10 @@ public class NodeSystem extends Sprite implements INodeSystem {
     }
 
     public function dispose():void {
-        for each(var n:INode in nodes) {
-            n.dispose();
+        var node_names:Vector.<String> = getNodeNames();
+        for each(var name:String in node_names) {
+            var n:INode = getNodeByName(name);
+            deleteNode(n);
         }
         nodes = null;
         connections = null;
