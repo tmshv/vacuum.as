@@ -39,40 +39,36 @@ public class MovieClipNodeProxy implements IDisposable {
         this.clips = clips;
         this.node = node;
         this.node.addEventListener(Event.CHANGE, handleNodeChange);
-        _clipName = node.id+".clip";
+        _clipName = node.id + ".clip";
 
         recreateObject();
     }
 
     private function handleNodeChange(event:Event):void {
         const change:NodeChangeEvent = event as NodeChangeEvent;
-        if(change) {
+        if (change) {
             const key:String = change.key;
             const val:Object = node.get(key);
 
             if (key == 'asset') {
                 recreateObject();
-            } else if(DISPLAY_OBJECT_PROPERTIES.indexOf(key) > -1){
+            } else if (DISPLAY_OBJECT_PROPERTIES.indexOf(key) > -1) {
                 updateObjectProperty(key, val);
-            } else if(key == "visible"){
-                var true_string:Boolean = String(val) == "true";
-                var false_string:Boolean = String(val) == "false";
-                if(true_string || false_string) {
-                    updateObjectProperty(key, true_string ? true : false);
-                }
+            } else if (key == "visible") {
+                updateObjectProperty(key, getVisible());
             }
         }
     }
 
-    private function recreateObject():void{
+    private function recreateObject():void {
         _removableObject = true;
         removeObject();
         var asset_name:String = node.get('asset');
-        if(assets.exist(asset_name)) {
+        if (assets.exist(asset_name)) {
             const Asset:Class = assets.get(asset_name);
             _clip = new Asset();
             _clip.name = _clipName;
-            if(_clip is Bitmap) {
+            if (_clip is Bitmap) {
                 _clip = wrapObject(_clip);
             }
             refreshObject();
@@ -82,7 +78,7 @@ public class MovieClipNodeProxy implements IDisposable {
         }
     }
 
-    private function wrapObject(obj:DisplayObject):DisplayObject{
+    private function wrapObject(obj:DisplayObject):DisplayObject {
         var wrapper:Sprite = new Sprite();
         wrapper.name = obj.name;
         wrapper.addChild(obj);
@@ -90,19 +86,20 @@ public class MovieClipNodeProxy implements IDisposable {
     }
 
     private function updateObjectProperty(prop:String, value:Object):void {
-        if(_clip) {
+        if (_clip) {
             _clip[prop] = value;
         }
     }
 
-    private function refreshObject():void{
-        if(_clip) {
+    private function refreshObject():void {
+        if (_clip) {
             for each(var prop:String in DISPLAY_OBJECT_PROPERTIES) {
                 const value:Object = node.get(prop);
-                if(value != null && value !=undefined) {
+                if (value != null && value != undefined) {
                     _clip[prop] = value;
                 }
             }
+            _clip.visible = getVisible();
         }
     }
 
@@ -122,6 +119,21 @@ public class MovieClipNodeProxy implements IDisposable {
         container = null;
         assets = null;
         clips = null;
+    }
+
+    private function getVisible():Boolean {
+        var prop:String = node.get("visible");
+        var true_string:Boolean = prop == "true";
+        var false_string:Boolean = prop == "false";
+        if (true_string) {
+            return true;
+        }
+
+        if (false_string) {
+            return false;
+        }
+
+        return true;
     }
 }
 }
