@@ -15,7 +15,7 @@ import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 
 public class VertexGroup extends Vertex implements IDisposable {
-    private var _list:Vector.<IVertex> = new Vector.<IVertex>();
+    protected var _list:Vector.<IVertex> = new Vector.<IVertex>();
     private var _target:IEventDispatcher;
 
     public function VertexGroup(target:IEventDispatcher, onEnterFrame:Boolean = true) {
@@ -30,6 +30,7 @@ public class VertexGroup extends Vertex implements IDisposable {
     public function addVertex(vertex:IVertex):void {
         _list.push(vertex);
         vertex.onChange(handleVertexChange);
+        changed = true;
         update();
     }
 
@@ -37,6 +38,7 @@ public class VertexGroup extends Vertex implements IDisposable {
         var index:int = _list.indexOf(vertex);
         if (index >= -1) {
             _list.splice(index, 1);
+            changed = true;
             update();
         }
     }
