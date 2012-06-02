@@ -28,6 +28,7 @@ public class CommandObject extends ActionObject implements ICommand {
 
     override protected function executeAction():void {
         var data:Object = get("init");
+        if (!data) data = {};
         if (reserve) {
             data.next = super.executeAction;
             execute(data);
