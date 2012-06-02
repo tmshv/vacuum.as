@@ -1,11 +1,13 @@
 package ru.gotoandstop.nodes {
 import flash.display.DisplayObject;
 import flash.events.MouseEvent;
+import flash.geom.Point;
 
 import ru.gotoandstop.IDirectionalVertex;
 
 import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
@@ -36,7 +38,9 @@ public class MouseVertex extends Vertex implements IPort{
 	}
 
 	private function handleMouseMove(event:MouseEvent):void {
-		super.setCoord(event.stageX, event.stageY);
+        var coord_x:Number = event.stageX + MouseController.offset.x;
+        var coord_y:Number = event.stageY + MouseController.offset.y;
+		super.setCoord(coord_x, coord_y);
 	}
 
 	public override function toString():String {
