@@ -14,6 +14,10 @@ import ru.gotoandstop.vacuum.view.VertexView;
  * @author Roman Timashev (roman@tmshv.ru)
  */
 public class MouseController extends EventDispatcher implements IDisposable {
+    public static const offset:Point = new Point();
+
+    public var useGlobalOffset:Boolean = true;
+
     private var _dot:VertexView;
     private var _target:DisplayObject;
     private var _mouseDown:Boolean;
@@ -85,10 +89,12 @@ public class MouseController extends EventDispatcher implements IDisposable {
      */
     private function handleMouseMove(event:MouseEvent):void {
         if (_mouseDown) {
+            var offset_x:Number = _mouseOffset.x + (useGlobalOffset ? offset.x : 0);
+            var offset_y:Number = _mouseOffset.y + (useGlobalOffset ? offset.y : 0);
             var coord:Point = VertexView.screenToLayout(
                     _dot,
-                    event.stageX + _mouseOffset.x,
-                    event.stageY + _mouseOffset.y
+                    event.stageX + offset_x,
+                    event.stageY + offset_y
             );
 
             var c:Boolean = _dot.considerScaleLayout;
