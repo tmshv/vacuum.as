@@ -13,7 +13,11 @@ import ru.gotoandstop.vacuum.view.VertexView;
  * Creation date: May 2, 2011 (3:04:51 AM)
  * @author Roman Timashev (roman@tmshv.ru)
  */
-public class MouseController extends EventDispatcher implements IDisposable {
+public class MouseController extends EventDispatcher implements IDisposable{
+    public static const ALT:uint = 1;
+    public static const SHIFT:uint = 2;
+    public static const CTRL:uint = 4;
+
     public static const offset:Point = new Point();
 
     public var useGlobalOffset:Boolean = true;
@@ -24,8 +28,16 @@ public class MouseController extends EventDispatcher implements IDisposable {
 
     private var _mouseOffset:Point;
 
-    public function MouseController(dot:VertexView, target:DisplayObject = null) {
+    public var ctrlKey:Boolean;
+    public var shiftKey:Boolean;
+    public var altKey:Boolean;
+
+    public function MouseController(dot:VertexView, target:DisplayObject = null, keyMask:uint=0) {
         super();
+        ctrlKey = keyMask >> 2 & 1;
+        shiftKey = keyMask >> 1 & 1;
+        altKey = keyMask & 1;
+
         _dot = dot;
         if (target) {
             _target = target;
@@ -113,7 +125,9 @@ public class MouseController extends EventDispatcher implements IDisposable {
      *
      */
     private function handleMouseDown(event:MouseEvent):void {
-        this.startMove();
+        if (event.ctrlKey == ctrlKey && event.shiftKey == shiftKey && event.altKey == altKey) {
+            this.startMove();
+        }
     }
 
     private function handleMouseUp(event:MouseEvent):void {
