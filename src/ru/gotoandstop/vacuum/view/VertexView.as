@@ -19,8 +19,8 @@ import ru.gotoandstop.values.BooleanValue;
 public class VertexView extends Sprite implements IDisposable, IVertex {
     public static function screenToLayout(view:VertexView, x:Number, y:Number):Point {
         return new Point(
-                (x - view.layout.center.x) / view.layout.scale.value,
-                (y - view.layout.center.y) / view.layout.scale.value
+                (x - view._layout.center.x) / view._layout.scale.value,
+                (y - view._layout.center.y) / view._layout.scale.value
         );
     }
 
@@ -54,23 +54,30 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
         return this._icon;
     }
 
-    private var layout:Layout;
+    private var _layout:Layout;
     public var considerScaleLayout:Boolean = true;
 
     public function VertexView(vertex:IVertex, layout:Layout, icon:VertexIcon = null, considerScaleLayout:Boolean = true) {
         super();
         this.considerScaleLayout = considerScaleLayout;
-        this._active = new BooleanValue();
+        _active = new BooleanValue();
+        setIcon(icon ? icon : new EmptyIcon());
 
-        this.setIcon(icon ? icon : new EmptyIcon());
+        _layout = layout;
+        _layout.scale.addEventListener(Event.CHANGE, this.handleLayoutChange);
+        _layout.center.addEventListener(Event.CHANGE, this.handleLayoutChange);
+        _vertex = vertex;
 
-        this.layout = layout;
-        this.layout.scale.addEventListener(Event.CHANGE, this.handleLayoutChange);
-        this.layout.center.addEventListener(Event.CHANGE, this.handleLayoutChange);
-
-        this._vertex = vertex;
         this.vertex.addEventListener(Event.CHANGE, this.handleVertexChange);
-        this.configure(vertex);
+        configure(vertex);
+        addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+    }
+
+    private function handleAddedToStage(event:Event):void {
+        removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+
+        addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+        stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
     }
 
     public function update():void {
@@ -86,15 +93,19 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
     }
 
     public function dispose():void {
+        removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+
         this.vertex.removeEventListener(Event.CHANGE, this.handleVertexChange);
-        this.layout.scale.removeEventListener(Event.CHANGE, this.handleLayoutChange);
-        this.layout.center.removeEventListener(Event.CHANGE, this.handleLayoutChange);
-        super.removeEventListener(Event.REMOVED_FROM_STAGE, this.handleRemovedFromStage);
+        this._layout.scale.removeEventListener(Event.CHANGE, this.handleLayoutChange);
+        this._layout.center.removeEventListener(Event.CHANGE, this.handleLayoutChange);
+
+        removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+        stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
     }
 
     public function setCoord(x:Number, y:Number):void {
-        x = (x - layout.center.x) * layout.scale.value;
-        y = (y - layout.center.y) * layout.scale.value;
+        x = (x - _layout.center.x) * _layout.scale.value;
+        y = (y - _layout.center.y) * _layout.scale.value;
 
         this.vertex.setCoord(x, y);
     }
@@ -107,7 +118,7 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
             }
 
             if (params.layoutCenter) {
-                return new Point(x - layout.center.x, y - layout.center.y);
+                return new Point(x - _layout.center.x, y - _layout.center.y);
             }
         }
         return new Point(this.x, this.y);
@@ -118,17 +129,17 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
     }
 
     public function setIcon(icon:VertexIcon):void {
-        if (this._icon) {
-            super.removeChild(this._icon);
+        if (_icon) {
+            super.removeChild(_icon);
         }
-        this._icon = icon;
-        super.addChild(this._icon);
+        _icon = icon;
+        super.addChild(_icon);
     }
 
     public function getPosition(withLayout:Boolean = false):Point {
         if (withLayout) {
-            var x:Number = (super.x - this.layout.center.x) / this.layout.scale.value;
-            var y:Number = (super.y - this.layout.center.y) / this.layout.scale.value;
+            var x:Number = (super.x - this._layout.center.x) / this._layout.scale.value;
+            var y:Number = (super.y - this._layout.center.y) / this._layout.scale.value;
             return new Point(x, y);
         } else {
             return new Point(super.x, super.y);
@@ -137,35 +148,32 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
 
     public function screenCoordToIdeal(x:Number, y:Number):Point {
         return new Point(
-                (x - layout.center.x) / this.layout.scale.value,
-                (y - layout.center.y) / this.layout.scale.value
+                (x - _layout.center.x) / this._layout.scale.value,
+                (y - _layout.center.y) / this._layout.scale.value
         );
     }
 
     /**
      * Устанавливает вьюшку в координату, соответстующую <code>vertex</code>.
-     * Действие происходит только в том случае, если <code>active</code> имеет значение true.
      * @param vertex
      *
      */
     private function configure(vertex:IVertex):void {
-        var dx:Number = considerScaleLayout ? vertex.x * this.layout.scale.value : vertex.x;
-        var dy:Number = considerScaleLayout ? vertex.y * this.layout.scale.value : vertex.y;
-        super.x = this.layout.center.x + dx;
-        super.y = this.layout.center.y + dy;
+        var dx:Number = considerScaleLayout ? vertex.x * this._layout.scale.value : vertex.x;
+        var dy:Number = considerScaleLayout ? vertex.y * this._layout.scale.value : vertex.y;
+        super.x = this._layout.center.x + dx;
+        super.y = this._layout.center.y + dy;
 
         update();
     }
 
-//		private function handleMouseDown(event:MouseEvent):void{
-//			this.active.value = true;
-//			super.startDrag();
-//		}
-//		
-//		private function handleMouseUp(event:MouseEvent):void{
-//			this.active.value = false;
-//			super.stopDrag();
-//		}
+    private function handleMouseDown(event:MouseEvent):void {
+        this.active.value = true;
+    }
+
+    private function handleMouseUp(event:MouseEvent):void {
+        this.active.value = false;
+    }
 
     private function handleVertexChange(event:Event):void {
         const vertex:IVertex = event.target as IVertex;
@@ -174,10 +182,6 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
 
     private function handleLayoutChange(event:Event):void {
         this.configure(this.vertex);
-    }
-
-    private function handleRemovedFromStage(event:Event):void {
-        this.dispose();
     }
 
     private var controllers:Object = {};
@@ -191,7 +195,7 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
     }
 
     public function clone():IVertex {
-        return new VertexView(_vertex.clone(), layout, _icon);
+        return new VertexView(_vertex.clone(), _layout, _icon);
     }
 }
 }
