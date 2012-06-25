@@ -18,11 +18,13 @@ import ru.gotoandstop.nodes.core.NodeChangeEvent;
 import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.storage.Storage;
+import ru.gotoandstop.ui.Element;
 
 public class MovieClipNodeProxy implements IDisposable {
     private static const DISPLAY_OBJECT_PROPERTIES:Array = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
     private var node:INode;
-    private var containers:Storage;
+//    private var containers:Storage;
+    private var containers:Element;
     private var assets:Storage;
     private var clips:Storage;
 
@@ -36,8 +38,8 @@ public class MovieClipNodeProxy implements IDisposable {
 
     private var _removableObject:Boolean;
 
-    public function MovieClipNodeProxy(node:INode, clipContainers:Storage, assets:Storage, clips:Storage) {
-        containers = clipContainers;
+    public function MovieClipNodeProxy(node:INode, clipContainer:Element, assets:Storage, clips:Storage) {
+        containers = clipContainer;
         this.assets = assets;
         this.clips = clips;
         this.node = node;
@@ -49,11 +51,12 @@ public class MovieClipNodeProxy implements IDisposable {
 
     private function getContainer():DisplayObjectContainer {
         var container_name:String = node.get("container");
-        if(containers.exist(container_name)){
-            return containers.get(container_name);
-        }else{
-            return null;
-        }
+        return containers.element(container_name);
+//        if(containers.exist(container_name)){
+//            return containers.get(container_name);
+//        }else{
+//            return null;
+//        }
     }
 
     private function handleNodeChange(event:Event):void {
