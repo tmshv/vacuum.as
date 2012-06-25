@@ -41,6 +41,10 @@ public class CommandObject extends ActionObject implements ICommand {
     public function execute(data:Object = null):void {
         if (command) {
             command.execute(data);
+        }else{
+            var Cmd:Class = super.system.storage.get(super.type + ".command");
+            var c:ICommand = new Cmd();
+            c.execute(data);
         }
     }
 

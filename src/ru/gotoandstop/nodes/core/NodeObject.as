@@ -85,13 +85,13 @@ public class NodeObject extends EventDispatcher implements INode{
      */
     protected function notifyAbout(key:String, value:*):void{
         if(!_storage) return;
-        const p:String = param(key);
+        const param_key:String = param(key);
         if(isLink(key) && value == null) {
-            value = get(p);
+            value = get(param_key);
         }
 
-        super.dispatchEvent(new NodeChangeEvent(p, value));
-        super.dispatchEvent(new Event(eventName(p)));
+        super.dispatchEvent(new NodeChangeEvent(param_key, value));
+        super.dispatchEvent(new Event(eventName(param_key)));
     }
 
     /**

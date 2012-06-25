@@ -13,19 +13,12 @@ import ru.gotoandstop.nodes.core.NodeObject;
 
 public class ExtractObject extends NodeObject {
     public function ExtractObject() {
-        super.addEventListener(Event.CHANGE, handleChange);
+        on("input", handleChange);
+        on("field", handleChange);
     }
 
     private function handleChange(event:Event):void {
-        const change:NodeChangeEvent = event as NodeChangeEvent;
-        if (change) {
-            var key:String = change.key;
-            if (key == "input") {
-                update();
-            } else if (key == "field") {
-                update();
-            }
-        }
+        update();
     }
 
     override public function update():void {
@@ -35,13 +28,16 @@ public class ExtractObject extends NodeObject {
             var e:Object = input[field];
             if(e != undefined) {
                 set("output", e);
+            }else{
+                set("output", null);
             }
         }
         super.update();
     }
 
     override public function dispose():void {
-        super.removeEventListener(Event.CHANGE, handleChange);
+        off("input", handleChange);
+        off("field", handleChange);
         super.dispose();
     }
 }

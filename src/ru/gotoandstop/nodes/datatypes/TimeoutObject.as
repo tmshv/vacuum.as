@@ -16,7 +16,7 @@ public class TimeoutObject extends ActionObject{
 	private var _timeoutID:uint;
 
 	public function TimeoutObject() {
-
+        super();
 	}
 
     override protected function executeAction():void {

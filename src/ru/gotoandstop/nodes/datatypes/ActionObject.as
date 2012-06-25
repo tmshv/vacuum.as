@@ -21,11 +21,27 @@ public class ActionObject extends NodeObject {
     public function ActionObject() {
         super.set('init', 0);
         super.set('done', 0);
+
+//        on("init", onInit);
     }
 
     public function overrideAction(cmd:ICommand):void {
         _overridedCommand = cmd;
     }
+
+//    private function onInit(event:Event):void {
+//        var origin:String = lastTransfer ? lastTransfer.origin : '';
+//        var changing_is_update:Boolean = origin == TransportOrigin.NODE_UPDATE;
+//        var value:Object = get("init");
+//        var value_is_valid:Boolean = value != null && value != undefined;
+//        if (value_is_valid && changing_is_update) {
+//            if (_overridedCommand) {
+//                _overridedCommand.execute();
+//            } else {
+//                executeAction();
+//            }
+//        }
+//    }
 
     override protected function notifyAbout(key:String, value:*):void {
         super.notifyAbout(key, value);
@@ -50,6 +66,7 @@ public class ActionObject extends NodeObject {
     }
 
     override public function dispose():void {
+//        off("init", onInit);
         super.dispose();
     }
 }
