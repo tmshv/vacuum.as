@@ -16,15 +16,18 @@ import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.nodes.core.NodeChangeEvent;
 import ru.gotoandstop.storage.Storage;
+import ru.gotoandstop.storage.Storage;
+import ru.gotoandstop.storage.Storage;
 
 public class MovieClipNodeProxy implements IDisposable {
     private static const DISPLAY_OBJECT_PROPERTIES:Array = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
     private var node:INode;
-    private var container:DisplayObjectContainer;
+    private var containers:Storage;
     private var assets:Storage;
     private var clips:Storage;
 
     private var _clip:DisplayObject;
+    private var _currentContainer:DisplayObjectContainer;
 
     private var _clipName:String;
     public function get clipName():String {
@@ -33,8 +36,8 @@ public class MovieClipNodeProxy implements IDisposable {
 
     private var _removableObject:Boolean;
 
-    public function MovieClipNodeProxy(node:INode, clipContainer:DisplayObjectContainer, assets:Storage, clips:Storage) {
-        container = clipContainer;
+    public function MovieClipNodeProxy(node:INode, clipContainers:Storage, assets:Storage, clips:Storage) {
+        containers = clipContainers;
         this.assets = assets;
         this.clips = clips;
         this.node = node;
@@ -44,6 +47,15 @@ public class MovieClipNodeProxy implements IDisposable {
         recreateObject();
     }
 
+    private function getContainer():DisplayObjectContainer {
+        var container_name:String = node.get("container");
+        if(containers.exist(container_name)){
+            return containers.get(container_name);
+        }else{
+            return null;
+        }
+    }
+
     private function handleNodeChange(event:Event):void {
         const change:NodeChangeEvent = event as NodeChangeEvent;
         if (change) {
@@ -51,6 +63,8 @@ public class MovieClipNodeProxy implements IDisposable {
             const val:Object = node.get(key);
 
             if (key == 'asset') {
+                recreateObject();
+            } else if (key == "container") {
                 recreateObject();
             } else if (DISPLAY_OBJECT_PROPERTIES.indexOf(key) > -1) {
                 updateObjectProperty(key, val);
@@ -68,7 +82,9 @@ public class MovieClipNodeProxy implements IDisposable {
         _removableObject = true;
         removeObject();
         var asset_name:String = node.get('asset');
-        if (assets.exist(asset_name)) {
+        var cont:DisplayObjectContainer = getContainer();
+        if (assets.exist(asset_name) && cont){
+            _currentContainer = cont;
             const Asset:Class = assets.get(asset_name);
             _clip = new Asset();
             _clip.name = _clipName;
@@ -76,7 +92,8 @@ public class MovieClipNodeProxy implements IDisposable {
                 _clip = wrapObject(_clip);
             }
             refreshObject();
-            container.addChild(_clip);
+
+            _currentContainer.addChild(_clip);
             clips.set(_clipName, _clip);
             node.set('clip', {value:_clipName, access:'read'});
         }
@@ -99,7 +116,7 @@ public class MovieClipNodeProxy implements IDisposable {
         if (_clip) {
             for each(var prop:String in DISPLAY_OBJECT_PROPERTIES) {
                 const value:Object = node.get(prop);
-                if (value != null){// && value != undefined) {
+                if (value != null) {// && value != undefined) {
                     _clip[prop] = value;
                 }
             }
@@ -111,7 +128,7 @@ public class MovieClipNodeProxy implements IDisposable {
         if (_removableObject) {
             clips.kill(_clipName);
             node.kill('clip');
-            if (_clip && container.contains(_clip)) container.removeChild(_clip);
+            if (_clip && _currentContainer.contains(_clip)) _currentContainer.removeChild(_clip);
         }
         _clip = null;
     }
@@ -120,7 +137,7 @@ public class MovieClipNodeProxy implements IDisposable {
         removeObject();
         node.removeEventListener(Event.CHANGE, handleNodeChange);
         node = null;
-        container = null;
+        containers = null;
         assets = null;
         clips = null;
     }
