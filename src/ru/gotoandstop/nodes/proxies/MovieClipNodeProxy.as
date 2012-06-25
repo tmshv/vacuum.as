@@ -55,7 +55,11 @@ public class MovieClipNodeProxy implements IDisposable {
             } else if (DISPLAY_OBJECT_PROPERTIES.indexOf(key) > -1) {
                 updateObjectProperty(key, val);
             } else if (key == "visible") {
-                updateObjectProperty(key, getVisible());
+                updateObjectProperty(key, stringParamToBoolean("visible"));
+            } else if (key == "mouseEnabled") {
+                var mouse_enabled:Boolean = stringParamToBoolean("mouseEnabled");
+                updateObjectProperty("mouseEnabled", mouse_enabled);
+                updateObjectProperty("mouseChildren", mouse_enabled);
             }
         }
     }
@@ -99,7 +103,7 @@ public class MovieClipNodeProxy implements IDisposable {
                     _clip[prop] = value;
                 }
             }
-            _clip.visible = getVisible();
+            _clip.visible = stringParamToBoolean("visible");
         }
     }
 
@@ -121,8 +125,8 @@ public class MovieClipNodeProxy implements IDisposable {
         clips = null;
     }
 
-    private function getVisible():Boolean {
-        var prop:String = node.get("visible");
+    private function stringParamToBoolean(key:String):Boolean {
+        var prop:String = node.get(key);
         var true_string:Boolean = prop == "true";
         var false_string:Boolean = prop == "false";
         if (true_string) {
