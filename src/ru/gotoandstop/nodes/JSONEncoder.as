@@ -28,12 +28,11 @@ public class JSONEncoder {
 
     //make system from json shit
     public function decode(data:Object):void {
-        var str:String = data.toString();
-        var object:Object = data is String ? by.blooddy.crypto.serialization.JSON.decode(str) : data;
+        var system_definition:Object = data is String ? by.blooddy.crypto.serialization.JSON.decode(String(data)) : data;
 
-        var nodes:Array = object.nodes;
-        var links:Array = object.links;
-        var defs:Array = object.definitions;
+        var nodes:Array = system_definition.nodes;
+        var links:Array = system_definition.links;
+        var defs:Array = system_definition.definitions;
 
         if(readDefinition) {
             for each(var d:Object in defs) {
