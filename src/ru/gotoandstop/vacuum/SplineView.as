@@ -10,8 +10,9 @@ import ru.gotoandstop.IDisposable;
 
 import ru.gotoandstop.mvc.BaseView;
 	import ru.gotoandstop.mvc.IModel;
-		
-	/**
+import ru.gotoandstop.vacuum.render.IDrawer;
+
+/**
 	 *
 	 * Creation date: May 1, 2011 (2:01:47 AM)
 	 * @author Roman Timashev (roman@tmshv.ru)
@@ -21,6 +22,8 @@ import ru.gotoandstop.mvc.BaseView;
 		public function get spline():Spline{
 			return _spline;
 		}
+
+        public var drawer:IDrawer;
 		
 		public function SplineView(spline:Spline){
 			super();
@@ -35,14 +38,17 @@ import ru.gotoandstop.mvc.BaseView;
 		}
 		
 		private function handleSplineChanged(event:Event):void{
-			const spline:Spline = event.target as Spline;
 			drawSpline2(spline.getCommands());
 		}
-		
+
 		private function drawSpline2(data:GraphicsPath):void{
-			super.graphics.clear();
-			super.graphics.lineStyle(0);
-			super.graphics.drawPath(data.commands, data.data, data.winding);
+            if(drawer) {
+                drawer.draw(graphics, data)
+            }else{
+                graphics.clear();
+                graphics.lineStyle(0, 0x000000);
+                graphics.drawPath(data.commands, data.data, data.winding);
+            }
 		}
 	}
 }
