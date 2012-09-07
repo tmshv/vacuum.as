@@ -19,13 +19,13 @@ public class BezierQuadConnection implements ILineConnection {
 		return _index;
 	}
 
-	private var _first:ITargetVertex;
-	private var firstMid:RibbonVertex;
-	private var _second:ITargetVertex;
-	private var secondMid:RibbonVertex;
+    public var first:ITargetVertex;
+    public var firstMid:RibbonVertex;
+    public var second:ITargetVertex;
+    public var secondMid:RibbonVertex;
 
-	private var spline:Spline;
-	private var _view:SplineView;
+    public var spline:Spline;
+    public var view:SplineView;
 
 	private var _canvas:DisplayObjectContainer;
 	public function get canvas():DisplayObjectContainer {
@@ -37,41 +37,41 @@ public class BezierQuadConnection implements ILineConnection {
 		_index = SimpleLineConnection.getIndex();
 		spline = new Spline(canvas);
 
-		_view = new SplineView(spline);
-		_view.alpha = 0.75;
-		_canvas.addChild(_view);
+		view = new SplineView(spline);
+		view.alpha = 0.75;
+		_canvas.addChild(view);
 
-		_first = new TargetVertex();
+		first = new TargetVertex();
 		firstMid = new RibbonVertex();
-		_second = new TargetVertex();
+		second = new TargetVertex();
 		secondMid = new RibbonVertex();
-		spline.addVertex(_first);
+		spline.addVertex(first);
 		spline.addVertex2(firstMid, true);
 		spline.addVertex2(secondMid, true);
-		spline.addVertex(_second);
+		spline.addVertex(second);
 	}
 
 	public function dispose():void {
-		_canvas.removeChild(_view);
-		_view.dispose();
+		_canvas.removeChild(view);
+		view.dispose();
 		spline.dispose();
 		firstMid.dispose();
 		secondMid.dispose();
 		_canvas = null;
-		_first = null;
-		_second = null;
+		first = null;
+		second = null;
 		firstMid = null;
 		secondMid = null;
 		spline = null;
-		_view = null;
+		view = null;
 	}
 
 	public function setOutsideVertices(first:IPort, second:IPort):void {
-		var new_first:Boolean = first != _first.target;
-		var new_second:Boolean = second != _second.target;
+		var new_first:Boolean = first != this.first.target;
+		var new_second:Boolean = second != this.second.target;
 
-		_first.setTarget(first);
-		_second.setTarget(second);
+		this.first.setTarget(first);
+		this.second.setTarget(second);
 
 		firstMid.makeRibbon = new_first;
 		secondMid.makeRibbon = new_second;
