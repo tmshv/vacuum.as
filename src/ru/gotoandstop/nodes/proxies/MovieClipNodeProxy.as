@@ -11,6 +11,7 @@ import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.events.EventDispatcher;
 
 import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.nodes.core.INode;
@@ -20,9 +21,16 @@ import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.ui.Element;
 
-public class MovieClipNodeProxy implements IDisposable {
+[Event(name="displayObjectCreated", type="ru.gotoandstop.nodes.proxies.MovieClipNodeProxyEvent")]
+[Event(name="displayObjectDefinitionNotFound", type="ru.gotoandstop.nodes.proxies.MovieClipNodeProxyEvent")]
+
+public class MovieClipNodeProxy extends EventDispatcher implements IDisposable {
     private static const DISPLAY_OBJECT_PROPERTIES:Array = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
-    private var node:INode;
+    private var _node:INode;
+    public function get node():INode{
+        return _node;
+    }
+
 //    private var containers:Storage;
     private var containers:Element;
     private var assets:Storage;
@@ -38,32 +46,43 @@ public class MovieClipNodeProxy implements IDisposable {
 
     private var _removableObject:Boolean;
 
+    private var _definitionHelper:IMovieClipDefinitionHelper;
+    public function get definitionHelper():IMovieClipDefinitionHelper{
+        return _definitionHelper;
+    }
+
     public function MovieClipNodeProxy(node:INode, clipContainer:Element, assets:Storage, clips:Storage) {
         containers = clipContainer;
         this.assets = assets;
         this.clips = clips;
-        this.node = node;
-        this.node.addEventListener(Event.CHANGE, handleNodeChange);
+        _node = node;
+        _node.addEventListener(Event.CHANGE, handleNodeChange);
         _clipName = node.id + ".clip";
+
+        _definitionHelper = new BaseMovieClipDefinitionHelper();
 
         recreateObject();
     }
 
+    public function setDefinitionHelper(helper:IMovieClipDefinitionHelper):void{
+        _definitionHelper = helper;
+        recreateObject();
+    }
+
+    public function update():void{
+        recreateObject();
+    }
+
     private function getContainer():DisplayObjectContainer {
-        var container_name:String = node.get("container");
-        return containers.element(container_name);
-//        if(containers.exist(container_name)){
-//            return containers.get(container_name);
-//        }else{
-//            return null;
-//        }
+        var element_name:String = _node.get("container");
+        return containers.element(element_name);
     }
 
     private function handleNodeChange(event:Event):void {
         const change:NodeChangeEvent = event as NodeChangeEvent;
         if (change) {
             const key:String = change.key;
-            const val:Object = node.get(key);
+            const val:Object = _node.get(key);
 
             if (key == 'asset') {
                 recreateObject();
@@ -84,11 +103,12 @@ public class MovieClipNodeProxy implements IDisposable {
     private function recreateObject():void {
         _removableObject = true;
         removeObject();
-        var asset_name:String = node.get('asset');
+        var definition_name:String = _node.get('asset');
+        definition_name = definitionHelper.getDefinition(definition_name);
         var cont:DisplayObjectContainer = getContainer();
-        if (assets.exist(asset_name) && cont){
+        if (assets.exist(definition_name)){
             _currentContainer = cont;
-            const Asset:Class = assets.get(asset_name);
+            const Asset:Class = assets.get(definition_name);
             _clip = new Asset();
             _clip.name = _clipName;
             if (_clip is Bitmap) {
@@ -98,7 +118,11 @@ public class MovieClipNodeProxy implements IDisposable {
 
             _currentContainer.addChild(_clip);
             clips.set(_clipName, _clip);
-            node.set('clip', {value:_clipName, access:'read'});
+            _node.set('clip', {value:_clipName, access:'read'});
+
+            super.dispatchEvent(new MovieClipNodeProxyEvent(MovieClipNodeProxyEvent.DISPLAY_OBJECT_CREATED));
+        }else{
+            super.dispatchEvent(new MovieClipNodeProxyEvent(MovieClipNodeProxyEvent.DISPLAY_OBJECT_DEFINITION_NOT_FOUND));
         }
     }
 
@@ -118,7 +142,7 @@ public class MovieClipNodeProxy implements IDisposable {
     private function refreshObject():void {
         if (_clip) {
             for each(var prop:String in DISPLAY_OBJECT_PROPERTIES) {
-                const value:Object = node.get(prop);
+                const value:Object = _node.get(prop);
                 if (value != null) {// && value != undefined) {
                     _clip[prop] = value;
                 }
@@ -130,7 +154,7 @@ public class MovieClipNodeProxy implements IDisposable {
     private function removeObject():void {
         if (_removableObject) {
             clips.kill(_clipName);
-            node.kill('clip');
+            _node.kill('clip');
             if (_clip && _currentContainer.contains(_clip)) _currentContainer.removeChild(_clip);
         }
         _clip = null;
@@ -138,15 +162,15 @@ public class MovieClipNodeProxy implements IDisposable {
 
     public function dispose():void {
         removeObject();
-        node.removeEventListener(Event.CHANGE, handleNodeChange);
-        node = null;
+        _node.removeEventListener(Event.CHANGE, handleNodeChange);
+        _node = null;
         containers = null;
         assets = null;
         clips = null;
     }
 
     private function stringParamToBoolean(key:String):Boolean {
-        var prop:String = node.get(key);
+        var prop:String = _node.get(key);
         var true_string:Boolean = prop == "true";
         var false_string:Boolean = prop == "false";
         if (true_string) {
