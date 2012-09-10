@@ -17,13 +17,12 @@ package ru.gotoandstop.vacuum.view{
 			var stroke_color:uint = stroke & 0xffffff;
 			
 			var canvas:Graphics = graphics;
-			var s:uint = size;
-			var s2:uint = s >> 1;
+			var s2:uint = size >> 1;
 			canvas.clear();
 			super.drawInvisibleCircle(size+2);
 			if(fill_alpha) canvas.beginFill(fill_color, fill_alpha);
 			if(stroke_alpha) canvas.lineStyle(0, stroke_color, stroke_alpha);
-			canvas.drawRect(-s2, -s2, s, s);
+			canvas.drawRect(-s2, -s2, size, size);
 		}
 	}
 }
