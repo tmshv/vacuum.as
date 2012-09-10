@@ -2,6 +2,8 @@ package ru.gotoandstop.vacuum {
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
+import flash.geom.Matrix;
+import flash.geom.Point;
 import flash.geom.Point;
 
 import ru.gotoandstop.IDisposable;
@@ -65,6 +67,14 @@ public class Layout extends EventDispatcher implements IDisposable, ILockable {
         rotation.addEventListener(Event.CHANGE, handleChange);
         scale.addEventListener(Event.CHANGE, handleChange);
         center.addEventListener(Event.CHANGE, handleChange);
+    }
+
+    public function screenToLayout(screenCoord:Point):Point{
+        var m:Matrix = new Matrix();
+        m.rotate(_rotation.value);
+        m.scale(_scale.value, _scale.value);
+        m.translate(_center.x, _center.y);
+        return m.transformPoint(screenCoord);
     }
 
     public function dispose():void {

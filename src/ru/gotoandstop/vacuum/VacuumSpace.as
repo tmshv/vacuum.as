@@ -14,14 +14,22 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 
 import ru.gotoandstop.IDisposable;
+import ru.gotoandstop.vacuum.render.DisplayVertex;
+import ru.gotoandstop.vacuum.render.DisplayVertex;
+import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.IVertex;
 
 import ru.gotoandstop.vacuum.core.IVertex;
+import ru.gotoandstop.vacuum.core.LayoutVertex;
+import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.vacuum.splines.RectSpline;
+import ru.gotoandstop.vacuum.view.VertexIcon;
 import ru.gotoandstop.vacuum.view.VertexIcon;
 import ru.gotoandstop.vacuum.view.VertexView;
 
 public class VacuumSpace extends Sprite implements IDisposable{
+    public var defaultIcon:VertexIcon;
+
     private var _layout:Layout;
     public function get layout():Layout {
         return _layout;
@@ -41,7 +49,7 @@ public class VacuumSpace extends Sprite implements IDisposable{
         if(vertex is VertexView) {
             super.addChild(vertex as VertexView);
         }else{
-            view = new VertexView(vertex, _layout, icon)
+            view = new VertexView(vertex, _layout, icon);
             super.addChild(view);
         }
         return view;
@@ -87,6 +95,24 @@ public class VacuumSpace extends Sprite implements IDisposable{
         super.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
         super.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
         super.stage.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+    }
+
+    public function createVertex(x:Number, y:Number, icon:VertexIcon=null, mouseInteraction:Boolean=false):Object {
+        var v_base:IVertex = new Vertex(x, y);
+        var v_layout:LayoutVertex = new LayoutVertex(v_base);
+        v_layout.setLayout(_layout);
+        var v_disp:DisplayVertex = new DisplayVertex(v_layout, icon ? icon : defaultIcon);
+        addChild(v_disp);
+
+        return {
+            base:v_base,
+            layout:v_layout,
+            display:v_disp
+        };
+    }
+
+    public function createScreenVertex(x:Number, y:Number, icon:VertexIcon=null, mouseInteraction:Boolean=false):Object{
+        return createVertex(x, y, icon, mouseInteraction);
     }
 }
 }
