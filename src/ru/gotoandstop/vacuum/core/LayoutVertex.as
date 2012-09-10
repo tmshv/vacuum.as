@@ -64,7 +64,7 @@ public class LayoutVertex extends TargetVertex {
 
     override public function setCoord(x:Number, y:Number):void {
         var coord:Point = new Point(x, y);
-        var new_coord:Point = _layout ? _layout.screenToLayout(coord) : coord;
+        var new_coord:Point = _layout ? _layout.applyLayout(coord) : coord;
         super.setCoord(new_coord.x, new_coord.y);
     }
 
