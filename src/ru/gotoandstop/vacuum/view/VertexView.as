@@ -100,7 +100,7 @@ public class VertexView extends Sprite implements IDisposable, IVertex {
         this._layout.center.removeEventListener(Event.CHANGE, this.handleLayoutChange);
 
         removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
-        stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
+        if(stage) stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
     }
 
     public function setCoord(x:Number, y:Number):void {
