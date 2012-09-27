@@ -241,7 +241,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
     }
 
     public function getLinkedValue(link:String):Object {
-        var match:Array = link.match(/([:_\d\w]+).([\d\w]+)/);
+        var match:Array = link.match(/([_\d\w]+).([\d\w]+)/);
         var node_name:String = match[1];
         var prop:String = match[2];
         var node:Node = getNodeByName(node_name) as Node;
