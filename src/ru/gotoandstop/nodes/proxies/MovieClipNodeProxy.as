@@ -118,7 +118,7 @@ public class MovieClipNodeProxy extends EventDispatcher implements IDisposable {
 
             _currentContainer.addChild(_clip);
             clips.set(_clipName, _clip);
-            _node.set('clip', {value:_clipName, access:'read'});
+            _node.set('clip', _clipName);//_node.set('clip', {value:_clipName, access:'read'});
 
             super.dispatchEvent(new MovieClipNodeProxyEvent(MovieClipNodeProxyEvent.DISPLAY_OBJECT_CREATED));
         }else{
