@@ -220,7 +220,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
             vacuumIndex:connection_index
         });
 
-        transferData(from, to, TransportOrigin.LINK_ESTABLISHING);
+        transferData(from.node.id, from.property, to.node.id, to.property, TransportOrigin.LINK_ESTABLISHING);
     }
 
     /**
@@ -228,13 +228,16 @@ public class NodeSystem extends Sprite implements INodeSystem {
      * @param to
      * @param from
      */
-    private function transferData(from:PortPoint, to:PortPoint, origin:String):void {
+    private function transferData(firstNodeName:String, firstProp:String, secondNodeName:String, secondProp:String, origin:String):void {
+        var from_node:INode = getNodeByName(firstNodeName);
+        var to_node:INode = getNodeByName(secondNodeName);
+
         var dto:TransportObject = new TransportObject();
-        dto.from = from.node;
-        dto.to = to.node;
+        dto.from = from_node;
+        dto.to = to_node;
         dto.system = this;
-        dto.fromField = from.property;
-        dto.toField = to.property;
+        dto.fromField = firstProp;
+        dto.toField = secondProp;
         dto.origin = origin;
 
         dto.transfer();
@@ -270,7 +273,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
                 const from:PortPoint = connection.from;
                 const to:PortPoint = connection.to;
                 if (from.node.id == initiator_node.id && change.key == from.property) {
-                    transferData(from, to, TransportOrigin.NODE_UPDATE);
+                    transferData(from.node.id, from.property, to.node.id, to.property, TransportOrigin.NODE_UPDATE);
                 }
             }
         }
