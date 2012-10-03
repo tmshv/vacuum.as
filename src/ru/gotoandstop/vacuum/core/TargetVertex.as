@@ -21,15 +21,15 @@ public class TargetVertex extends Vertex implements ITargetVertex{
 	public function setTarget(vertex:IVertex):void {
 		dispose();
 		_target = vertex;
-		if(_target) _target.addEventListener(Event.CHANGE, handleTargetChange);
-		handleTargetChange(null);
+		if(_target) _target.onChange(handleTargetChange);
+		handleTargetChange();
 	}
 
 	public function dispose():void {
-		if(_target) _target.removeEventListener(Event.CHANGE, handleTargetChange);
+		if(_target) _target.offChange(handleTargetChange);
 	}
 	
-	protected function handleTargetChange(event:Event):void {
+	protected function handleTargetChange(event:Event=null):void {
 		super.setCoord(_target.x,  _target.y);
 	}
 }

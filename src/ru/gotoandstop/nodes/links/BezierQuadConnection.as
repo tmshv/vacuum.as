@@ -109,7 +109,7 @@ internal class RibbonVertex extends TargetVertex {
 		super.setTarget(vertex);
 	}
 
-	override protected function handleTargetChange(event:Event):void {
+	override protected function handleTargetChange(event:Event=null):void {
 		if (makeRibbon) {
 			Tweener.removeTweens(this);
 			Tweener.addTween(this, {x:_target.x, y:_target.y, time:.25, onComplete:onAnimComplete});
