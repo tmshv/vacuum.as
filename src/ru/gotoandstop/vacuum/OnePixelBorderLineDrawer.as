@@ -8,20 +8,13 @@ package ru.gotoandstop.vacuum {
 import flash.display.Graphics;
 import flash.display.GraphicsPath;
 
+import ru.gotoandstop.vacuum.BorderedLineDrawer;
+
 import ru.gotoandstop.vacuum.render.IDrawer;
 
-public class OnePixelBorderLineDrawer implements IDrawer {
+public class OnePixelBorderLineDrawer extends  BorderedLineDrawer{
     public function OnePixelBorderLineDrawer() {
-
-    }
-
-    public function draw(canvas:Graphics, data:GraphicsPath):void {
-        canvas.clear();
-        canvas.lineStyle(3, 0, 0.3);
-        canvas.drawPath(data.commands, data.data, data.winding);
-
-        canvas.lineStyle(1, 0xffffff);
-        canvas.drawPath(data.commands, data.data, data.winding);
+        super(0xffffffff, 1, 0x66000000, 1);
     }
 }
 }
