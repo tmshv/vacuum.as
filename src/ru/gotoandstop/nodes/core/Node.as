@@ -1,10 +1,7 @@
 package ru.gotoandstop.nodes.core {
-import by.blooddy.crypto.serialization.JSON;
-
 import caurina.transitions.Tweener;
 
 import com.bit101.components.Label;
-import com.bit101.components.Panel;
 import com.bit101.components.Panel;
 import com.bit101.components.PushButton;
 import com.bit101.components.Text;
@@ -14,34 +11,26 @@ import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.events.TextEvent;
 import flash.filters.GlowFilter;
 import flash.geom.Point;
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
+import ru.gotoandstop.ISelectable;
 import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.math.Calculate;
-import ru.gotoandstop.nodes.links.PortPointType;
-import ru.gotoandstop.vacuum.CombinedVertex;
-import ru.gotoandstop.vacuum.RelativeVertex;
-import ru.gotoandstop.vacuum.RelativeVertex;
-import ru.gotoandstop.nodes.VacuumEvent;
 import ru.gotoandstop.nodes.VacuumLayout;
-import ru.gotoandstop.nodes.core.NodeField;
-import ru.gotoandstop.nodes.core.NodeField;
 import ru.gotoandstop.nodes.events.NodeEvent;
 import ru.gotoandstop.nodes.links.PortPoint;
+import ru.gotoandstop.nodes.links.PortPointType;
 import ru.gotoandstop.nodes.view.Bit101Text;
 import ru.gotoandstop.storage.Storage;
-import ru.gotoandstop.storage.Storage;
-import ru.gotoandstop.ui.ISelectable;
+import ru.gotoandstop.vacuum.CombinedVertex;
+import ru.gotoandstop.vacuum.RelativeVertex;
 import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.ModifiableVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
-import ru.gotoandstop.vacuum.view.CircleIcon;
-import ru.gotoandstop.vacuum.view.RectIcon;
 import ru.gotoandstop.vacuum.view.VertexView;
 
 [Event(name='move', type='ru.gotoandstop.nodes.events.NodeEvent')]

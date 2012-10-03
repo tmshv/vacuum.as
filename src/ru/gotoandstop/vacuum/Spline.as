@@ -1,11 +1,7 @@
 package ru.gotoandstop.vacuum {
 import flash.display.GraphicsPath;
-import flash.events.Event;
-import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
-import flash.geom.Point;
 
-import ru.gotoandstop.mvc.BaseModel;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.VertexGroup;
 

@@ -9,6 +9,7 @@ import flash.geom.Point;
 import flash.utils.ByteArray;
 import flash.utils.getDefinitionByName;
 
+import ru.gotoandstop.ISelectable;
 import ru.gotoandstop.nodes.MouseVertex;
 import ru.gotoandstop.nodes.VacuumEvent;
 import ru.gotoandstop.nodes.VacuumLayout;
@@ -16,11 +17,9 @@ import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
 import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.links.PortPointType;
 import ru.gotoandstop.storage.Storage;
-import ru.gotoandstop.ui.ISelectable;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.modificators.SnapModifier;
-import ru.gotoandstop.values.IValue;
 
 [Event(name="addedNode", type="ru.gotoandstop.nodes.core.NodeSystemEvent")]
 [Event(name="removedNode", type="ru.gotoandstop.nodes.core.NodeSystemEvent")]

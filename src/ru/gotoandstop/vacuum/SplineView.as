@@ -1,15 +1,9 @@
 package ru.gotoandstop.vacuum{
-import flash.display.DisplayObject;
 import flash.display.GraphicsPath;
 import flash.display.Sprite;
-import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.geom.Point;
+import flash.events.Event;
 
 import ru.gotoandstop.IDisposable;
-
-import ru.gotoandstop.mvc.BaseView;
-	import ru.gotoandstop.mvc.IModel;
 import ru.gotoandstop.vacuum.render.IDrawer;
 
 /**

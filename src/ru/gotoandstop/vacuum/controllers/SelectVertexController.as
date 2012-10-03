@@ -3,7 +3,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 
-import ru.gotoandstop.ui.ISelectable;
+import ru.gotoandstop.ISelectable;
 import ru.gotoandstop.vacuum.view.RectIcon;
 import ru.gotoandstop.vacuum.view.VertexIcon;
 import ru.gotoandstop.vacuum.view.VertexView;
