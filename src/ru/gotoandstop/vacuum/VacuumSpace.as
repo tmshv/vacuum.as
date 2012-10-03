@@ -14,6 +14,8 @@ import flash.events.MouseEvent;
 import flash.geom.Point;
 
 import ru.gotoandstop.IDisposable;
+import ru.gotoandstop.nodes.VacuumEvent;
+import ru.gotoandstop.ui.ScreenElement;
 import ru.gotoandstop.vacuum.render.DisplayVertex;
 import ru.gotoandstop.vacuum.render.DisplayVertex;
 import ru.gotoandstop.vacuum.core.IVertex;
@@ -23,12 +25,15 @@ import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.LayoutVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.vacuum.splines.RectSpline;
+import ru.gotoandstop.vacuum.view.RectIcon;
 import ru.gotoandstop.vacuum.view.VertexIcon;
 import ru.gotoandstop.vacuum.view.VertexIcon;
 import ru.gotoandstop.vacuum.view.VertexView;
 
-public class VacuumSpace extends Sprite implements IDisposable{
-    public var defaultIcon:VertexIcon;
+public class VacuumSpace extends ScreenElement implements IDisposable{
+    public static function createDefaultIcon():VertexIcon{
+        return new RectIcon(0xff000000, 0xff000000);
+    }
 
     private var _layout:Layout;
     public function get layout():Layout {
@@ -36,9 +41,9 @@ public class VacuumSpace extends Sprite implements IDisposable{
     }
 
     private var _mouseDown:Point;
-    
+
     private var selector:RectSpline;
-    
+
     public function VacuumSpace() {
         _layout = new Layout();
         super.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
@@ -89,7 +94,7 @@ public class VacuumSpace extends Sprite implements IDisposable{
             selector.setBottom(event.stageY);
         }
     }
-    
+
     public function dispose():void {
         super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
         super.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
@@ -101,9 +106,9 @@ public class VacuumSpace extends Sprite implements IDisposable{
         var v_base:IVertex = new Vertex(x, y);
         var v_layout:LayoutVertex = new LayoutVertex(v_base);
         v_layout.setLayout(_layout);
-        var v_disp:DisplayVertex = new DisplayVertex(v_layout, icon ? icon : defaultIcon);
-        addChild(v_disp);
-
+        var v_disp:DisplayVertex = new DisplayVertex(this, v_layout, icon ? icon : createDefaultIcon());
+        element("points").push(v_disp);
+        if(mouseInteraction) v_disp.enableInteraction();
         return {
             base:v_base,
             layout:v_layout,
