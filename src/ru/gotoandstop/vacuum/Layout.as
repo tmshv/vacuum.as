@@ -1,16 +1,11 @@
 package ru.gotoandstop.vacuum {
 import flash.events.Event;
 import flash.events.EventDispatcher;
-import flash.events.IEventDispatcher;
 import flash.geom.Matrix;
-import flash.geom.Point;
 import flash.geom.Point;
 
 import ru.gotoandstop.IDisposable;
-
 import ru.gotoandstop.ILockable;
-
-import ru.gotoandstop.geom.Vector2D;
 import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.values.IntValue;
 import ru.gotoandstop.values.NumberValue;
@@ -69,12 +64,12 @@ public class Layout extends EventDispatcher implements IDisposable, ILockable {
         center.addEventListener(Event.CHANGE, handleChange);
     }
 
-    public function applyLayout(screenCoord:Point):Point{
+    public function applyLayout(coord:Point):Point{
         var m:Matrix = new Matrix();
         m.rotate(_rotation.value);
         m.scale(_scale.value, _scale.value);
         m.translate(_center.x, _center.y);
-        return m.transformPoint(screenCoord);
+        return m.transformPoint(coord);
     }
 
     public function screenToLayout(screenCoord:Point):Point{
