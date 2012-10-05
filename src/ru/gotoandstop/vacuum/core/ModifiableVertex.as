@@ -31,5 +31,15 @@ public class ModifiableVertex extends Vertex {
     public function addModifier(modifier:IVertexModifier):void {
         modifiers.push(modifier);
     }
+
+    public function removeModifier(modifier:IVertexModifier):void{
+        var index:int = modifiers.indexOf(modifier);
+        if(index > -1) modifiers.splice(index, 1);
+    }
+
+    public function getModifierByIndex(index:uint):IVertexModifier{
+        if(index < modifiers.length) return modifiers[index];
+        else return null;
+    }
 }
 }
