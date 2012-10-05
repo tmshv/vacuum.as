@@ -3,24 +3,22 @@ import flash.events.Event;
 import flash.geom.Point;
 
 import ru.gotoandstop.vacuum.core.IVertex;
+import ru.gotoandstop.vacuum.core.TargetVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 
 /**
  * @author tmshv
  */
-public class RelativeVertex extends Vertex {
-    private var target:IVertex;
+public class RelativeVertex extends TargetVertex {
     private var offset:IVertex;
-
     public var layoutCenter:Boolean = false;
 
-    public function RelativeVertex(target:IVertex, offset:IVertex) {
-        super();
-        this.target = target;
-        this.target.addEventListener(Event.CHANGE, this.recalc);
-        this.offset = offset;
-        this.offset.addEventListener(Event.CHANGE, this.recalc);
-        this.recalc();
+    public function RelativeVertex(targetVertex:IVertex, offsetVertex:IVertex) {
+        super(targetVertex);
+        target.onChange(recalc);
+        offset = offsetVertex;
+        offset.onChange(recalc);
+        recalc();
     }
 
     private function recalc(event:Event = null):void {
@@ -30,11 +28,11 @@ public class RelativeVertex extends Vertex {
         super.setCoord(x, y);
     }
 
-    public function dispose():void {
-        this.target.removeEventListener(Event.CHANGE, this.recalc);
-        this.offset.removeEventListener(Event.CHANGE, this.recalc);
-        this.target = null;
-        this.offset = null;
+    override public function dispose():void {
+        target.offChange(recalc);
+        offset.offChange(recalc);
+        _target = null;
+        offset = null;
     }
 }
 }
