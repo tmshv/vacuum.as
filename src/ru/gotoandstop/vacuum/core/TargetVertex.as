@@ -21,16 +21,16 @@ public class TargetVertex extends ModifiableVertex implements ITargetVertex{
 	public function setTarget(vertex:IVertex):void {
 		dispose();
 		_target = vertex;
-		if(_target) _target.onChange(handleTargetChange);
-		handleTargetChange();
+		if(_target) _target.onChange(calc);
+		calc();
 	}
 
 	public function dispose():void {
-		if(_target) _target.offChange(handleTargetChange);
+		if(_target) _target.offChange(calc);
 	}
 	
-	protected function handleTargetChange(event:Event=null):void {
-		super.setCoord(_target.x,  _target.y);
+	protected function calc(event:Event=null):void {
+		setCoord(_target.x,  _target.y);
 	}
 }
 }
