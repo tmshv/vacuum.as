@@ -37,6 +37,7 @@ public class VertexGroup extends Vertex implements IDisposable {
     public function removeVertex(vertex:IVertex):void {
         var index:int = _list.indexOf(vertex);
         if (index >= -1) {
+            vertex.offChange(handleVertexChange);
             _list.splice(index, 1);
             changed = true;
             update();
