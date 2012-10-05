@@ -22,10 +22,9 @@ public class RelativeVertex extends TargetVertex {
     }
 
     private function recalc(event:Event = null):void {
-        var base:Point = target.getCoord({layoutCenter:layoutCenter});
-        var x:Number = base.x + this.offset.x;
-        var y:Number = base.y + this.offset.y;
-        super.setCoord(x, y);
+        var coord:Point = target.getCoord({layoutCenter:layoutCenter});
+        coord.offset(offset.x, offset.y);
+        setCoord(coord.x, coord.y);
     }
 
     override public function dispose():void {
