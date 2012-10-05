@@ -8,7 +8,7 @@
 package ru.gotoandstop.vacuum.core {
 import flash.events.Event;
 
-public class TargetVertex extends Vertex implements ITargetVertex{
+public class TargetVertex extends ModifiableVertex implements ITargetVertex{
 	protected var _target:IVertex;
 	public function get target():IVertex {
 		return _target;
