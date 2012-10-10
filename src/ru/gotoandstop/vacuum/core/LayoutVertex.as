@@ -44,56 +44,29 @@ public class LayoutVertex extends TargetVertex {
     }
 
     private function recalc(event:Event=null):void {
-        setCoord(target.x, target.y);
+        setCoordToYourself(target.x, target.y);
     }
 
-//    public static function screenToLayout(view:VertexView, x:Number, y:Number):Point {
-//        return new Point(
-//                (x - view.layout.center.x) / view.layout.scale.value,
-//                (y - view.layout.center.y) / view.layout.scale.value
-//        );
-//    }
-//
-//    public function screenCoordToIdeal(x:Number, y:Number):Point {
-//        return new Point(
-//                (x - layout.center.x) / this.layout.scale.value,
-//                (y - layout.center.y) / this.layout.scale.value
-//        );
-//    }
-
+    private function setTargetCoord(x:Number, y:Number):void{
+        if(target) target.setCoord(x, y);
+    }
 
     override public function setCoord(x:Number, y:Number):void {
         var coord:Point = new Point(x, y);
-        var new_coord:Point = _layout ? _layout.applyLayout(coord) : coord;
-        super.setCoord(new_coord.x, new_coord.y);
+        coord = _layout ? _layout.invertLayout(coord) : coord;
+        setTargetCoord(coord.x, coord.y);
     }
-
-//    override public function set x(value:Number):void {
-//        var center:Number = 0;
-//        var scale:Number = 1;
-//        var rotation:Number = 0;
-//        if (_layout) {
-//            center = _layout.center.x;
-//            scale = _layout.scale.value;
-//        }
-//        super.x = transformValue(value, center, scale, rotation);
-//    }
-//
-//    override public function set y(value:Number):void {
-//        var center:Number = 0;
-//        var scale:Number = 1;
-//        var rotation:Number = 0;
-//        if (_layout) {
-//            center = _layout.center.y;
-//            scale = _layout.scale.value;
-//        }
-//        super.y = transformValue(value, center, scale, rotation);
-//    }
 
     private function transformValue(value:Number, center:Number, scale:Number, rotation:Number):Number {
         value = considerLayoutScale ? value * scale : value;
         value = considerLayoutCenter ? center + value : value;
         return value;
+    }
+
+    override protected function setCoordToYourself(x:Number, y:Number):void {
+        var coord:Point = new Point(x, y);
+        coord = _layout ? _layout.applyLayout(coord) : coord;
+        super.setCoordToYourself(coord.x,  coord.y);
     }
 }
 }

@@ -109,16 +109,16 @@ internal class RibbonVertex extends TargetVertex {
 		super.setTarget(vertex);
 	}
 
-	override protected function calc(event:Event=null):void {
-		if (makeRibbon) {
-			Tweener.removeTweens(this);
-			Tweener.addTween(this, {x:_target.x, y:_target.y, time:.25, onComplete:onAnimComplete});
-		} else {
-			super.setCoord(_target.x, _target.y);
-		}
-	}
+	override protected function setCoordToYourself(x:Number, y:Number):void {
+        if (makeRibbon) {
+            Tweener.removeTweens(this);
+            Tweener.addTween(this, {x:_target.x, y:_target.y, time:.25, onComplete:onAnimComplete});
+        } else {
+            super.setCoordToYourself(_target.x, _target.y);
+        }
+    }
 
-	private function onAnimComplete():void{
+    private function onAnimComplete():void{
 		makeRibbon = false;
 	}
 }

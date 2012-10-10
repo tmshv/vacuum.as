@@ -1,14 +1,9 @@
-/**
- * Created by JetBrains Astella.
- * User: tmshv
- * Date: 1/31/12
- * Time: 11:03 AM
- * To change this template use File | Settings | File Templates.
- */
 package ru.gotoandstop.vacuum.core {
 import flash.events.Event;
 
-public class TargetVertex extends ModifiableVertex implements ITargetVertex{
+import ru.gotoandstop.vacuum.core.IVertex;
+
+public class TargetVertex extends Vertex implements ITargetVertex{
 	protected var _target:IVertex;
 	public function get target():IVertex {
 		return _target;
@@ -21,16 +16,41 @@ public class TargetVertex extends ModifiableVertex implements ITargetVertex{
 	public function setTarget(vertex:IVertex):void {
 		dispose();
 		_target = vertex;
-		if(_target) _target.onChange(calc);
-		calc();
-	}
+		if(_target){
+            _target.onChange(recalc);
+            recalc();
+        }
+    }
 
 	public function dispose():void {
-		if(_target) _target.offChange(calc);
+		if(_target) _target.offChange(recalc);
 	}
 	
-	protected function calc(event:Event=null):void {
-		setCoord(_target.x,  _target.y);
-	}
+	private function recalc(event:Event=null):void {
+        setCoordToYourself(target.x, target.y);
+    }
+
+    protected function setCoordToYourself(x:Number, y:Number):void{
+        lock();
+        super.x = x;
+        super.y = y;
+        unlock();
+    }
+
+    override public function setCoord(x:Number, y:Number):void {
+        if(target) target.setCoord(x, y);
+    }
+
+    override public function set x(value:Number):void {
+        if(target) target.x = value;
+    }
+
+    override public function set y(value:Number):void {
+        if(target) target.y = value;
+    }
+
+    override public function clone():IVertex {
+        return new TargetVertex(target);
+    }
 }
 }

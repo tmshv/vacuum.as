@@ -23,6 +23,8 @@ public class InteractionController extends EventDispatcher implements IDisposabl
     private var _offset:Point;
     private var _moveMode:Boolean;
 
+    public var invertLayout:Boolean = true;
+
     public function InteractionController(space:VacuumSpace, vertex:DisplayVertex, target:DisplayObject = null) {
         super();
         _space = space;
@@ -42,7 +44,7 @@ public class InteractionController extends EventDispatcher implements IDisposabl
         if (_target && _target.stage) {
             _target.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
             _target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
-            _target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+            _target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, interact);
         }
 
         _target = target;
@@ -53,7 +55,7 @@ public class InteractionController extends EventDispatcher implements IDisposabl
     private function addListernersToTarget():void {
         _target.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
         _target.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
-        _target.stage.addEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+        _target.stage.addEventListener(MouseEvent.MOUSE_MOVE, interact);
     }
 
     public function dispose():void {
@@ -63,7 +65,7 @@ public class InteractionController extends EventDispatcher implements IDisposabl
 
         if (_target.stage) {
             _target.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
-            _target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
+            _target.stage.removeEventListener(MouseEvent.MOUSE_MOVE, interact);
         }
 
         _target = null;
@@ -86,11 +88,11 @@ public class InteractionController extends EventDispatcher implements IDisposabl
      * @param event
      *
      */
-    private function handleMouseMove(event:MouseEvent):void {
+    private function interact(event:MouseEvent):void {
         if (_moveMode) {
             var coord:Point = _offset.clone();
             coord.offset(event.stageX, event.stageY);
-            coord = _space.layout.screenToLayout(coord);
+//            if (invertLayout) coord = _space.layout.invertLayout(coord);
             _vertex.vertex.setCoord(coord.x, coord.y);
         }
     }

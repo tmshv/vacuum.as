@@ -65,20 +65,22 @@ public class Layout extends EventDispatcher implements IDisposable, ILockable {
     }
 
     public function applyLayout(coord:Point):Point{
-        var m:Matrix = new Matrix();
-        m.rotate(_rotation.value);
-        m.scale(_scale.value, _scale.value);
-        m.translate(_center.x, _center.y);
+        var m:Matrix = getMatrix();
         return m.transformPoint(coord);
     }
 
-    public function screenToLayout(screenCoord:Point):Point{
+    public function invertLayout(screenCoord:Point):Point{
+        var m:Matrix = getMatrix();
+        m.invert();
+        return m.transformPoint(screenCoord);
+    }
+
+    public function getMatrix():Matrix{
         var m:Matrix = new Matrix();
         m.rotate(_rotation.value);
         m.scale(_scale.value, _scale.value);
         m.translate(_center.x, _center.y);
-        m.invert();
-        return m.transformPoint(screenCoord);
+        return m;
     }
 
     public function dispose():void {

@@ -46,7 +46,6 @@ public class VacuumSpace extends ScreenElement implements IDisposable{
 
     public function VacuumSpace() {
         _layout = new Layout();
-        super.addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
     }
 
     public function showVertex(vertex:IVertex, icon:VertexIcon=null):IVertex{
@@ -60,15 +59,15 @@ public class VacuumSpace extends ScreenElement implements IDisposable{
         return view;
     }
 
-    private function handleAddedToStage(event:Event):void{
-        super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+    override protected function onStage():void {
+        super.onStage();
         super.stage.addEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
         super.stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
         super.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
 
-        selector = new RectSpline(super.stage, true);
+        selector = new RectSpline(stage, true);
         selector.closed = true;
-        super.addChild(new SplineView(selector));
+        element("gui").push(new SplineView(selector));
     }
 
     private function handleMouseDown(event:MouseEvent):void{
@@ -96,7 +95,6 @@ public class VacuumSpace extends ScreenElement implements IDisposable{
     }
 
     public function dispose():void {
-        super.removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
         super.stage.removeEventListener(MouseEvent.MOUSE_MOVE, handleMouseMove);
         super.stage.removeEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
         super.stage.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
@@ -118,6 +116,10 @@ public class VacuumSpace extends ScreenElement implements IDisposable{
 
     public function createScreenVertex(x:Number, y:Number, icon:VertexIcon=null, mouseInteraction:Boolean=false):Object{
         return createVertex(x, y, icon, mouseInteraction);
+    }
+
+    public function moveLayoutCenterTo(x:Number, y:Number):void {
+
     }
 }
 }
