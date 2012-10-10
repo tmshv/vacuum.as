@@ -58,8 +58,10 @@ public class DisplayVertex extends Sprite implements IDisposable{
     }
 
     public function enableInteraction(inverseMatrixLayout:Boolean=true):void {
-        _interactionController = new InteractionController(space, this);
-        _interactionController.invertLayout = inverseMatrixLayout;
+        if(!_interactionController){
+            _interactionController = new InteractionController(space, this);
+            _interactionController.invertLayout = inverseMatrixLayout;
+        }
     }
 
     public function disableInteraction():void {
