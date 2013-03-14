@@ -10,7 +10,11 @@ import ru.gotoandstop.vacuum.view.VertexView;
  * @author tmshv
  */
 public class PortPoint extends VertexView implements IPort {
-    public var node:INode;
+    private var _node:INode;
+    public function get node():INode {
+        return _node;
+    }
+
     public var property:String;
     private var _type:String;
     public function get type():String {
@@ -39,7 +43,7 @@ public class PortPoint extends VertexView implements IPort {
         }
 
         super(vertex, layout, icon);
-        this.node = node;
+        _node = node;
     }
 
     public function getValue():* {
