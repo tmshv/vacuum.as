@@ -8,14 +8,17 @@
 package ru.gotoandstop.nodes.links {
 import flash.display.DisplayObjectContainer;
 
+import ru.gotoandstop.nodes.links.NodeLink;
+
 import ru.gotoandstop.vacuum.Spline;
 import ru.gotoandstop.vacuum.SplineView;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.TargetVertex;
 
-public class SimpleLineConnection implements ILineConnection {
+public class DirectLink extends NodeLink{
 	private static var count:uint = 1;
-	internal static function getIndex():uint {
+
+    internal static function getIndex():uint {
 		return count++;
 	}
 
@@ -24,20 +27,16 @@ public class SimpleLineConnection implements ILineConnection {
 		return _canvas;
 	}
 
-	private var _index:uint;
-	public function get index():uint {
-		return _index;
-	}
-
 	protected var _first:ITargetVertex;
 	protected var _second:ITargetVertex;
 
 	protected var _spline:Spline;
 	protected var _view:SplineView;
 
-	public function SimpleLineConnection(canvas:DisplayObjectContainer) {
+	public function DirectLink(canvas:DisplayObjectContainer) {
+        super("simplelink");
 		_canvas = canvas;
-		_index = SimpleLineConnection.getIndex();
+		_index = DirectLink.getIndex();
 
 		_first = new TargetVertex();
 		_second = new TargetVertex();
@@ -55,12 +54,7 @@ public class SimpleLineConnection implements ILineConnection {
 		_spline.addVertex(_second);
 	}
 
-	public function setOutsideVertices(first:IPort, second:IPort):void {
-		_first.setTarget(first);
-		_second.setTarget(second);
-	}
-
-	public function dispose():void {
+	override public function dispose():void {
 		_canvas.removeChild(_view);
 		_view.dispose();
 		_spline.dispose();
@@ -70,5 +64,13 @@ public class SimpleLineConnection implements ILineConnection {
 		_spline = null;
 		_view = null;
 	}
+
+    override protected function init():void {
+        super.init();
+        if(_first && _second) {
+            _first.setTarget(inputPort);
+            _second.setTarget(outputPort);
+        }
+    }
 }
 }
