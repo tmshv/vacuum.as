@@ -132,12 +132,13 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
     }
 
     public function Node(object:INode, vacuum:VacuumLayout) {
+
         _vacuum = vacuum;
         _vacuum.layout.scale.addEventListener(Event.CHANGE, handleLayoutChange);
         pos = new ModifiableVertex();
         pos.addEventListener(Event.CHANGE, handlePositionChange);
         super(pos, vacuum.layout, null);
-//        super.considerScaleLayout = false;
+        super.considerScaleLayout = false;
         mover = new MouseController(this);
         _ports = new Storage();
         _fields = new Storage();

@@ -15,23 +15,27 @@ public class RelativeVertex extends TargetVertex {
 
     public function RelativeVertex(targetVertex:IVertex, offsetVertex:IVertex) {
         super(targetVertex);
-        target.onChange(recalc);
         offset = offsetVertex;
         offset.onChange(recalc);
         recalc();
     }
 
     private function recalc(event:Event = null):void {
-        var coord:Point = target.getCoord({layoutCenter:layoutCenter});
-        coord.offset(offset.x, offset.y);
-        setCoord(coord.x, coord.y);
+        setCoordToYourself(target.x, target.y);
     }
 
     override public function dispose():void {
-        target.offChange(recalc);
-        offset.offChange(recalc);
-        _target = null;
+        super.dispose();
+        if (offset) offset.offChange(recalc);
         offset = null;
+    }
+
+    override protected function setCoordToYourself(x:Number, y:Number):void {
+        if (offset) {
+            x += offset.x;
+            y += offset.y;
+        }
+        super.setCoordToYourself(x, y);
     }
 }
 }
