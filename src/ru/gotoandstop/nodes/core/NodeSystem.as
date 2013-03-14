@@ -14,6 +14,7 @@ import ru.gotoandstop.nodes.MouseVertex;
 import ru.gotoandstop.nodes.VacuumEvent;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
+import ru.gotoandstop.nodes.links.DirectLinkProvider;
 import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.links.PortPointType;
 import ru.gotoandstop.storage.Storage;
@@ -66,6 +67,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         nodes = new Vector.<Node>();
         connections = new Vector.<Object>();
         _vacuum = new VacuumLayout(this, new Layout());
+        _vacuum.init(new DirectLinkProvider(_vacuum.getLayer("lines")));
         _vacuum.cursor = new MouseVertex(stage);
         _vacuum.addEventListener(VacuumEvent.ADDED_VERTEX, handleAddedVertexToVacuum);
 
