@@ -32,7 +32,6 @@ public class BezierQuadConnection extends NodeLink{
 	public function BezierQuadConnection(canvas:DisplayObjectContainer) {
         super("bezierquad");
 		_canvas = canvas;
-		_index = DirectLink.getIndex();
 		spline = new Spline(canvas);
 
 		view = new SplineView(spline);

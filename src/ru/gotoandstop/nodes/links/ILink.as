@@ -11,7 +11,7 @@ import ru.gotoandstop.ILockable;
 import ru.gotoandstop.ISerializable;
 
 public interface ILink extends ISerializable, ILockable, IDisposable{
-    function get index():uint;
+    function get id():String;
     function get type():String;
     function get inputPort():IPort;
     function set inputPort(value:IPort):void;

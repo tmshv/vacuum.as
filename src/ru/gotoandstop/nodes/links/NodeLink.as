@@ -6,13 +6,18 @@
  */
 package ru.gotoandstop.nodes.links {
 import flash.errors.IllegalOperationError;
+import flash.utils.getTimer;
 
 import ru.gotoandstop.nodes.NodeSystemElementType;
 
 public class NodeLink implements ILink{
-    protected var _index:uint;
-    public function get index():uint {
-        return _index;
+    private static function generateID():String {
+        return "link"+getTimer().toString(16);
+    }
+
+    protected var _id:String;
+    public function get id():String {
+        return _id;
     }
 
     private var _type:String;
@@ -47,6 +52,7 @@ public class NodeLink implements ILink{
 
     public function NodeLink(linkType:String) {
         _type = linkType;
+        _id = generateID();
         init();
     }
 
@@ -54,7 +60,7 @@ public class NodeLink implements ILink{
         return {
             "elementType":NodeSystemElementType.LINK,
             "type":type,
-            "index":index
+            "index":id
         };
     }
 

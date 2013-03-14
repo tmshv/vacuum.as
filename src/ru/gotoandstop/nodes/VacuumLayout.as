@@ -67,11 +67,11 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 		return this.layers[name];
 	}
 
-	public function connect(first:IPort, second:IPort, index:uint = 0):uint {
+	public function connect(first:IPort, second:IPort, id:String=null):String {
 		var connection:ILink;
-		if (index) {
+		if (id) {
 			for each(var c:ILink in _links) {
-				if (c.index == index) {
+				if (c.id == id) {
 					connection = c;
 					break;
 				}
@@ -83,11 +83,11 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
             connection = _linkProvider.provideLink(first, second);
 			_links.push(connection);
 		}
-		return connection.index;
+		return connection.id;
 	}
 
-	public function connectWithMouse(port:PortPoint, index:uint = 0):uint {
-		return this.connect(port, this.cursor, index);
+	public function connectWithMouse(port:PortPoint, id:String=null):String {
+		return this.connect(port, this.cursor, id);
 	}
 
 	public function addDataType(type:String, obj:*):void {
@@ -98,9 +98,9 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 		return null;
 	}
 
-	public function breakConnection(connectionIndex:uint):void {
+	public function breakConnection(connectionIndex:String):void {
 		for each(var c:ILink in this._links) {
-			if (c.index == connectionIndex) {
+			if (c.id == connectionIndex) {
 				var index:int = this._links.indexOf(c);
 				this._links.splice(index, 1);
 

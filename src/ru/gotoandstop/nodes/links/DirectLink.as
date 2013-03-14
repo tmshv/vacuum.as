@@ -16,12 +16,6 @@ import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.TargetVertex;
 
 public class DirectLink extends NodeLink{
-	private static var count:uint = 1;
-
-    internal static function getIndex():uint {
-		return count++;
-	}
-
 	protected var _canvas:DisplayObjectContainer;
 	public function get canvas():DisplayObjectContainer {
 		return _canvas;
@@ -36,7 +30,6 @@ public class DirectLink extends NodeLink{
 	public function DirectLink(canvas:DisplayObjectContainer) {
         super("simplelink");
 		_canvas = canvas;
-		_index = DirectLink.getIndex();
 
 		_first = new TargetVertex();
 		_second = new TargetVertex();

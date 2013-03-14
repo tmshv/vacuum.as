@@ -38,7 +38,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
     private var _mouseDownCoord:Point = new Point();
 
     private var connections:Vector.<Object>;
-    private var fakeConnection:uint;
+    private var fakeConnection:String;
     private var firstPortFake:PortPoint;
 
     private var nodeLibrary:Object;
@@ -214,11 +214,11 @@ public class NodeSystem extends Sprite implements INodeSystem {
             }
         }
 
-        var connection_index:uint = _vacuum.connect(from, to, fakeConnection);
+        var connection_id:String = _vacuum.connect(from, to, fakeConnection);
         connections.push({
             from:from,
             to:to,
-            vacuumIndex:connection_index
+            vacuumIndex:connection_id
         });
 
         transferData(from.node.id, from.property, to.node.id, to.property, TransportOrigin.LINK_ESTABLISHING);
@@ -495,7 +495,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
     private function handleInVertexMouseUp(event:MouseEvent):void {
         const vertex:PortPoint = event.currentTarget as PortPoint;
         makeLink(firstPortFake, vertex);
-        fakeConnection = 0;
+        fakeConnection = null;
         firstPortFake = null;
     }
 
@@ -518,7 +518,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         }
 
         _vacuum.breakConnection(fakeConnection);
-        fakeConnection = 0;
+        fakeConnection = null;
         firstPortFake = null;
     }
 
