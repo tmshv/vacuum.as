@@ -6,8 +6,16 @@
  * To change this template use File | Settings | File Templates.
  */
 package ru.gotoandstop.nodes.links {
-public interface ILink {
+import ru.gotoandstop.IDisposable;
+import ru.gotoandstop.ILockable;
+import ru.gotoandstop.ISerializable;
+
+public interface ILink extends ISerializable, ILockable, IDisposable{
     function get index():uint;
     function get type():String;
+    function get inputPort():IPort;
+    function set inputPort(value:IPort):void;
+    function get outputPort():IPort;
+    function set outputPort(value:IPort):void;
 }
 }
