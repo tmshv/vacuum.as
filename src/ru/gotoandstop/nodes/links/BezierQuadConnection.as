@@ -8,17 +8,14 @@
 package ru.gotoandstop.nodes.links {
 import flash.display.DisplayObjectContainer;
 
+import ru.gotoandstop.nodes.links.NodeLink;
+
 import ru.gotoandstop.vacuum.Spline;
 import ru.gotoandstop.vacuum.SplineView;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.TargetVertex;
 
-public class BezierQuadConnection implements ILineConnection {
-	private var _index:uint;
-	public function get index():uint {
-		return _index;
-	}
-
+public class BezierQuadConnection extends NodeLink{
     public var first:ITargetVertex;
     public var firstMid:RibbonVertex;
     public var second:ITargetVertex;
@@ -33,8 +30,9 @@ public class BezierQuadConnection implements ILineConnection {
 	}
 
 	public function BezierQuadConnection(canvas:DisplayObjectContainer) {
+        super("bezierquad");
 		_canvas = canvas;
-		_index = SimpleLineConnection.getIndex();
+		_index = DirectLink.getIndex();
 		spline = new Spline(canvas);
 
 		view = new SplineView(spline);
@@ -51,7 +49,7 @@ public class BezierQuadConnection implements ILineConnection {
 		spline.addVertex(second);
 	}
 
-	public function dispose():void {
+	override public function dispose():void {
 		_canvas.removeChild(view);
 		view.dispose();
 		spline.dispose();
