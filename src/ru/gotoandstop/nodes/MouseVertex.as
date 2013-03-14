@@ -6,6 +6,7 @@ import flash.geom.Point;
 import ru.gotoandstop.IDirectionalVertex;
 
 import ru.gotoandstop.IDisposable;
+import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.nodes.links.IPort;
 import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
@@ -43,7 +44,11 @@ public class MouseVertex extends Vertex implements IPort{
 		super.setCoord(coord_x, coord_y);
 	}
 
-	public override function toString():String {
+    public function get node():INode {
+        return null;
+    }
+
+    public override function toString():String {
 		return super.toString() + "[mouse]";
 	}
 
