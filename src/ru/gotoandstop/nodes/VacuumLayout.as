@@ -4,17 +4,12 @@ import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.EventDispatcher;
 
-import ru.gotoandstop.IDirectionalVertex;
 import ru.gotoandstop.IDisposable;
-import ru.gotoandstop.nodes.links.BezierQuadConnection;
-import ru.gotoandstop.nodes.links.ILineConnection;
-import ru.gotoandstop.nodes.links.IPort;
-import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.nodes.links.ILink;
+import ru.gotoandstop.nodes.links.ILinkProvider;
 import ru.gotoandstop.nodes.links.IPort;
 import ru.gotoandstop.nodes.links.PortPoint;
-import ru.gotoandstop.nodes.links.SimpleLineConnection;
 import ru.gotoandstop.vacuum.Layout;
-import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.vacuum.view.VertexView;
 
@@ -36,23 +31,31 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 		return  this._layout;
 	}
 
-	private var connections:Vector.<ILineConnection>;
-
+	private var _links:Vector.<ILink>;
+    private var _linkProvider:ILinkProvider;
 	public var cursor:IPort;
+
+    private var __inited:Boolean;
 
 	public function VacuumLayout(container:DisplayObjectContainer, layout:Layout) {
 		super();
-//		layout.scale.setValue(0.5);
-		this._layout = layout;
+        this._container = container;
+        this._layout = layout;
 		this.vertices = new Vector.<Vertex>();
-		this._container = container;
 		this.layers = new Object();
-		this.connections = new Vector.<ILineConnection>();
-		this.addLayer('lines');
-		this.addLayer('nodes');
-		this.addLayer('activepoints');
+		this._links = new Vector.<ILink>();
+
+        this.addLayer('lines');
+        this.addLayer('nodes');
+        this.addLayer('activepoints');
         this.addLayer("vertex");
 	}
+
+    public function init(linkProvider:ILinkProvider):void{
+        if(__inited) throw new Error("instance already initialized");
+        _linkProvider = linkProvider;
+        __inited = true;
+    }
 
 	public function addLayer(name:String):void {
 		var layer:Sprite = new Sprite();
@@ -65,9 +68,9 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 	}
 
 	public function connect(first:IPort, second:IPort, index:uint = 0):uint {
-		var connection:ILineConnection;
+		var connection:ILink;
 		if (index) {
-			for each(var c:ILineConnection in connections) {
+			for each(var c:ILink in _links) {
 				if (c.index == index) {
 					connection = c;
 					break;
@@ -77,11 +80,9 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 
 		if (!connection) {
 			const layer:Sprite = layers['lines'];
-//			connection = new SimpleLineConnection(layer);
-			connection = new BezierQuadConnection(layer);
-			connections.push(connection);
+            connection = _linkProvider.provideLink(first, second);
+			_links.push(connection);
 		}
-		connection.setOutsideVertices(first, second);
 		return connection.index;
 	}
 
@@ -98,10 +99,10 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 	}
 
 	public function breakConnection(connectionIndex:uint):void {
-		for each(var c:ILineConnection in this.connections) {
+		for each(var c:ILink in this._links) {
 			if (c.index == connectionIndex) {
-				var index:int = this.connections.indexOf(c);
-				this.connections.splice(index, 1);
+				var index:int = this._links.indexOf(c);
+				this._links.splice(index, 1);
 
 				c.dispose();
 				break;
@@ -134,10 +135,10 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 	}
 
 	public function dispose():void {
-		for each(var c:ILineConnection in connections) {
+		for each(var c:ILink in _links) {
 			c.dispose();
 		}
-		connections = null;
+		_links = null;
 
 		for each(var layer:DisplayObject in layers) {
 			container.removeChild(layer);
