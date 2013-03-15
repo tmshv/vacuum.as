@@ -8,17 +8,17 @@ package ru.gotoandstop.nodes.links {
 import flash.display.Sprite;
 
 public class DirectLinkProvider implements ILinkProvider{
-    private var _layer:Sprite;
+    private var _canvas:Sprite;
 
-    public function DirectLinkProvider(layer:Sprite) {
-        _layer = layer;
+    public function DirectLinkProvider(canvas:Sprite) {
+        _canvas = canvas;
     }
 
     public function provideLink(output:IPort, input:IPort):ILink {
-        var link:ILink = new DirectLink(_layer);
+        var link:ILink = new DirectLink(_canvas);
         link.lock();
-        link.inputPort = input;
         link.outputPort = output;
+        link.inputPort = input;
         link.unlock();
         return link;
     }

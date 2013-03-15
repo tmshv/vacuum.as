@@ -8,8 +8,6 @@
 package ru.gotoandstop.nodes.links {
 import flash.display.DisplayObjectContainer;
 
-import ru.gotoandstop.nodes.links.NodeLink;
-
 import ru.gotoandstop.vacuum.Spline;
 import ru.gotoandstop.vacuum.SplineView;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
