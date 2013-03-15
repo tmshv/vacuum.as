@@ -53,7 +53,7 @@ public class NodeLink implements ILink{
     public function NodeLink(linkType:String) {
         _type = linkType;
         _id = generateID();
-        init();
+//        init();
     }
 
     public function encode():Object {
