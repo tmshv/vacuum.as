@@ -450,12 +450,12 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     private function handleAddedVertexToVacuum(event:VacuumEvent):void {
         const vertex:PortPoint = event.vertex as PortPoint;
-        if (vertex.type == PortPointType.IN) {
+        if (vertex.type == PortPointType.INPUT) {
             vertex.addEventListener(MouseEvent.MOUSE_DOWN, this.handleInVertexMouseDown);
             vertex.addEventListener(MouseEvent.MOUSE_UP, this.handleInVertexMouseUp);
             vertex.addEventListener(MouseEvent.MOUSE_OVER, this.handleInVertexMouseOver);
             vertex.addEventListener(MouseEvent.MOUSE_OUT, this.handleInVertexMouseOut);
-        } else if (vertex.type == PortPointType.OUT) {
+        } else if (vertex.type == PortPointType.OUTPUT) {
             vertex.addEventListener(MouseEvent.MOUSE_DOWN, this.handleOutVertexMouseDown);
         }
     }

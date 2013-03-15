@@ -346,9 +346,9 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
             var type:String = port.type;
 
             var port_vertex:RelativeVertex;
-            if (type == PortPointType.IN) {
+            if (type == PortPointType.INPUT) {
                 port_vertex = _fieldSnapPoints.get(key);
-            } else if (type == PortPointType.OUT) {
+            } else if (type == PortPointType.OUTPUT) {
                 port_vertex = new RelativeVertex(_fieldSnapPoints.get(key), new CombinedVertex(rightBottom, new Vertex()));
             }
 

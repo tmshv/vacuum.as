@@ -5,7 +5,7 @@ package ru.gotoandstop.nodes.links{
 	 * @author Roman Timashev (roman@tmshv.ru)
 	 **/
 	public class PortPointType{
-		public static const IN:String = 'in';
-		public static const OUT:String = 'out';
+		public static const INPUT:String = "in";
+		public static const OUTPUT:String = "out";
 	}
 }
