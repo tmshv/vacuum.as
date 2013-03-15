@@ -218,7 +218,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         connections.push({
             from:from,
             to:to,
-            vacuumIndex:connection_id
+            vacuumLinkID:connection_id
         });
 
         transferData(from.node.id, from.property, to.node.id, to.property, TransportOrigin.LINK_ESTABLISHING);
@@ -263,7 +263,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         var index:int = connections.indexOf(connection);
         connections.splice(index, 1);
 
-        if (breakVacuumConnection) _vacuum.breakConnection(connection.vacuumIndex);
+        if (breakVacuumConnection) _vacuum.breakConnection(connection.vacuumLinkID);
     }
 
     private function handleObjectChange(event:Event):void {
@@ -479,7 +479,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         for each(var connection:Object in connections) {
             if (connection.to == vertex) {
                 unlink(connection);
-                fakeConnection = _vacuum.connectWithMouse(connection.from, connection.vacuumIndex);
+                fakeConnection = _vacuum.connectWithMouse(connection.from, connection.vacuumLinkID);
                 firstPortFake = connection.from;
             }
         }
