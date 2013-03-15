@@ -35,14 +35,7 @@ public class Pin extends VertexView implements IPin {
         this._type = type;
         this.direction = direction;
 
-        var icon:VertexIcon;
-        if (this.type == 'in') {
-            icon = new RectIcon(0xffbbbbbb, 0xffffffff);
-        } else {
-            icon = new RectIcon(0xff000000, 0xff000000);
-        }
-
-        super(vertex, layout, icon);
+        super(vertex, layout, new RectIcon(0xffbbbbbb, 0xffffffff));
         _node = node;
     }
 
