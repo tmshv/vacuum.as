@@ -9,6 +9,7 @@ import ru.gotoandstop.nodes.links.ILink;
 import ru.gotoandstop.nodes.links.ILinkProvider;
 import ru.gotoandstop.nodes.links.IPort;
 import ru.gotoandstop.nodes.links.PortPoint;
+import ru.gotoandstop.ui.Element;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.vacuum.view.VertexView;
@@ -17,15 +18,9 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class VacuumLayout extends EventDispatcher implements IDisposable {
+public class VacuumLayout extends Element implements IDisposable {
 	private var vertices:Vector.<Vertex>;
-	private var _container:DisplayObjectContainer;
 
-	public function get container():DisplayObjectContainer {
-		return this._container;
-	}
-
-	private var layers:Object;
 	private var _layout:Layout;
 	public function get layout():Layout {
 		return  this._layout;
@@ -37,18 +32,16 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 
     private var __inited:Boolean;
 
-	public function VacuumLayout(container:DisplayObjectContainer, layout:Layout) {
+	public function VacuumLayout(layout:Layout) {
 		super();
-        this._container = container;
         this._layout = layout;
 		this.vertices = new Vector.<Vertex>();
-		this.layers = new Object();
 		this._links = new Vector.<ILink>();
 
-        this.addLayer('lines');
-        this.addLayer('nodes');
-        this.addLayer('activepoints');
-        this.addLayer("vertex");
+        element("lines");
+        element("nodes");
+        element("activepoints");
+        element("vertex");
 	}
 
     public function init(linkProvider:ILinkProvider):void{
@@ -56,16 +49,6 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
         _linkProvider = linkProvider;
         __inited = true;
     }
-
-	public function addLayer(name:String):void {
-		var layer:Sprite = new Sprite();
-		this.container.addChild(layer);
-		this.layers[name] = layer;
-	}
-
-	public function getLayer(name:String):Sprite {
-		return this.layers[name];
-	}
 
 	public function connect(first:IPort, second:IPort, id:String=null):String {
 		var connection:ILink;
@@ -79,7 +62,7 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 		}
 
 		if (!connection) {
-			const layer:Sprite = layers['lines'];
+			const layer:Sprite = element("lines");
             connection = _linkProvider.provideLink(first, second);
 			_links.push(connection);
 		}else{
@@ -116,23 +99,21 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 	}
 
     public function showVertex(v:VertexView):void {
-        const layer:Sprite = this.layers['vertex'];
-        layer.addChild(v);
+        element("vertex").push(v);
     }
 
     public function hideVertex(v:VertexView):void {
-        const layer:Sprite = this.layers['vertex'];
+        const layer:Sprite = element("vertex");
         if(v && layer.contains(v)) layer.removeChild(v);
     }
 
 	public function showPort(point:PortPoint):void {
-		const layer:Sprite = this.layers['activepoints'];
-		layer.addChild(point);
+		element("activepoints").push(point);
 		super.dispatchEvent(new VacuumEvent(VacuumEvent.ADDED_VERTEX, false, false, point));
 	}
 
 	public function deletePoint(point:PortPoint):void {
-		const layer:Sprite = this.layers['activepoints'];
+        const layer:Sprite = element("activepoints");
         if(layer.contains(point)) {
             layer.removeChild(point);
             super.dispatchEvent(new VacuumEvent(VacuumEvent.REMOVED_VERTEX, false, false, point));
@@ -144,12 +125,7 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 			c.dispose();
 		}
 		_links = null;
-
-		for each(var layer:DisplayObject in layers) {
-			container.removeChild(layer);
-		}
-		layers = null;
-
+        removeChildren();
 		if(cursor) cursor.dispose();
 	}
 }

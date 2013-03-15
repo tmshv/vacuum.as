@@ -14,6 +14,7 @@ import ru.gotoandstop.nodes.MouseVertex;
 import ru.gotoandstop.nodes.VacuumEvent;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
+import ru.gotoandstop.nodes.links.BezierQuadLinkProvider;
 import ru.gotoandstop.nodes.links.DirectLinkProvider;
 import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.links.PortPointType;
@@ -66,10 +67,12 @@ public class NodeSystem extends Sprite implements INodeSystem {
         nodeLibrary = new Object();
         nodes = new Vector.<Node>();
         connections = new Vector.<Object>();
-        _vacuum = new VacuumLayout(this, new Layout());
-        _vacuum.init(new DirectLinkProvider(_vacuum.getLayer("lines")));
+        _vacuum = new VacuumLayout(new Layout());
+//        _vacuum.init(new DirectLinkProvider(_vacuum.getLayer("lines")));
+        _vacuum.init(new BezierQuadLinkProvider(_vacuum.element("lines")));
         _vacuum.cursor = new MouseVertex(stage);
         _vacuum.addEventListener(VacuumEvent.ADDED_VERTEX, handleAddedVertexToVacuum);
+        addChild(_vacuum);
 
         _stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
         _stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
@@ -145,7 +148,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
             node.set(key, p);
         }
 
-        var container:DisplayObjectContainer = _vacuum.getLayer('nodes');
+        var container:DisplayObjectContainer = _vacuum.element("nodes");
         container.addChild(node);
         node.setCloseCommand(new DeleteNodeCommand(node, deleteNode));
         nodes.push(node);
@@ -307,7 +310,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
         super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.REMOVED_NODE, false, false, node));
         node_visual.dispose();
-        var container:DisplayObjectContainer = _vacuum.getLayer('nodes');
+        var container:DisplayObjectContainer = _vacuum.element("nodes");
         if (container.contains(node_visual)) {
             container.removeChild(node_visual);
         }
