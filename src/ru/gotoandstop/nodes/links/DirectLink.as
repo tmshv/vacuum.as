@@ -14,10 +14,7 @@ import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.TargetVertex;
 
 public class DirectLink extends NodeLink{
-	protected var _canvas:DisplayObjectContainer;
-	public function get canvas():DisplayObjectContainer {
-		return _canvas;
-	}
+    public static const TYPE:String = "direct";
 
 	protected var _first:ITargetVertex;
 	protected var _second:ITargetVertex;
@@ -25,17 +22,16 @@ public class DirectLink extends NodeLink{
 	protected var _spline:Spline;
 	protected var _view:SplineView;
 
-	public function DirectLink(canvas:DisplayObjectContainer) {
-        super("simplelink");
-		_canvas = canvas;
+	public function DirectLink() {
+        super(TYPE);
 
 		_first = new TargetVertex();
 		_second = new TargetVertex();
 
-		_spline = new Spline(canvas);
+		_spline = new Spline(this);
 		_view = new SplineView(_spline);
 		_view.alpha = 0.25;
-		_canvas.addChild(_view);
+		addChild(_view);
 
 		fillSpline();
 	}
@@ -46,10 +42,9 @@ public class DirectLink extends NodeLink{
 	}
 
 	override public function dispose():void {
-		_canvas.removeChild(_view);
+		removeChild(_view);
 		_view.dispose();
 		_spline.dispose();
-		_canvas = null;
 		_first = null;
 		_second = null;
 		_spline = null;

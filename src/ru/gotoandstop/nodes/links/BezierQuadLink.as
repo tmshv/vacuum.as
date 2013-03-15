@@ -14,6 +14,8 @@ import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.TargetVertex;
 
 public class BezierQuadLink extends NodeLink{
+    public static const TYPE:String = "bezierquad";
+
     public var first:ITargetVertex;
     public var firstMid:ITargetVertex;
     public var second:ITargetVertex;
@@ -22,19 +24,13 @@ public class BezierQuadLink extends NodeLink{
     public var spline:Spline;
     public var view:SplineView;
 
-	private var _canvas:DisplayObjectContainer;
-	public function get canvas():DisplayObjectContainer {
-		return _canvas;
-	}
-
-	public function BezierQuadLink(canvas:DisplayObjectContainer) {
-        super("bezierquad");
-		_canvas = canvas;
-		spline = new Spline(canvas);
+	public function BezierQuadLink() {
+        super(TYPE);
+		spline = new Spline(this);
 
 		view = new SplineView(spline);
 		view.alpha = 0.75;
-		_canvas.addChild(view);
+		addChild(view);
 
 		first = new TargetVertex();
 		firstMid = new TargetVertex();
@@ -47,12 +43,11 @@ public class BezierQuadLink extends NodeLink{
 	}
 
 	override public function dispose():void {
-		_canvas.removeChild(view);
+		removeChild(view);
 		view.dispose();
 		spline.dispose();
 		firstMid.dispose();
 		secondMid.dispose();
-		_canvas = null;
 		first = null;
 		second = null;
 		firstMid = null;
