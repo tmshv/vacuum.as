@@ -5,12 +5,13 @@
  * Time: 10:08 PM
  */
 package ru.gotoandstop.nodes.links {
+import flash.display.Sprite;
 import flash.errors.IllegalOperationError;
 import flash.utils.getTimer;
 
 import ru.gotoandstop.nodes.NodeSystemElementType;
 
-public class NodeLink implements ILink{
+public class NodeLink extends Sprite implements ILink{
     private static function generateID():String {
         return "link"+getTimer().toString(16);
     }
