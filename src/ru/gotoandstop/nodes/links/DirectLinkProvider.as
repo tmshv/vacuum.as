@@ -14,7 +14,7 @@ public class DirectLinkProvider implements ILinkProvider{
         _layer = layer;
     }
 
-    public function provideLink(input:IPort, output:IPort):ILink {
+    public function provideLink(output:IPort, input:IPort):ILink {
         var link:ILink = new DirectLink(_layer);
         link.lock();
         link.inputPort = input;

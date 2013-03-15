@@ -6,6 +6,6 @@
  */
 package ru.gotoandstop.nodes.links {
 public interface ILinkProvider {
-    function provideLink(input:IPort, output:IPort):ILink;
+    function provideLink(output:IPort, input:IPort):ILink;
 }
 }
