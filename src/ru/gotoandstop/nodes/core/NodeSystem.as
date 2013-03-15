@@ -62,7 +62,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     private var selectedNodes:Vector.<ISelectable> = new Vector.<ISelectable>();
 
-    public function NodeSystem(stage:Stage, storage:Storage = null, linkProvider:ILinkProvider=null) {
+    public function NodeSystem(stage:Stage, storage:Storage = null, linkProvider:ILinkProvider = null) {
         _stage = stage;
         _storage = storage ? storage : new Storage();
         linkProvider = linkProvider ? linkProvider : new DirectLinkProvider();
@@ -497,7 +497,9 @@ public class NodeSystem extends Sprite implements INodeSystem {
      */
     private function handleInVertexMouseUp(event:MouseEvent):void {
         const vertex:Pin = event.currentTarget as Pin;
-        makeLink(firstPortFake, vertex);
+        if (firstPortFake) {
+            makeLink(firstPortFake, vertex);
+        }
         fakeConnection = null;
         firstPortFake = null;
     }
