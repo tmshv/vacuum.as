@@ -19,7 +19,7 @@ import ru.gotoandstop.vacuum.view.VertexView;
  * @author tmshv
  */
 public class VacuumLayout extends Element implements IDisposable {
-	private var vertices:Vector.<Vertex>;
+	private var _vertexes:Vector.<Vertex>;
 
 	private var _layout:Layout;
 	public function get layout():Layout {
@@ -30,48 +30,42 @@ public class VacuumLayout extends Element implements IDisposable {
     private var _linkProvider:ILinkProvider;
 	public var cursor:IPort;
 
-    private var __inited:Boolean;
-
-	public function VacuumLayout(layout:Layout) {
+	public function VacuumLayout(layout:Layout, linkProvider:ILinkProvider) {
 		super();
-        this._layout = layout;
-		this.vertices = new Vector.<Vertex>();
-		this._links = new Vector.<ILink>();
-
+        _layout = layout;
+        _linkProvider = linkProvider;
+        _vertexes = new Vector.<Vertex>();
+        _links = new Vector.<ILink>();
         element("lines");
         element("nodes");
         element("activepoints");
         element("vertex");
 	}
 
-    public function init(linkProvider:ILinkProvider):void{
-        if(__inited) throw new Error("instance already initialized");
-        _linkProvider = linkProvider;
-        __inited = true;
-    }
-
 	public function connect(first:IPort, second:IPort, id:String=null):String {
-		var connection:ILink;
+		var link:ILink;
 		if (id) {
 			for each(var c:ILink in _links) {
 				if (c.id == id) {
-					connection = c;
+					link = c;
 					break;
 				}
 			}
 		}
 
-		if (!connection) {
-			const layer:Sprite = element("lines");
-            connection = _linkProvider.provideLink(first, second);
-			_links.push(connection);
+		if (!link) {
+			link = _linkProvider.provideLink(first, second);
+            if(link is DisplayObject) {
+                element("lines").push(link as DisplayObject);
+            }
+			_links.push(link);
 		}else{
-            connection.lock();
-            connection.outputPort = first;
-            connection.inputPort = second;
-            connection.unlock();
+            link.lock();
+            link.outputPort = first;
+            link.inputPort = second;
+            link.unlock();
         }
-		return connection.id;
+		return link.id;
 	}
 
 	public function connectWithMouse(port:PortPoint, id:String=null):String {

@@ -16,6 +16,7 @@ import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
 import ru.gotoandstop.nodes.links.BezierQuadLinkProvider;
 import ru.gotoandstop.nodes.links.DirectLinkProvider;
+import ru.gotoandstop.nodes.links.ILinkProvider;
 import ru.gotoandstop.nodes.links.PortPoint;
 import ru.gotoandstop.nodes.links.PortPointType;
 import ru.gotoandstop.storage.Storage;
@@ -61,15 +62,14 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     private var selectedNodes:Vector.<ISelectable> = new Vector.<ISelectable>();
 
-    public function NodeSystem(stage:Stage, storage:Storage = null) {
+    public function NodeSystem(stage:Stage, storage:Storage = null, linkProvider:ILinkProvider=null) {
         _stage = stage;
         _storage = storage ? storage : new Storage();
+        linkProvider = linkProvider ? linkProvider : new DirectLinkProvider();
         nodeLibrary = new Object();
         nodes = new Vector.<Node>();
         connections = new Vector.<Object>();
-        _vacuum = new VacuumLayout(new Layout());
-//        _vacuum.init(new DirectLinkProvider(_vacuum.getLayer("lines")));
-        _vacuum.init(new BezierQuadLinkProvider(_vacuum.element("lines")));
+        _vacuum = new VacuumLayout(new Layout(), linkProvider);
         _vacuum.cursor = new MouseVertex(stage);
         _vacuum.addEventListener(VacuumEvent.ADDED_VERTEX, handleAddedVertexToVacuum);
         addChild(_vacuum);
