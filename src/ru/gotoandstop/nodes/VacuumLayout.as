@@ -82,7 +82,12 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 			const layer:Sprite = layers['lines'];
             connection = _linkProvider.provideLink(first, second);
 			_links.push(connection);
-		}
+		}else{
+            connection.lock();
+            connection.outputPort = first;
+            connection.inputPort = second;
+            connection.unlock();
+        }
 		return connection.id;
 	}
 
