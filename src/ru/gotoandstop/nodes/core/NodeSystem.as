@@ -17,8 +17,8 @@ import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
 import ru.gotoandstop.nodes.links.BezierQuadLinkProvider;
 import ru.gotoandstop.nodes.links.DirectLinkProvider;
 import ru.gotoandstop.nodes.links.ILinkProvider;
-import ru.gotoandstop.nodes.links.PortPoint;
-import ru.gotoandstop.nodes.links.PortPointType;
+import ru.gotoandstop.nodes.links.Pin;
+import ru.gotoandstop.nodes.links.PinType;
 import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.IVertex;
@@ -41,7 +41,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     private var connections:Vector.<Object>;
     private var fakeConnection:String;
-    private var firstPortFake:PortPoint;
+    private var firstPortFake:Pin;
 
     private var nodeLibrary:Object;
     private var nodes:Vector.<Node>;
@@ -197,8 +197,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
         var from_node:Node = getNodeByName(firstNodeName) as Node;
         var to_node:Node = getNodeByName(secondNodeName) as Node;
 
-        var d1:PortPoint = from_node.getPort(firstProp);
-        var d2:PortPoint = to_node.getPort(secondProp);
+        var d1:Pin = from_node.getPort(firstProp);
+        var d2:Pin = to_node.getPort(secondProp);
         if (d1 && d2) {
             makeLink(d1, d2);
         }
@@ -210,7 +210,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
      * @param to released ActivePoint
      *
      */
-    private function makeLink(from:PortPoint, to:PortPoint):void {
+    private function makeLink(from:Pin, to:Pin):void {
         for each(var con:Object in connections) {
             if (con.to == to) {
                 unlink(con, true);
@@ -260,7 +260,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
     }
 
     private function unlink(connection:Object, breakVacuumConnection:Boolean = false):void {
-        var to:PortPoint = connection.to;
+        var to:Pin = connection.to;
         to.node.kill('-' + to.property);
 
         var index:int = connections.indexOf(connection);
@@ -274,8 +274,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
         if (change) {
             var initiator_node:INode = change.target as INode;
             for each(var connection:Object in connections) {
-                const from:PortPoint = connection.from;
-                const to:PortPoint = connection.to;
+                const from:Pin = connection.from;
+                const to:Pin = connection.to;
                 if (from.node.id == initiator_node.id && change.key == from.property) {
                     transferData(from.node.id, from.property, to.node.id, to.property, TransportOrigin.NODE_UPDATE);
                 }
@@ -301,8 +301,8 @@ public class NodeSystem extends Sprite implements INodeSystem {
         index = selectedNodes.indexOf(node_visual);
         selectedNodes.splice(index, 1);
 
-        var points:Vector.<PortPoint> = node_visual.getPortList();
-        for each(var point:PortPoint in points) {
+        var points:Vector.<Pin> = node_visual.getPortList();
+        for each(var point:Pin in points) {
             if (point) _vacuum.deletePoint(point);
         }
 
@@ -449,13 +449,13 @@ public class NodeSystem extends Sprite implements INodeSystem {
     }
 
     private function handleAddedVertexToVacuum(event:VacuumEvent):void {
-        const vertex:PortPoint = event.vertex as PortPoint;
-        if (vertex.type == PortPointType.INPUT) {
+        const vertex:Pin = event.vertex as Pin;
+        if (vertex.type == PinType.INPUT) {
             vertex.addEventListener(MouseEvent.MOUSE_DOWN, this.handleInVertexMouseDown);
             vertex.addEventListener(MouseEvent.MOUSE_UP, this.handleInVertexMouseUp);
             vertex.addEventListener(MouseEvent.MOUSE_OVER, this.handleInVertexMouseOver);
             vertex.addEventListener(MouseEvent.MOUSE_OUT, this.handleInVertexMouseOut);
-        } else if (vertex.type == PortPointType.OUTPUT) {
+        } else if (vertex.type == PinType.OUTPUT) {
             vertex.addEventListener(MouseEvent.MOUSE_DOWN, this.handleOutVertexMouseDown);
         }
     }
@@ -466,7 +466,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
      *
      */
     private function handleOutVertexMouseDown(event:MouseEvent):void {
-        var vertex:PortPoint = event.currentTarget as PortPoint;
+        var vertex:Pin = event.currentTarget as Pin;
         firstPortFake = vertex;
         fakeConnection = _vacuum.connectWithMouse(firstPortFake);
     }
@@ -477,7 +477,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
      *
      */
     private function handleInVertexMouseDown(event:MouseEvent):void {
-        const vertex:PortPoint = event.currentTarget as PortPoint;
+        const vertex:Pin = event.currentTarget as Pin;
 
         for each(var connection:Object in connections) {
             if (connection.to == vertex) {
@@ -496,14 +496,14 @@ public class NodeSystem extends Sprite implements INodeSystem {
      *
      */
     private function handleInVertexMouseUp(event:MouseEvent):void {
-        const vertex:PortPoint = event.currentTarget as PortPoint;
+        const vertex:Pin = event.currentTarget as Pin;
         makeLink(firstPortFake, vertex);
         fakeConnection = null;
         firstPortFake = null;
     }
 
     private function handleInVertexMouseOver(event:MouseEvent):void {
-        const vertex:PortPoint = event.currentTarget as PortPoint;
+        const vertex:Pin = event.currentTarget as Pin;
         if (fakeConnection) {
             _vacuum.connect(firstPortFake, vertex, fakeConnection);
         }

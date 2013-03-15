@@ -9,7 +9,7 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class PortPoint extends VertexView implements IPort {
+public class Pin extends VertexView implements IPort {
     private var _node:INode;
     public function get node():INode {
         return _node;
@@ -30,7 +30,7 @@ public class PortPoint extends VertexView implements IPort {
         this._direction = value;
     }
 
-    public function PortPoint(vertex:IVertex, layout:Layout, node:INode, property:String, type:String, direction:String) {
+    public function Pin(vertex:IVertex, layout:Layout, node:INode, property:String, type:String, direction:String) {
         this.property = property;
         this._type = type;
         this.direction = direction;

@@ -14,7 +14,7 @@ import com.bit101.components.Panel;
 import flash.display.Sprite;
 
 
-import ru.gotoandstop.nodes.links.PortPoint;
+import ru.gotoandstop.nodes.links.Pin;
 import ru.gotoandstop.nodes.validate.IInputValidator;
 
 public class NodeField extends Panel {
@@ -68,7 +68,7 @@ public class NodeField extends Panel {
     private var validator:IInputValidator;
 
     private var type:String;
-    private var port:PortPoint;
+    private var port:Pin;
     private var label:Label;
     private var def:Object;
 

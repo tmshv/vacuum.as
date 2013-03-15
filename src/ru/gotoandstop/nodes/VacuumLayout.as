@@ -8,7 +8,7 @@ import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.nodes.links.ILink;
 import ru.gotoandstop.nodes.links.ILinkProvider;
 import ru.gotoandstop.nodes.links.IPort;
-import ru.gotoandstop.nodes.links.PortPoint;
+import ru.gotoandstop.nodes.links.Pin;
 import ru.gotoandstop.ui.Element;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.Vertex;
@@ -68,7 +68,7 @@ public class VacuumLayout extends Element implements IDisposable {
 		return link.id;
 	}
 
-	public function connectWithMouse(port:PortPoint, id:String=null):String {
+	public function connectWithMouse(port:Pin, id:String=null):String {
 		return this.connect(port, this.cursor, id);
 	}
 
@@ -101,12 +101,12 @@ public class VacuumLayout extends Element implements IDisposable {
         if(v && layer.contains(v)) layer.removeChild(v);
     }
 
-	public function showPort(point:PortPoint):void {
+	public function showPort(point:Pin):void {
 		element("activepoints").push(point);
 		super.dispatchEvent(new VacuumEvent(VacuumEvent.ADDED_VERTEX, false, false, point));
 	}
 
-	public function deletePoint(point:PortPoint):void {
+	public function deletePoint(point:Pin):void {
         const layer:Sprite = element("activepoints");
         if(layer.contains(point)) {
             layer.removeChild(point);
