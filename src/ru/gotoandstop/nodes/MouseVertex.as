@@ -7,7 +7,7 @@ import ru.gotoandstop.IDirectionalVertex;
 
 import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.nodes.core.INode;
-import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.nodes.links.IPin;
 import ru.gotoandstop.vacuum.controllers.MouseController;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.IVertex;
@@ -16,7 +16,7 @@ import ru.gotoandstop.vacuum.core.Vertex;
 /**
  * @author tmshv
  */
-public class MouseVertex extends Vertex implements IPort{
+public class MouseVertex extends Vertex implements IPin{
 	private var target2:DisplayObject;
 	private var _direction:String;
 	public function get direction():String {

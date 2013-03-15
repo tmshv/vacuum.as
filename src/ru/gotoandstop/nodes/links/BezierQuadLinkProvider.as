@@ -8,7 +8,7 @@ package ru.gotoandstop.nodes.links {
 import flash.display.Sprite;
 
 public class BezierQuadLinkProvider implements ILinkProvider{
-    public function provideLink(output:IPort, input:IPort):ILink {
+    public function provideLink(output:IPin, input:IPin):ILink {
         var link:BezierQuadLink = new BezierQuadLink();
         link.lock();
         link.outputPort = output;

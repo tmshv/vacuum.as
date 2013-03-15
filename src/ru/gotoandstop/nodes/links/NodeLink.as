@@ -31,20 +31,20 @@ public class NodeLink extends Sprite implements ILink{
         return _locked;
     }
 
-    private var _input:IPort;
-    public function get inputPort():IPort {
+    private var _input:IPin;
+    public function get inputPort():IPin {
         return _input;
     }
-    public function set inputPort(value:IPort):void {
+    public function set inputPort(value:IPin):void {
         __change = true;
         _input = value;
     }
 
-    private var _output:IPort;
-    public function get outputPort():IPort {
+    private var _output:IPin;
+    public function get outputPort():IPin {
         return _output;
     }
-    public function set outputPort(value:IPort):void {
+    public function set outputPort(value:IPin):void {
         __change = true;
         _output = value;
     }

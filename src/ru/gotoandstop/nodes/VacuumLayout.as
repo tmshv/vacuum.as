@@ -7,7 +7,7 @@ import flash.events.EventDispatcher;
 import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.nodes.links.ILink;
 import ru.gotoandstop.nodes.links.ILinkProvider;
-import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.nodes.links.IPin;
 import ru.gotoandstop.nodes.links.Pin;
 import ru.gotoandstop.ui.Element;
 import ru.gotoandstop.vacuum.Layout;
@@ -28,7 +28,7 @@ public class VacuumLayout extends Element implements IDisposable {
 
 	private var _links:Vector.<ILink>;
     private var _linkProvider:ILinkProvider;
-	public var cursor:IPort;
+	public var cursor:IPin;
 
 	public function VacuumLayout(layout:Layout, linkProvider:ILinkProvider) {
 		super();
@@ -42,7 +42,7 @@ public class VacuumLayout extends Element implements IDisposable {
         element("vertex");
 	}
 
-	public function connect(first:IPort, second:IPort, id:String=null):String {
+	public function connect(first:IPin, second:IPin, id:String=null):String {
 		var link:ILink;
 		if (id) {
 			for each(var c:ILink in _links) {

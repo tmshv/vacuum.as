@@ -9,7 +9,7 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class Pin extends VertexView implements IPort {
+public class Pin extends VertexView implements IPin {
     private var _node:INode;
     public function get node():INode {
         return _node;
