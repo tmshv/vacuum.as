@@ -1,102 +1,81 @@
 package ru.gotoandstop.nodes.core {
-import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
-import flash.display.Sprite;
-import flash.display.Stage;
 import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.utils.ByteArray;
+import flash.events.EventDispatcher;
 import flash.utils.getDefinitionByName;
 
-import ru.gotoandstop.ISelectable;
-import ru.gotoandstop.nodes.MouseVertex;
-import ru.gotoandstop.nodes.VacuumEvent;
+import ru.gotoandstop.nodes.NodeDefinition;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.commands.DeleteNodeCommand;
-import ru.gotoandstop.nodes.links.BezierQuadLinkProvider;
-import ru.gotoandstop.nodes.links.DirectLinkProvider;
-import ru.gotoandstop.nodes.links.ILinkProvider;
 import ru.gotoandstop.nodes.links.Pin;
-import ru.gotoandstop.nodes.links.PinType;
 import ru.gotoandstop.storage.Storage;
-import ru.gotoandstop.vacuum.Layout;
-import ru.gotoandstop.vacuum.core.IVertex;
-import ru.gotoandstop.vacuum.modificators.SnapModifier;
 
-[Event(name="addedNode", type="ru.gotoandstop.nodes.core.NodeSystemEvent")]
-[Event(name="removedNode", type="ru.gotoandstop.nodes.core.NodeSystemEvent")]
+[Event(name="nodeAdded", type="ru.gotoandstop.nodes.core.NodeSystemEvent")]
+[Event(name="nodeRemoved", type="ru.gotoandstop.nodes.core.NodeSystemEvent")]
 
 /**
  * @author tmshv
  */
-public class NodeSystem extends Sprite implements INodeSystem {
+public class NodeSystem extends EventDispatcher implements INodeSystem {
+    public static var STRUCT_VERSION:String = "2";
+
     public static function getUniqueName(params:Object = null):String {
         var prefix:String = params ? params.type : 'node';
         var timestamp:String = new Date().getTime().toString(0x10).toLowerCase();
         return prefix + '_' + timestamp;
     }
 
-    private var _mouseDownCoord:Point = new Point();
-
-    private var connections:Vector.<Object>;
-    private var fakeConnection:String;
-    private var firstPortFake:Pin;
-
+    internal var connections:Vector.<Object>;
     private var nodeLibrary:Object;
-    private var nodes:Vector.<Node>;
 
+    private var nodes:Vector.<Node>;
     private var _storage:Storage;
     public function get storage():Storage {
         return _storage;
     }
 
     private var _vacuum:VacuumLayout;
-    public function get vacuum():VacuumLayout {
-        return _vacuum;
-    }
 
-    private var _stage:Stage;
-
-    private var snapVerticles:Vector.<IVertex> = new Vector.<IVertex>();
-
-    private var selectedNodes:Vector.<ISelectable> = new Vector.<ISelectable>();
-
-    public function NodeSystem(stage:Stage, storage:Storage = null, linkProvider:ILinkProvider = null) {
-        _stage = stage;
+    public function NodeSystem(storage:Storage = null) {
+        /**
+         * todo:remove this method
+         * temp method
+         * @param v
+         */
         _storage = storage ? storage : new Storage();
-        linkProvider = linkProvider ? linkProvider : new DirectLinkProvider();
         nodeLibrary = new Object();
         nodes = new Vector.<Node>();
         connections = new Vector.<Object>();
-        _vacuum = new VacuumLayout(new Layout(), linkProvider);
-        _vacuum.cursor = new MouseVertex(stage);
-        _vacuum.addEventListener(VacuumEvent.ADDED_VERTEX, handleAddedVertexToVacuum);
-        addChild(_vacuum);
-
-        _stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
-        _stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
-        _stage.addEventListener(MouseEvent.CLICK, handleStageClick);
     }
 
-    public function registerNode(node:Object):void {
-        if (!node.type || !node.object || !node.node) {
-            throw new ArgumentError('node argument must contain String type, Class object and Class node fields');
-        }
+    public function initVacuum(v:VacuumLayout):void {
+        _vacuum = v;
+    }
 
-        trace('reg node', node.type);
-        nodeLibrary[node.type] = node;
+    public function registerNodeDefinition(nodeDefinition:NodeDefinition):void {
+        nodeLibrary[nodeDefinition.type] = nodeDefinition;
+    }
+
+    public function getNodeDefinition(type:String):NodeDefinition {
+        var proto:NodeDefinition = nodeLibrary[type];
+        return proto.clone();
+    }
+
+    public function getRegistredTypes():Vector.<String> {
+        var vec:Vector.<String> = new Vector.<String>();
+        for (var i:String in nodeLibrary) {
+            vec.push(i);
+        }
+        return vec;
     }
 
     public function createNode(type:String, data:Object = null):INode {
         if (!data) data = {};
-        var prototype:Object = getDefinition(type);
+        var prototype:NodeDefinition = getNodeDefinition(type);
         if (!prototype) throw new Error('node with type %type is not registred in system'.replace(/%type/, type));
 
-        trace('creating node', type);
-
-        var object_definition_name:String = prototype.object;
-        var node_definition_name:String = prototype.node;
+        var object_definition_name:String = prototype.nodeDefinition;
+        var node_definition_name:String = prototype.vacuumNodeDefinition;
         var ObjectClass:Class = getDefinitionByName(object_definition_name) as Class;
         var NodeClass:Class = getDefinitionByName(node_definition_name) as Class;
         if (!(ObjectClass && NodeClass)) {
@@ -105,16 +84,14 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
         var object:INode = new ObjectClass();
         object.system = this;
+
         object.addEventListener(Event.CHANGE, handleObjectChange);
-
         var node:Node = new NodeClass(object, _vacuum);
-        node.doubleClickEnabled = true;
-        node.addEventListener(MouseEvent.MOUSE_DOWN, handleNodeMouseDown);
-        node.addEventListener(MouseEvent.MOUSE_UP, handleNodeMouseUp);
-        node.id = data.id ? data.id : getUniqueName({type:type});
-        node.type = type;
-        node.pos.addModifier(new SnapModifier(snapVerticles, 10));
 
+        node.doubleClickEnabled = true;
+        node.id = data.id ? data.id : getUniqueName({type:type});
+
+        node.type = type;
         var extras:Object = merge(prototype.extras, data.extras);
         var has_extras:Boolean = Boolean(extras);
         if (has_extras) {
@@ -135,12 +112,11 @@ public class NodeSystem extends Sprite implements INodeSystem {
                 data_params[dparam.key] = dparam.value;
             }
         }
-        var params:Array = prototype.params;
+        var prototype_params:Vector.<Object> = prototype.params;
         var key:String;
-        var value:Object;
-        for each(var p:Object in params) {
-            key = p.key;
+        for each(var p:Object in prototype_params) {
 
+            key = p.key;
             var custom_value:Object = data_params[key];
             if (custom_value != undefined) {
                 p.value = custom_value;
@@ -152,40 +128,18 @@ public class NodeSystem extends Sprite implements INodeSystem {
         container.addChild(node);
         node.setCloseCommand(new DeleteNodeCommand(node, deleteNode));
         nodes.push(node);
-        super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.ADDED_NODE, false, false, node));
+        super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.NODE_ADDED, false, false, node));
         return node;
     }
 
-    private function handleNodeMouseDown(event:MouseEvent):void {
-        _mouseDownCoord.x = event.stageX;
-        _mouseDownCoord.y = event.stageY;
-    }
-
-    private function handleNodeMouseUp(event:MouseEvent):void {
-        if (_mouseDownCoord.equals(new Point(event.stageX, event.stageY))) {
-            var node:Node = event.currentTarget as Node;
-            if (node.isSelected) {
-                var index:int = selectedNodes.indexOf(node);
-                selectedNodes.splice(index, 1);
-                node.deselect();
-            } else {
-                if (!event.shiftKey) {
-                    clearSelection();
-                }
-                selectedNodes.push(node);
-                node.select();
-            }
-        }
-    }
-
-    public function getNodeByName(name:String):INode {
+    public function getNodeByID(id:String):INode {
         for each(var node:INode in nodes) {
-            if (node.id == name) return node;
+            if (node.id == id) return node;
         }
         return null;
     }
 
-    public function getNodeNames():Vector.<String> {
+    public function getNodesID():Vector.<String> {
         var names:Vector.<String> = new Vector.<String>();
         for each(var node:INode in nodes) {
             names.push(node.id);
@@ -193,57 +147,46 @@ public class NodeSystem extends Sprite implements INodeSystem {
         return names;
     }
 
-    public function connect(firstNodeName:String, firstProp:String, secondNodeName:String, secondProp:String):void {
-        var from_node:Node = getNodeByName(firstNodeName) as Node;
-        var to_node:Node = getNodeByName(secondNodeName) as Node;
+    public function connect(outputNodeID:String, outputNodeField:String, intputNodeID:String, inputNodeField:String):void {
+        var from_node:Node = getNodeByID(outputNodeID) as Node;
 
-        var d1:Pin = from_node.getPort(firstProp);
-        var d2:Pin = to_node.getPort(secondProp);
+        var to_node:Node = getNodeByID(intputNodeID) as Node;
+        var d1:Pin = from_node.getPort(outputNodeField);
+        var d2:Pin = to_node.getPort(inputNodeField);
         if (d1 && d2) {
             makeLink(d1, d2);
         }
     }
 
-    /**
-     *
-     * @param from pressed ActivePoint
-     * @param to released ActivePoint
-     *
-     */
-    private function makeLink(from:Pin, to:Pin):void {
+    internal function makeLink(output:Pin, intput:Pin, fakeConnection:String = null):void {
         for each(var con:Object in connections) {
-            if (con.to == to) {
+            if (con.to == intput) {
                 unlink(con, true);
             }
         }
 
-        var connection_id:String = _vacuum.connect(from, to, fakeConnection);
+        var connection_id:String = _vacuum.connect(output, intput, fakeConnection);
+
         connections.push({
-            from:from,
-            to:to,
+            from:output,
+            to:intput,
             vacuumLinkID:connection_id
         });
-
-        transferData(from.node.id, from.property, to.node.id, to.property, TransportOrigin.LINK_ESTABLISHING);
+        transferData(output.node.id, output.property, intput.node.id, intput.property, TransportOrigin.LINK_ESTABLISHING);
     }
 
-    /**
-     * magic is here!!!
-     * @param to
-     * @param from
-     */
     private function transferData(firstNodeName:String, firstProp:String, secondNodeName:String, secondProp:String, origin:String):void {
-        var from_node:INode = getNodeByName(firstNodeName);
-        var to_node:INode = getNodeByName(secondNodeName);
+        var from_node:INode = getNodeByID(firstNodeName);
 
+        var to_node:INode = getNodeByID(secondNodeName);
         var dto:TransportObject = new TransportObject();
         dto.from = from_node;
         dto.to = to_node;
         dto.system = this;
         dto.fromField = firstProp;
         dto.toField = secondProp;
-        dto.origin = origin;
 
+        dto.origin = origin;
         dto.transfer();
     }
 
@@ -251,7 +194,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
         var match:Array = link.match(/([_\d\w]+).([\d\w]+)/);
         var node_name:String = match[1];
         var prop:String = match[2];
-        var node:Node = getNodeByName(node_name) as Node;
+        var node:Node = getNodeByID(node_name) as Node;
         if (node) {
             return node.get(prop);
         } else {
@@ -259,13 +202,13 @@ public class NodeSystem extends Sprite implements INodeSystem {
         }
     }
 
-    private function unlink(connection:Object, breakVacuumConnection:Boolean = false):void {
+    internal function unlink(connection:Object, breakVacuumConnection:Boolean = false):void {
         var to:Pin = connection.to;
+
         to.node.kill('-' + to.property);
-
         var index:int = connections.indexOf(connection);
-        connections.splice(index, 1);
 
+        connections.splice(index, 1);
         if (breakVacuumConnection) _vacuum.breakConnection(connection.vacuumLinkID);
     }
 
@@ -285,8 +228,6 @@ public class NodeSystem extends Sprite implements INodeSystem {
 
     public function deleteNode(node:INode):void {
         var node_visual:Node = node as Node;
-        node_visual.removeEventListener(MouseEvent.MOUSE_DOWN, handleNodeMouseDown);
-        node_visual.removeEventListener(MouseEvent.MOUSE_UP, handleNodeMouseDown);
         for (var i:uint; i < connections.length; i++) {
             var connection:Object = connections[i];
             if (connection.from.node == node_visual || connection.to.node == node_visual) {
@@ -296,36 +237,85 @@ public class NodeSystem extends Sprite implements INodeSystem {
         }
 
         var index:int = nodes.indexOf(node_visual);
+
         nodes.splice(index, 1);
-
-        index = selectedNodes.indexOf(node_visual);
-        selectedNodes.splice(index, 1);
-
         var points:Vector.<Pin> = node_visual.getPortList();
         for each(var point:Pin in points) {
             if (point) _vacuum.deletePoint(point);
         }
 
-        node_visual.object.removeEventListener(Event.CHANGE, handleObjectChange);
 
-        super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.REMOVED_NODE, false, false, node));
+        node_visual.object.removeEventListener(Event.CHANGE, handleObjectChange);
+        super.dispatchEvent(new NodeSystemEvent(NodeSystemEvent.NODE_REMOVED, false, false, node_visual));
         node_visual.dispose();
         var container:DisplayObjectContainer = _vacuum.element("nodes");
         if (container.contains(node_visual)) {
+            /**
+             * v2
+             * @return
+             */
             container.removeChild(node_visual);
         }
     }
 
-    /**
-     * v2
-     * @return
-     */
-    public function getStructure():Object {
-        var node_names:Vector.<String> = getNodeNames();
+    public function breakConnection(nodeID:String, nodeField:String):void {
+    }
+
+    public function matchNodeIDs(pattern:RegExp):Vector.<INode> {
+        return null;
+    }
+
+    public function dispose():void {
+        for (var i:uint; i < connections.length; i++) {
+            var connection:Object = connections[i];
+            unlink(connection, true);
+            i--;
+        }
+
+        var node_names:Vector.<String> = getNodesID();
+        for each(var name:String in node_names) {
+            var n:Node = getNodeByID(name) as Node;
+            n.object.system = null;
+            deleteNode(n);
+        }
+        nodes = null;
+        connections = null;
+        nodeLibrary = null;
+    }
+
+    private static function getParamsFromPrototypeForSave(proto:Object):Vector.<String> {
+        var list:Vector.<String> = new Vector.<String>();
+        var params:Array = proto.params;
+        for each(var p:Object in params) {
+            var s:Boolean = p.save == undefined || p.save;
+            if (s) {
+                list.push(p.key);
+            }
+        }
+        return list;
+    }
+
+    private static function merge(object1:Object, object2:Object):Object {
+        var result:Object = {};
+        var i:String;
+        for (i in object1) {
+            result[i] = object1[i];
+        }
+        for (i in object2) {
+            if (result[i] == undefined) {
+                result[i] = object2[i];
+            }
+        }
+
+        return result;
+    }
+
+    public function serialize():Object {
+        var node_names:Vector.<String> = getNodesID();
         var nodes:Array = new Array();
         for each (var id:String in node_names) {
-            var node:Node = getNodeByName(id) as Node;
-            var proto:Object = getDefinition(node.type);
+            var node:Node = getNodeByID(id) as Node;
+            var proto:Object = getNodeDefinition(node.type);
             var params:Array = [];
 //            var key_list:Vector.<String> = node.getParams();
             var key_list:Vector.<String> = getParamsFromPrototypeForSave(proto);
@@ -359,238 +349,7 @@ public class NodeSystem extends Sprite implements INodeSystem {
             defs.push(def);
         }
 
-        return {definitions:defs, nodes:nodes, links:links, version:'2'};
+        return {definitions:defs, nodes:nodes, links:links, version:STRUCT_VERSION};
     }
-
-    private function merge(object1:Object, object2:Object):Object {
-        var result:Object = {};
-        var i:String;
-        for (i in object1) {
-            result[i] = object1[i];
-        }
-        for (i in object2) {
-            if (result[i] == undefined) {
-                result[i] = object2[i];
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * v1
-     * @return
-     */
-//    public function getStructure():Object {
-//        var node_names:Vector.<String> = getNodeNames();
-//        var nodes:Array = new Array();
-//        for each (var name:String in node_names) {
-//            var node:Node = getNodeByName(name) as Node;
-//            var raw_node:Object = {
-//                type:node.type
-//            };
-//
-//            //model filling
-//            var model:Object = {};
-//            var params:Vector.<String> = node.getParams();
-//            for each(var prop:String in params) {
-//                var val:* = node.get(prop);
-//                if (val != null && val != undefined) {
-//                    if (val is IValue) {
-//                        var ival:* = (val as IValue).getValue();
-//                        model[prop] = ival;
-//                    } else {
-//                        model[prop] = val;
-//                    }
-//                }
-//            }
-//            model.position = {
-//                x:node.x,
-//                y:node.y
-//            }
-//            model.id = node.id;
-//
-//            raw_node.model = model;
-//            nodes.push(raw_node);
-//        }
-//        var links:Array = new Array();
-//        for each (var conection:Object in connections) {
-//            links.push({from:[conection.from.node.id, conection.from.property], to:[conection.to.node.id, conection.to.property]});
-//        }
-//
-//        return {nodes:nodes, links:links, version:'1'};
-//    }
-
-    public function getRegistredTypes():Vector.<String> {
-        var vec:Vector.<String> = new Vector.<String>();
-        for (var i:String in nodeLibrary) {
-            vec.push(i);
-        }
-        return vec;
-    }
-
-    public function getDefinition(type:String):Object {
-        var proto:Object = nodeLibrary[type];
-
-        var bytes:ByteArray = new ByteArray();
-        bytes.writeObject(proto);
-        bytes.position = 0;
-        return bytes.readObject();
-
-//        var node:Object = merge(proto, {});
-//        return node;
-    }
-
-    public function breakConnection(nodeName:String, nodeProp:String):void {
-    }
-
-    public function matchNodeName(pattern:RegExp):Vector.<INode> {
-        return null;
-    }
-
-    private function handleAddedVertexToVacuum(event:VacuumEvent):void {
-        const vertex:Pin = event.vertex as Pin;
-        if (vertex.type == PinType.INPUT) {
-            vertex.addEventListener(MouseEvent.MOUSE_DOWN, this.handleInVertexMouseDown);
-            vertex.addEventListener(MouseEvent.MOUSE_UP, this.handleInVertexMouseUp);
-            vertex.addEventListener(MouseEvent.MOUSE_OVER, this.handleInVertexMouseOver);
-            vertex.addEventListener(MouseEvent.MOUSE_OUT, this.handleInVertexMouseOut);
-        } else if (vertex.type == PinType.OUTPUT) {
-            vertex.addEventListener(MouseEvent.MOUSE_DOWN, this.handleOutVertexMouseDown);
-        }
-    }
-
-    /**
-     * Нажатие на черную
-     * @param event
-     *
-     */
-    private function handleOutVertexMouseDown(event:MouseEvent):void {
-        var vertex:Pin = event.currentTarget as Pin;
-        firstPortFake = vertex;
-        fakeConnection = _vacuum.connectWithMouse(firstPortFake);
-    }
-
-    /**
-     * Нажатие на белую
-     * @param event
-     *
-     */
-    private function handleInVertexMouseDown(event:MouseEvent):void {
-        const vertex:Pin = event.currentTarget as Pin;
-
-        for each(var connection:Object in connections) {
-            if (connection.to == vertex) {
-                unlink(connection);
-                fakeConnection = _vacuum.connectWithMouse(connection.from, connection.vacuumLinkID);
-                firstPortFake = connection.from;
-            }
-        }
-
-        handleInVertexMouseOver(event);
-    }
-
-    /**
-     * Отпуск над белой
-     * @param event
-     *
-     */
-    private function handleInVertexMouseUp(event:MouseEvent):void {
-        const vertex:Pin = event.currentTarget as Pin;
-        if (firstPortFake) {
-            makeLink(firstPortFake, vertex);
-        }
-        fakeConnection = null;
-        firstPortFake = null;
-    }
-
-    private function handleInVertexMouseOver(event:MouseEvent):void {
-        const vertex:Pin = event.currentTarget as Pin;
-        if (fakeConnection) {
-            _vacuum.connect(firstPortFake, vertex, fakeConnection);
-        }
-    }
-
-    private function handleInVertexMouseOut(event:MouseEvent):void {
-        if (fakeConnection) {
-            _vacuum.connectWithMouse(firstPortFake, fakeConnection);
-        }
-    }
-
-    private function handleMouseUp(event:MouseEvent):void {
-        if (!super.contains(event.target as DisplayObject)) {
-            clearSelection();
-        }
-
-        _vacuum.breakConnection(fakeConnection);
-        fakeConnection = null;
-        firstPortFake = null;
-    }
-
-    private function handleMouseDown(event:MouseEvent):void {
-    }
-
-    private function handleStageClick(event:MouseEvent):void {
-    }
-
-    public function dispose():void {
-        for (var i:uint; i < connections.length; i++) {
-            var connection:Object = connections[i];
-            unlink(connection, true);
-            i--;
-        }
-
-        var node_names:Vector.<String> = getNodeNames();
-        for each(var name:String in node_names) {
-            var n:Node = getNodeByName(name) as Node;
-            n.object.system = null;
-            deleteNode(n);
-        }
-        nodes = null;
-        connections = null;
-        nodeLibrary = null;
-
-        _stage.removeEventListener(MouseEvent.MOUSE_UP, this.handleMouseUp);
-        _stage.removeEventListener(MouseEvent.MOUSE_DOWN, this.handleMouseDown);
-        _stage.removeEventListener(MouseEvent.CLICK, this.handleStageClick);
-        _vacuum.removeEventListener(VacuumEvent.ADDED_VERTEX, this.handleAddedVertexToVacuum);
-        _vacuum.dispose();
-        _vacuum = null;
-
-        trace("nodesystem destroyed");
-    }
-
-    public function addSnapVertex(vertex:IVertex):void {
-        snapVerticles.push(vertex);
-    }
-
-    public function getSelectedNodes():Vector.<Node> {
-        var result:Vector.<Node> = new Vector.<Node>();
-        for each(var n:ISelectable in selectedNodes) {
-            result.push(n as Node);
-        }
-        return result;
-    }
-
-    private function clearSelection():void {
-        for each(var n:ISelectable in selectedNodes) {
-            n.deselect();
-        }
-        selectedNodes.splice(0, selectedNodes.length);
-    }
-
-    private function getParamsFromPrototypeForSave(proto:Object):Vector.<String> {
-        var list:Vector.<String> = new Vector.<String>();
-        var params:Array = proto.params;
-        for each(var p:Object in params) {
-            var s:Boolean = p.save == undefined || p.save;
-            if (s) {
-                list.push(p.key);
-            }
-        }
-        return list;
-    }
-
-
 }
 }

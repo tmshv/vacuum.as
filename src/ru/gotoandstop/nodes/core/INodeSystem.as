@@ -6,38 +6,32 @@
  */
 package ru.gotoandstop.nodes.core {
 import flash.events.IEventDispatcher;
-import flash.utils.ByteArray;
-import flash.utils.getDefinitionByName;
 
 import ru.gotoandstop.IDisposable;
-
-import ru.gotoandstop.nodes.core.INode;
+import ru.gotoandstop.ISerializable;
+import ru.gotoandstop.nodes.NodeDefinition;
 import ru.gotoandstop.storage.Storage;
 
-public interface INodeSystem extends IEventDispatcher, IDisposable {
-    function registerNode(node:Object):void;
+public interface INodeSystem extends IEventDispatcher, IDisposable, ISerializable{
+    function registerNodeDefinition(nodeDefinition:NodeDefinition):void;
+
+    function getNodeDefinition(type:String):NodeDefinition;
+
+    function getRegistredTypes():Vector.<String>;
 
     function createNode(type:String, model:Object = null):INode;
 
     function deleteNode(node:INode):void ;
 
-    function getStructure():Object;
+    function getNodesID():Vector.<String>;
 
-    function getNodeNames():Vector.<String>;
-
-    function getNodeByName(name:String):INode;
+    function getNodeByID(id:String):INode;
 
     function getLinkedValue(link:String):Object;
 
-    function matchNodeName(pattern:RegExp):Vector.<INode>;
+    function connect(outputNodeID:String, outputNodeField:String, intputNodeID:String, inputNodeField:String):void;
 
-    function getRegistredTypes():Vector.<String>;
-
-    function getDefinition(type:String):Object;
-
-    function connect(fromName:String, fromProp:String, toName:String, toProp:String):void;
-
-    function breakConnection(nodeName:String, nodeProp:String):void;
+    function breakConnection(nodeID:String, nodeField:String):void;
 
     function get storage():Storage;
 }

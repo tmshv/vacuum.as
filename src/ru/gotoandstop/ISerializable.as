@@ -6,7 +6,6 @@
  */
 package ru.gotoandstop {
 public interface ISerializable {
-    function encode():Object;
-    function decode():Object;
+    function serialize():Object;
 }
 }

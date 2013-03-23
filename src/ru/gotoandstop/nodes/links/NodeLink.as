@@ -57,7 +57,7 @@ public class NodeLink extends Sprite implements ILink{
 //        init();
     }
 
-    public function encode():Object {
+    public function serialize():Object {
         return {
             "elementType":NodeSystemElementType.LINK,
             "type":type,
