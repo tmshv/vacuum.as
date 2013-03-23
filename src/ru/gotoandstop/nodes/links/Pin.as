@@ -1,4 +1,5 @@
 package ru.gotoandstop.nodes.links {
+import ru.gotoandstop.nodes.Triag45Icon;
 import ru.gotoandstop.nodes.core.INode;
 import ru.gotoandstop.vacuum.Layout;
 import ru.gotoandstop.vacuum.core.IVertex;
@@ -9,9 +10,17 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class PortPoint extends VertexView implements IPort {
-    public var node:INode;
-    public var property:String;
+public class Pin extends VertexView implements IPin {
+    private var _node:INode;
+    public function get node():INode {
+        return _node;
+    }
+
+    private var _property:String;
+    public function get property():String{
+        return _property;
+    }
+
     private var _type:String;
     public function get type():String {
         return _type;
@@ -21,25 +30,23 @@ public class PortPoint extends VertexView implements IPort {
     public function get direction():String {
         return this._direction;
     }
-
     public function set direction(value:String):void {
-        this._direction = value;
+        _direction = value;
     }
 
-    public function PortPoint(vertex:IVertex, layout:Layout, node:INode, property:String, type:String, direction:String) {
-        this.property = property;
-        this._type = type;
+    private var _locked:Boolean;
+    public function get isLocked():Boolean {
+        return _locked;
+    }
+
+    public function Pin(vertex:IVertex, layout:Layout, node:INode, property:String, type:String, direction:String) {
         this.direction = direction;
+        _property = property;
+        _type = type;
+        _node = node;
 
-        var icon:VertexIcon;
-        if (this.type == 'in') {
-            icon = new RectIcon(0xffbbbbbb, 0xffffffff);
-        } else {
-            icon = new RectIcon(0xff000000, 0xff000000);
-        }
-
+        var icon:VertexIcon = type == PinType.INPUT ? new RectIcon(0xffbbbbbb, 0xffffffff) : new Triag45Icon(0xffbbbbbb, 0xffffffff);
         super(vertex, layout, icon);
-        this.node = node;
     }
 
     public function getValue():* {
@@ -63,13 +70,11 @@ public class PortPoint extends VertexView implements IPort {
     }
 
     public function lock():void {
+        _locked = true;
     }
 
     public function unlock():void {
-    }
-
-    public function get isLocked():Boolean {
-        return false;
+        _locked = false;
     }
 
     public function get dataType():String {
@@ -77,7 +82,7 @@ public class PortPoint extends VertexView implements IPort {
     }
 
     override public function toString():String {
-        var msg:String = '[port type for property of node]';
+        var msg:String = "[pin type for property of node]";
         msg = msg.replace(/type/, type);
         msg = msg.replace(/property/, property);
         msg = msg.replace(/node/, node);

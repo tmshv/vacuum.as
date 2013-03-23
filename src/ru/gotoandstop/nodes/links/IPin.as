@@ -9,9 +9,15 @@ package ru.gotoandstop.nodes.links {
 import ru.gotoandstop.IDirectionalVertex;
 import ru.gotoandstop.IDisposable;
 import ru.gotoandstop.ILockable;
+import ru.gotoandstop.nodes.core.INode;
 
-public interface IPort extends IDirectionalVertex, ILockable, IDisposable{
+public interface IPin extends IDirectionalVertex, ILockable, IDisposable{
 	function get type():String;
 	function get dataType():String;
+
+    /**
+     * parent node of port
+     */
+    function get node():INode;
 }
 }
