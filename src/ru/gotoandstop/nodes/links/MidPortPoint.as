@@ -3,9 +3,9 @@ import flash.events.Event;
 
 import ru.gotoandstop.IDirectionalVertex;
 import ru.gotoandstop.IDisposable;
-import ru.gotoandstop.nodes.links.IPort;
-import ru.gotoandstop.nodes.links.IPort;
-import ru.gotoandstop.nodes.links.IPort;
+import ru.gotoandstop.nodes.links.IPin;
+import ru.gotoandstop.nodes.links.IPin;
+import ru.gotoandstop.nodes.links.IPin;
 import ru.gotoandstop.vacuum.core.IVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 
@@ -14,13 +14,13 @@ import ru.gotoandstop.vacuum.core.Vertex;
  * @author Roman Timashev
  */
 public class MidPortPoint extends Vertex{
-	private var _target:IPort;
-	private var _target2:IPort;
+	private var _target:IPin;
+	private var _target2:IPin;
 	private var ratio:Number;
 	private var min:Number;
 	private var max:Number;
 
-	public function MidPortPoint(target:IPort, target2:IPort, interpolationValue:Number = 0.5, minimalInterpolationValue:Number = 1, maximalInterpolationValue:Number = 100) {
+	public function MidPortPoint(target:IPin, target2:IPin, interpolationValue:Number = 0.5, minimalInterpolationValue:Number = 1, maximalInterpolationValue:Number = 100) {
 		super();
 		_target = target;
 		_target2 = target2;

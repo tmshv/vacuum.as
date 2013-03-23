@@ -13,21 +13,8 @@ import ru.gotoandstop.vacuum.SplineView;
 import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.TargetVertex;
 
-public class SimpleLineConnection implements ILineConnection {
-	private static var count:uint = 1;
-	internal static function getIndex():uint {
-		return count++;
-	}
-
-	protected var _canvas:DisplayObjectContainer;
-	public function get canvas():DisplayObjectContainer {
-		return _canvas;
-	}
-
-	private var _index:uint;
-	public function get index():uint {
-		return _index;
-	}
+public class DirectLink extends NodeLink{
+    public static const TYPE:String = "direct";
 
 	protected var _first:ITargetVertex;
 	protected var _second:ITargetVertex;
@@ -35,17 +22,16 @@ public class SimpleLineConnection implements ILineConnection {
 	protected var _spline:Spline;
 	protected var _view:SplineView;
 
-	public function SimpleLineConnection(canvas:DisplayObjectContainer) {
-		_canvas = canvas;
-		_index = SimpleLineConnection.getIndex();
+	public function DirectLink() {
+        super(TYPE);
 
 		_first = new TargetVertex();
 		_second = new TargetVertex();
 
-		_spline = new Spline(canvas);
+		_spline = new Spline(this);
 		_view = new SplineView(_spline);
 		_view.alpha = 0.25;
-		_canvas.addChild(_view);
+		addChild(_view);
 
 		fillSpline();
 	}
@@ -55,20 +41,22 @@ public class SimpleLineConnection implements ILineConnection {
 		_spline.addVertex(_second);
 	}
 
-	public function setOutsideVertices(first:IPort, second:IPort):void {
-		_first.setTarget(first);
-		_second.setTarget(second);
-	}
-
-	public function dispose():void {
-		_canvas.removeChild(_view);
+	override public function dispose():void {
+		removeChild(_view);
 		_view.dispose();
 		_spline.dispose();
-		_canvas = null;
 		_first = null;
 		_second = null;
 		_spline = null;
 		_view = null;
 	}
+
+    override protected function init():void {
+        super.init();
+        if(_first && _second) {
+            _first.setTarget(inputPort);
+            _second.setTarget(outputPort);
+        }
+    }
 }
 }

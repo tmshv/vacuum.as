@@ -21,8 +21,8 @@ import ru.gotoandstop.command.ICommand;
 import ru.gotoandstop.math.Calculate;
 import ru.gotoandstop.nodes.VacuumLayout;
 import ru.gotoandstop.nodes.events.NodeEvent;
-import ru.gotoandstop.nodes.links.PortPoint;
-import ru.gotoandstop.nodes.links.PortPointType;
+import ru.gotoandstop.nodes.links.Pin;
+import ru.gotoandstop.nodes.links.PinType;
 import ru.gotoandstop.nodes.view.Bit101Text;
 import ru.gotoandstop.storage.Storage;
 import ru.gotoandstop.vacuum.CombinedVertex;
@@ -346,13 +346,13 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
             var type:String = port.type;
 
             var port_vertex:RelativeVertex;
-            if (type == PortPointType.IN) {
+            if (type == PinType.INPUT) {
                 port_vertex = _fieldSnapPoints.get(key);
-            } else if (type == PortPointType.OUT) {
+            } else if (type == PinType.OUTPUT) {
                 port_vertex = new RelativeVertex(_fieldSnapPoints.get(key), new CombinedVertex(rightBottom, new Vertex()));
             }
 
-            var point:PortPoint = new PortPoint(port_vertex, _vacuum.layout, this, key, type, port.dir);
+            var point:Pin = new Pin(port_vertex, _vacuum.layout, this, key, type, port.dir);
             _vacuum.showPort(point);
             _ports.set(key, point);
         }
@@ -432,12 +432,12 @@ public class Node extends VertexView implements IVertex, INode, ISelectable {
 
     }
 
-    public function getPort(key:String):PortPoint {
+    public function getPort(key:String):Pin {
         return _ports.get(key);
     }
 
-    public function getPortList():Vector.<PortPoint> {
-        var result:Vector.<PortPoint> = new Vector.<PortPoint>();
+    public function getPortList():Vector.<Pin> {
+        var result:Vector.<Pin> = new Vector.<Pin>();
         var list:Vector.<String> = _ports.getKeyList();
         for each(var key:String in list) {
             result.push(_ports.get(key));

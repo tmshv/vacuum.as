@@ -23,7 +23,7 @@ public class JSONEncoder {
 
     //make json from system
     public function encode():String {
-        return by.blooddy.crypto.serialization.JSON.encode(system.getStructure());
+        return by.blooddy.crypto.serialization.JSON.encode(system.serialize());
     }
 
     //make system from json shit
@@ -36,7 +36,7 @@ public class JSONEncoder {
 
         if(readDefinition) {
             for each(var d:Object in defs) {
-                system.registerNode(d);
+                system.registerNodeDefinition(NodeDefinition.create(d));
             }
         }
 

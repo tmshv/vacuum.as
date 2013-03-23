@@ -4,17 +4,13 @@ import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.EventDispatcher;
 
-import ru.gotoandstop.IDirectionalVertex;
 import ru.gotoandstop.IDisposable;
-import ru.gotoandstop.nodes.links.BezierQuadConnection;
-import ru.gotoandstop.nodes.links.ILineConnection;
-import ru.gotoandstop.nodes.links.IPort;
-import ru.gotoandstop.nodes.links.IPort;
-import ru.gotoandstop.nodes.links.IPort;
-import ru.gotoandstop.nodes.links.PortPoint;
-import ru.gotoandstop.nodes.links.SimpleLineConnection;
+import ru.gotoandstop.nodes.links.ILink;
+import ru.gotoandstop.nodes.links.ILinkProvider;
+import ru.gotoandstop.nodes.links.IPin;
+import ru.gotoandstop.nodes.links.Pin;
+import ru.gotoandstop.ui.Element;
 import ru.gotoandstop.vacuum.Layout;
-import ru.gotoandstop.vacuum.core.ITargetVertex;
 import ru.gotoandstop.vacuum.core.Vertex;
 import ru.gotoandstop.vacuum.view.VertexView;
 
@@ -22,71 +18,58 @@ import ru.gotoandstop.vacuum.view.VertexView;
 /**
  * @author tmshv
  */
-public class VacuumLayout extends EventDispatcher implements IDisposable {
-	private var vertices:Vector.<Vertex>;
-	private var _container:DisplayObjectContainer;
+public class VacuumLayout extends Element implements IDisposable {
+	private var _vertexes:Vector.<Vertex>;
 
-	public function get container():DisplayObjectContainer {
-		return this._container;
-	}
-
-	private var layers:Object;
 	private var _layout:Layout;
 	public function get layout():Layout {
 		return  this._layout;
 	}
 
-	private var connections:Vector.<ILineConnection>;
+	private var _links:Vector.<ILink>;
+    private var _linkProvider:ILinkProvider;
+	public var cursor:IPin;
 
-	public var cursor:IPort;
-
-	public function VacuumLayout(container:DisplayObjectContainer, layout:Layout) {
+	public function VacuumLayout(layout:Layout, linkProvider:ILinkProvider) {
 		super();
-//		layout.scale.setValue(0.5);
-		this._layout = layout;
-		this.vertices = new Vector.<Vertex>();
-		this._container = container;
-		this.layers = new Object();
-		this.connections = new Vector.<ILineConnection>();
-		this.addLayer('lines');
-		this.addLayer('nodes');
-		this.addLayer('activepoints');
-        this.addLayer("vertex");
+        _layout = layout;
+        _linkProvider = linkProvider;
+        _vertexes = new Vector.<Vertex>();
+        _links = new Vector.<ILink>();
+        element("lines");
+        element("nodes");
+        element("activepoints");
+        element("vertex");
 	}
 
-	public function addLayer(name:String):void {
-		var layer:Sprite = new Sprite();
-		this.container.addChild(layer);
-		this.layers[name] = layer;
-	}
-
-	public function getLayer(name:String):Sprite {
-		return this.layers[name];
-	}
-
-	public function connect(first:IPort, second:IPort, index:uint = 0):uint {
-		var connection:ILineConnection;
-		if (index) {
-			for each(var c:ILineConnection in connections) {
-				if (c.index == index) {
-					connection = c;
+	public function connect(first:IPin, second:IPin, id:String=null):String {
+		var link:ILink;
+		if (id) {
+			for each(var c:ILink in _links) {
+				if (c.id == id) {
+					link = c;
 					break;
 				}
 			}
 		}
 
-		if (!connection) {
-			const layer:Sprite = layers['lines'];
-//			connection = new SimpleLineConnection(layer);
-			connection = new BezierQuadConnection(layer);
-			connections.push(connection);
-		}
-		connection.setOutsideVertices(first, second);
-		return connection.index;
+		if (!link) {
+			link = _linkProvider.provideLink(first, second);
+            if(link is DisplayObject) {
+                element("lines").push(link as DisplayObject);
+            }
+			_links.push(link);
+		}else{
+            link.lock();
+            link.outputPort = first;
+            link.inputPort = second;
+            link.unlock();
+        }
+		return link.id;
 	}
 
-	public function connectWithMouse(port:PortPoint, index:uint = 0):uint {
-		return this.connect(port, this.cursor, index);
+	public function connectWithMouse(port:Pin, id:String=null):String {
+		return this.connect(port, this.cursor, id);
 	}
 
 	public function addDataType(type:String, obj:*):void {
@@ -97,11 +80,11 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 		return null;
 	}
 
-	public function breakConnection(connectionIndex:uint):void {
-		for each(var c:ILineConnection in this.connections) {
-			if (c.index == connectionIndex) {
-				var index:int = this.connections.indexOf(c);
-				this.connections.splice(index, 1);
+	public function breakConnection(connectionIndex:String):void {
+		for each(var c:ILink in this._links) {
+			if (c.id == connectionIndex) {
+				var index:int = this._links.indexOf(c);
+				this._links.splice(index, 1);
 
 				c.dispose();
 				break;
@@ -110,23 +93,21 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 	}
 
     public function showVertex(v:VertexView):void {
-        const layer:Sprite = this.layers['vertex'];
-        layer.addChild(v);
+        element("vertex").push(v);
     }
 
     public function hideVertex(v:VertexView):void {
-        const layer:Sprite = this.layers['vertex'];
+        const layer:Sprite = element("vertex");
         if(v && layer.contains(v)) layer.removeChild(v);
     }
 
-	public function showPort(point:PortPoint):void {
-		const layer:Sprite = this.layers['activepoints'];
-		layer.addChild(point);
+	public function showPort(point:Pin):void {
+		element("activepoints").push(point);
 		super.dispatchEvent(new VacuumEvent(VacuumEvent.ADDED_VERTEX, false, false, point));
 	}
 
-	public function deletePoint(point:PortPoint):void {
-		const layer:Sprite = this.layers['activepoints'];
+	public function deletePoint(point:Pin):void {
+        const layer:Sprite = element("activepoints");
         if(layer.contains(point)) {
             layer.removeChild(point);
             super.dispatchEvent(new VacuumEvent(VacuumEvent.REMOVED_VERTEX, false, false, point));
@@ -134,16 +115,11 @@ public class VacuumLayout extends EventDispatcher implements IDisposable {
 	}
 
 	public function dispose():void {
-		for each(var c:ILineConnection in connections) {
+		for each(var c:ILink in _links) {
 			c.dispose();
 		}
-		connections = null;
-
-		for each(var layer:DisplayObject in layers) {
-			container.removeChild(layer);
-		}
-		layers = null;
-
+		_links = null;
+        removeChildren();
 		if(cursor) cursor.dispose();
 	}
 }
